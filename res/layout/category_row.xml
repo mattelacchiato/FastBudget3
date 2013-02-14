@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <LinearLayout android:orientation="horizontal" >
+
+        <TextView android:id="@+id/category_name" />
+
+        <TextView
+            android:id="@+id/category_amount"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal" >
+
+        <ProgressBar
+            android:id="@+id/category_fill"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:maxHeight="9sp"
+            android:minHeight="9sp"
+            android:paddingTop="7sp" />
+
+        <TextView
+            android:id="@+id/category_budget"
+            android:gravity="right"
+            android:width="40sp" />
+    </LinearLayout>
+
+</LinearLayout>
