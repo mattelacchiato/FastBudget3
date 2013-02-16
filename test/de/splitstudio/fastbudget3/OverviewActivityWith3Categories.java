@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,10 +26,11 @@ public class OverviewActivityWith3Categories {
 
 	@Before
 	public void setUp() {
+		Locale.setDefault(Locale.US);
 		this.overview = new OverviewActivity();
-		Category category1 = new Category(NAME1);
-		Category category2 = new Category(NAME2);
-		Category category3 = new Category(NAME3);
+		Category category1 = new Category(NAME1, 111);
+		Category category2 = new Category(NAME2, 222);
+		Category category3 = new Category(NAME3, 333);
 		overview.categories.addAll(Arrays.asList(category1, category2, category3));
 		overview.onCreate(null);
 	}
@@ -45,13 +47,20 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void showsTheNameOfEachCategory() throws Exception {
-		assertThatChildNameIs(0, NAME1);
-		assertThatChildNameIs(1, NAME2);
-		assertThatChildNameIs(2, NAME3);
+		assertThatTextAtPositionIs(R.id.category_name, 0, NAME1);
+		assertThatTextAtPositionIs(R.id.category_name, 1, NAME2);
+		assertThatTextAtPositionIs(R.id.category_name, 2, NAME3);
 	}
 
-	private void assertThatChildNameIs(int position, String expected) {
-		TextView name1 = (TextView) overview.getListView().getChildAt(position).findViewById(R.id.category_name);
+	@Test
+	public void showsTheAmountOfEachBudget() throws Exception {
+		assertThatTextAtPositionIs(R.id.category_budget, 0, "$1.11");
+		assertThatTextAtPositionIs(R.id.category_budget, 1, "$2.22");
+		assertThatTextAtPositionIs(R.id.category_budget, 2, "$3.33");
+	}
+
+	private void assertThatTextAtPositionIs(int viewId, int position, String expected) {
+		TextView name1 = (TextView) overview.getListView().getChildAt(position).findViewById(viewId);
 		assertThat(name1, is(notNullValue()));
 		assertThat(name1.getText().toString(), is(expected));
 	}
