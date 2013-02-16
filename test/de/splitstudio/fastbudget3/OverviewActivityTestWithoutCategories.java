@@ -17,19 +17,24 @@ import android.content.Intent;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
 
 @RunWith(RobolectricTestRunner.class)
-public class OverviewWithoutCategories {
+public class OverviewActivityTestWithoutCategories {
 
-	private Overview overview;
+	private OverviewActivity overview;
 
 	@Before
 	public void setUp() {
-		this.overview = new Overview();
+		this.overview = new OverviewActivity();
 		overview.onCreate(null);
 	}
 
 	@Test
-	public void containsAListWithOneHelpItem() throws Exception {
-		assertThat(overview.getListView().getChildCount(), is(1));
+	public void hasAnAddView() throws Exception {
+		assertThat(overview.getListView().findViewById(R.id.category_add), is(notNullValue()));
+	}
+
+	@Test
+	public void hasAnEmptyList() throws Exception {
+		assertThat(overview.getListView().getAdapter().getCount(), is(0));
 	}
 
 	@Test
