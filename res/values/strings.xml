@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="add_category">Create a category</string>
     <string name="app_name">FastBudget 3</string>
     <string name="menu_settings">Settings</string>
-    <string name="add_category">Create a category</string>
+    <string name="hint_category_name">Category Name</string>
 
 </resources>

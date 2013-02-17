@@ -6,7 +6,6 @@
 
     <ListView
         android:id="@android:id/list"
-        style="@android:style/Widget.ListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 

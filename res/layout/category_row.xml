@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" 
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+     >
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -14,12 +16,28 @@
             android:id="@+id/category_name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:paddingBottom="0dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
             android:text="Category Name"
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
-
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/category_fill"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="-6dp"
+        android:layout_weight="0.97"
+        android:indeterminate="false"
+        android:max="1000"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="0dp"
+        android:progress="123" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -30,30 +48,23 @@
             android:id="@+id/category_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:layout_weight="1"
+            android:gravity="left"
             android:padding="8dp"
             android:text="-100,23€"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
             tools:ignore="HardcodedText" />
-
-        <ProgressBar
-            android:id="@+id/category_fill"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:indeterminate="false"
-            android:paddingTop="3dp"
-            android:progress="50" />
 
         <TextView
             android:id="@+id/category_budget"
-            android:layout_width="72dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="right"
             android:padding="8sp"
             android:text="-122,30€"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
             tools:ignore="HardcodedText" />
-
     </LinearLayout>
-                    
+
 </LinearLayout>
