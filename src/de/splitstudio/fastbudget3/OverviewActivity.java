@@ -15,7 +15,6 @@ import android.widget.ListView;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
 
-//TODO 13.02.2013: rename to activity
 public class OverviewActivity extends ListActivity {
 
 	List<Category> categories = new ArrayList<Category>();
