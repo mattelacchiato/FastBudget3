@@ -12,7 +12,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import de.splitstudio.utils.view.Calculator;
 
 @RunWith(RobolectricTestRunner.class)
 public class CategoryActivityTest {
@@ -52,4 +54,22 @@ public class CategoryActivityTest {
 		assertThat(activity.getTitle().toString(), is(expectedTitle));
 	}
 
+	@Test
+	public void ithasACalculator() {
+		View calculator = activity.findViewById(R.id.calculator);
+		assertThat(calculator, is(notNullValue()));
+		assertThat(calculator, is(Calculator.class));
+	}
+
+	@Test
+	public void itHasASaveButton() {
+		Button button = (Button) activity.findViewById(R.id.button_save);
+		assertThat(button, is(notNullValue()));
+	}
+
+	@Test
+	public void itHasACancelButton() {
+		Button button = (Button) activity.findViewById(R.id.button_cancel);
+		assertThat(button, is(notNullValue()));
+	}
 }
