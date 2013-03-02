@@ -53,4 +53,5 @@ public class OverviewActivityTestWithoutCategories {
 		ShadowIntent shadowIntent = shadowOf(startedIntent);
 		assertThat(shadowIntent.getComponent().getClassName(), equalTo(CategoryActivity.class.getName()));
 	}
+
 }

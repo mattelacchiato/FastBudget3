@@ -23,6 +23,13 @@ public class OverviewActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.overview_activity);
+		appendFooterToList();
+
+		CategoryListAdapter categoryListAdapter = new CategoryListAdapter(LayoutInflater.from(this), categories);
+		setListAdapter(categoryListAdapter);
+	}
+
+	private void appendFooterToList() {
 		View listFooter = LayoutInflater.from(getContext()).inflate(R.layout.category_add, null);
 		listFooter.setOnClickListener(new OnClickListener() {
 			@Override
@@ -31,10 +38,6 @@ public class OverviewActivity extends ListActivity {
 			}
 		});
 		((ListView) findViewById(android.R.id.list)).addFooterView(listFooter);
-
-		CategoryListAdapter categoryListAdapter = new CategoryListAdapter(LayoutInflater.from(this), categories);
-		setListAdapter(categoryListAdapter);
-
 	}
 
 	private Context getContext() {
