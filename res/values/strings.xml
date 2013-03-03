@@ -5,6 +5,9 @@
     <string name="amount">Amount</string>
     <string name="app_name">FastBudget 3</string>
     <string name="cancel">Cancel</string>
+    <string name="error_invalid_number">The number you have entered is not valid</string>
+    <string name="error_name_duplicated">This category name is already given</string>
+    <string name="error_name_empty">Please enter a name for this category</string>
     <string name="menu_settings">Settings</string>
     <string name="hint_category_name">Category Name</string>
     <string name="save">Save</string>

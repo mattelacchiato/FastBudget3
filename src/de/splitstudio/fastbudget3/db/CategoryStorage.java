@@ -6,7 +6,7 @@ import com.eyeem.storage.Storage;
 
 public class CategoryStorage extends Storage<Category> {
 
-	private static final int MAX_ITEMS = 100;
+	private static final int MAX_ITEMS = 10000;
 	private static CategoryStorage instance;
 
 	//Singleton

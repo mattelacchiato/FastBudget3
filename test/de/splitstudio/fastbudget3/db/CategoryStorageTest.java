@@ -16,18 +16,21 @@ import de.splitstudio.fastbudget3.CategoryActivity;
 @RunWith(RobolectricTestRunner.class)
 public class CategoryStorageTest {
 
+	private static final int ANY_BUDGET = 123;
 	private Context anyContext;
+	private CategoryStorage categoryStorage;
 
 	@Before
 	public void setUp() {
 		anyContext = new CategoryActivity();
+		categoryStorage = CategoryStorage.getInstance(anyContext);
+		categoryStorage.init(10000000);
 	}
 
 	@Test
 	public void getInstance_createsAnInstanceOfCategoryStorage() {
-		CategoryStorage instance = CategoryStorage.getInstance(anyContext);
-		assertThat(instance, is(notNullValue()));
-		assertThat(instance, is(CategoryStorage.class));
+		assertThat(categoryStorage, is(notNullValue()));
+		assertThat(categoryStorage, is(CategoryStorage.class));
 	}
 
 	@Test
@@ -35,6 +38,12 @@ public class CategoryStorageTest {
 		CategoryStorage instance1 = CategoryStorage.getInstance(anyContext);
 		CategoryStorage instance2 = CategoryStorage.getInstance(anyContext);
 		assertThat(instance1, is(sameInstance(instance2)));
+	}
+
+	@Test
+	public void savesItem() {
+		categoryStorage.push(new Category("fdasfasd", ANY_BUDGET));
+		assertThat(categoryStorage.currentSize(), is(1));
 	}
 
 }
