@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -33,6 +34,9 @@ public class OverviewActivityWith3Categories {
 		Category category3 = new Category(NAME3, 333);
 		overview.categories.addAll(Arrays.asList(category1, category2, category3));
 		overview.onCreate(null);
+		overview.storage.push(category1);
+		overview.storage.push(category2);
+		overview.storage.push(category3);
 	}
 
 	@Test

@@ -16,7 +16,7 @@ import de.splitstudio.fastbudget3.CategoryActivity;
 @RunWith(RobolectricTestRunner.class)
 public class CategoryStorageTest {
 
-	private static final int ANY_BUDGET = 123;
+	private static final int ANY_BUDGET = 100;
 	private Context anyContext;
 	private CategoryStorage categoryStorage;
 

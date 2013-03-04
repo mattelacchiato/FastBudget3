@@ -14,14 +14,17 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
+import de.splitstudio.fastbudget3.db.CategoryStorage;
 
 public class OverviewActivity extends ListActivity {
 
 	List<Category> categories = new ArrayList<Category>();
+	CategoryStorage storage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		storage = CategoryStorage.getInstance(getContext());
 		setContentView(R.layout.overview_activity);
 		appendFooterToList();
 

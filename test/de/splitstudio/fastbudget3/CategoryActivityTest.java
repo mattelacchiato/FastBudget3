@@ -28,6 +28,7 @@ import de.splitstudio.utils.view.Calculator;
 public class CategoryActivityTest {
 
 	private static final String ANY_NAME = "category name";
+	private static final int ANY_BUDGET = 100;
 	private CategoryActivity categoryActivity;
 
 	@Before
@@ -87,6 +88,7 @@ public class CategoryActivityTest {
 	public void clickSave_goesBackToOverview() {
 		ShadowActivity shadowActivity = shadowOf(categoryActivity);
 
+		fillBudget("1");
 		fillName("bla");
 		clickSaveButton();
 
@@ -107,7 +109,7 @@ public class CategoryActivityTest {
 	@Test
 	public void clickSave_complainsAboutDuplicateName_noIntentStarted() {
 		String name = "duplicatedName";
-		categoryActivity.storage.push(new Category(name, 1));
+		categoryActivity.storage.push(new Category(name, ANY_BUDGET));
 
 		fillName(name);
 		clickSaveButton();
@@ -128,12 +130,19 @@ public class CategoryActivityTest {
 
 	@Test
 	public void clickSave_addsCategoryToStorage() {
+		assertThat(categoryActivity.storage.currentSize(), is(0));
 
+		fillName(ANY_NAME);
+		fillBudget("1.00");
+		clickSaveButton();
+
+		assertThat(categoryActivity.storage.currentSize(), is(1));
 	}
 
 	@Test
 	public void cancelButton_nothingAdded() {
-
+		categoryActivity.findViewById(R.id.button_cancel).performClick();
+		assertThat(categoryActivity.storage.currentSize(), is(0));
 	}
 
 	private void assertNoIntentWasStarted() {
