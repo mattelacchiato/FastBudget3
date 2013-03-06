@@ -3,67 +3,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp"
-     >
+    android:orientation="horizontal"
+    android:padding="8dp" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:orientation="horizontal" >
+        android:layout_weight="1"
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/category_name"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/category_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="0dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:text="Category Name"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/category_fill"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="-6dp"
+            android:layout_weight="0.97"
+            android:indeterminate="false"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:paddingTop="8dp"
-            android:text="Category Name"
-            android:textSize="20sp"
-            tools:ignore="HardcodedText" />
+            android:paddingTop="0dp"
+            android:progress="23" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/category_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:padding="8dp"
+                android:text="-100,23€"
+                android:textAppearance="?android:attr/textAppearanceSmallInverse"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/category_budget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:padding="8sp"
+                android:text="-122,30€"
+                android:textAppearance="?android:attr/textAppearanceSmallInverse"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/category_fill"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="-6dp"
-        android:layout_weight="0.97"
-        android:indeterminate="false"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="0dp"
-        android:progress="23" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <Button
+        android:id="@+id/button_list_add"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/category_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:padding="8dp"
-            android:text="-100,23€"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"
-            tools:ignore="HardcodedText" />
-
-        <TextView
-            android:id="@+id/category_budget"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:padding="8sp"
-            android:text="-122,30€"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"
-            tools:ignore="HardcodedText" />
-    </LinearLayout>
+        android:onClick="add"
+        android:text="+"
+        android:width="20dp"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>

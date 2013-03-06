@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -54,7 +53,7 @@ public class CategoryActivity extends Activity {
 	}
 
 	private void goToOverview() {
-		startActivity(new Intent(this, OverviewActivity.class));
+		finish();
 	}
 
 	private int parseAmount() {

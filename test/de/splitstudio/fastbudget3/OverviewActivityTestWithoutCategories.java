@@ -29,7 +29,7 @@ public class OverviewActivityTestWithoutCategories {
 
 	@Test
 	public void hasAnAddView() throws Exception {
-		assertThat(overview.getListView().findViewById(R.id.category_add), is(notNullValue()));
+		assertThat(overview.findViewById(R.id.button_list_add), is(notNullValue()));
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class OverviewActivityTestWithoutCategories {
 	public void listFooter_click_categoryActivityStarts() throws Exception {
 		ShadowActivity shadowActivity = shadowOf(overview);
 
-		overview.findViewById(R.id.category_add).performClick();
+		overview.findViewById(R.id.button_list_add).performClick();
 
 		Intent startedIntent = shadowActivity.getNextStartedActivity();
 		assertThat("No intend was started!", startedIntent, is(notNullValue()));

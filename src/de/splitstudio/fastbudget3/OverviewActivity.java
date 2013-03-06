@@ -11,36 +11,34 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ListView;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
 import de.splitstudio.fastbudget3.db.CategoryStorage;
 
 public class OverviewActivity extends ListActivity {
 
-	List<Category> categories = new ArrayList<Category>();
+	List<Category> categories;
 	CategoryStorage storage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		categories = new ArrayList<Category>();
 		storage = CategoryStorage.getInstance(getContext());
-		setContentView(R.layout.overview_activity);
-		appendFooterToList();
 
-		CategoryListAdapter categoryListAdapter = new CategoryListAdapter(LayoutInflater.from(this), categories);
-		setListAdapter(categoryListAdapter);
+		categories.addAll(storage.getAll());
+		setContentView(R.layout.overview_activity);
+		setListAdapter(new CategoryListAdapter(LayoutInflater.from(this), categories));
+		setAddListener();
 	}
 
-	private void appendFooterToList() {
-		View listFooter = LayoutInflater.from(getContext()).inflate(R.layout.category_add, null);
-		listFooter.setOnClickListener(new OnClickListener() {
+	private void setAddListener() {
+		findViewById(R.id.button_list_add).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				startActivity(new Intent(getContext(), CategoryActivity.class));
 			}
 		});
-		((ListView) findViewById(android.R.id.list)).addFooterView(listFooter);
 	}
 
 	private Context getContext() {

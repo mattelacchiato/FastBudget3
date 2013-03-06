@@ -1,6 +1,5 @@
 package de.splitstudio.fastbudget3;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -14,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowActivity;
-import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.shadows.ShadowToast;
 
 import android.content.Intent;
@@ -92,10 +90,7 @@ public class CategoryActivityTest {
 		fillName("bla");
 		clickSaveButton();
 
-		Intent startedIntent = shadowActivity.getNextStartedActivity();
-		assertThat("No intend was started!", startedIntent, is(notNullValue()));
-		ShadowIntent shadowIntent = shadowOf(startedIntent);
-		assertThat(shadowIntent.getComponent().getClassName(), equalTo(OverviewActivity.class.getName()));
+		assertThat(shadowActivity.isFinishing(), is(true));
 	}
 
 	@Test

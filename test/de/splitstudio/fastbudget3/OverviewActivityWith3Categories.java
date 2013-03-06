@@ -4,8 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -32,7 +30,6 @@ public class OverviewActivityWith3Categories {
 		Category category1 = new Category(NAME1, 111);
 		Category category2 = new Category(NAME2, 222);
 		Category category3 = new Category(NAME3, 333);
-		overview.categories.addAll(Arrays.asList(category1, category2, category3));
 		overview.onCreate(null);
 		overview.storage.push(category1);
 		overview.storage.push(category2);
@@ -41,7 +38,7 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void hasAnAddView() throws Exception {
-		assertThat(overview.getListView().findViewById(R.id.category_add), is(notNullValue()));
+		assertThat(overview.findViewById(R.id.button_list_add), is(notNullValue()));
 	}
 
 	@Test
