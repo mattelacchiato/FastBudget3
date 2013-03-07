@@ -8,20 +8,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.db4o.ObjectContainer;
+
 import de.splitstudio.fastbudget3.db.Category;
-import de.splitstudio.fastbudget3.db.CategoryStorage;
+import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.utils.NumberUtils;
 
 public class CategoryActivity extends Activity {
 
-	CategoryStorage storage;
+	ObjectContainer db;
 
 	Locale locale;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		storage = CategoryStorage.getInstance(this);
+		db = Database.getInstance(this);
 		locale = getResources().getConfiguration().locale;
 		setContentView(R.layout.category_activity);
 		setTitle(R.string.add_category);
@@ -35,7 +38,7 @@ public class CategoryActivity extends Activity {
 			Toast.makeText(this, R.string.error_name_empty, Toast.LENGTH_LONG).show();
 			return;
 		}
-		if (storage.contains(name)) {
+		if (!db.queryByExample(new Category(name)).isEmpty()) {
 			Toast.makeText(this, R.string.error_name_duplicated, Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -44,7 +47,8 @@ public class CategoryActivity extends Activity {
 			return;
 		}
 
-		storage.push(new Category(name, amount));
+		db.store(new Category(name, amount));
+		db.commit();
 		goToOverview();
 	}
 

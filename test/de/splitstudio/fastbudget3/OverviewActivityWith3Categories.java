@@ -12,12 +12,18 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import android.widget.TextView;
+
+import com.db4o.ObjectContainer;
+
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.Database;
 
 @RunWith(RobolectricTestRunner.class)
 public class OverviewActivityWith3Categories {
 
 	private OverviewActivity overview;
+
+	private ObjectContainer db;
 
 	private static final String NAME1 = "First Category";
 	private static final String NAME2 = "Second Category";
@@ -26,14 +32,14 @@ public class OverviewActivityWith3Categories {
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		this.overview = new OverviewActivity();
-		Category category1 = new Category(NAME1, 111);
-		Category category2 = new Category(NAME2, 222);
-		Category category3 = new Category(NAME3, 333);
+		overview = new OverviewActivity();
+		db = Database.getInstance(overview);
+		Database.clear();
+
+		db.store(new Category(NAME1, 111));
+		db.store(new Category(NAME2, 222));
+		db.store(new Category(NAME3, 333));
 		overview.onCreate(null);
-		overview.storage.push(category1);
-		overview.storage.push(category2);
-		overview.storage.push(category3);
 	}
 
 	@Test

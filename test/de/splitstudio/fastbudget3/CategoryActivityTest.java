@@ -3,6 +3,8 @@ package de.splitstudio.fastbudget3;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.shadowOf;
 
@@ -19,7 +21,11 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.db4o.ObjectContainer;
+
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.utils.view.Calculator;
 
 @RunWith(RobolectricTestRunner.class)
@@ -27,14 +33,20 @@ public class CategoryActivityTest {
 
 	private static final String ANY_NAME = "category name";
 	private static final int ANY_BUDGET = 100;
+
 	private CategoryActivity categoryActivity;
+
+	private ObjectContainer db;
 
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		this.categoryActivity = new CategoryActivity();
+		categoryActivity = new CategoryActivity();
 		categoryActivity.onCreate(null);
-		categoryActivity.storage.init(10000);
+		db = Database.getInstance(categoryActivity);
+		for (Object object : db.query().execute()) {
+			db.delete(object);
+		}
 	}
 
 	@Test
@@ -104,7 +116,7 @@ public class CategoryActivityTest {
 	@Test
 	public void clickSave_complainsAboutDuplicateName_noIntentStarted() {
 		String name = "duplicatedName";
-		categoryActivity.storage.push(new Category(name, ANY_BUDGET));
+		db.store(new Category(name, ANY_BUDGET));
 
 		fillName(name);
 		clickSaveButton();
@@ -125,19 +137,19 @@ public class CategoryActivityTest {
 
 	@Test
 	public void clickSave_addsCategoryToStorage() {
-		assertThat(categoryActivity.storage.currentSize(), is(0));
+		assertThat(db.query().execute(), is(empty()));
 
 		fillName(ANY_NAME);
 		fillBudget("1.00");
 		clickSaveButton();
 
-		assertThat(categoryActivity.storage.currentSize(), is(1));
+		assertThat(db.query().execute(), hasSize(1));
 	}
 
 	@Test
 	public void cancelButton_nothingAdded() {
 		categoryActivity.findViewById(R.id.button_cancel).performClick();
-		assertThat(categoryActivity.storage.currentSize(), is(0));
+		assertThat(db.query().execute(), is(empty()));
 	}
 
 	private void assertNoIntentWasStarted() {

@@ -11,32 +11,53 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import com.db4o.ObjectContainer;
+
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
-import de.splitstudio.fastbudget3.db.CategoryStorage;
+import de.splitstudio.fastbudget3.db.Database;
 
 public class OverviewActivity extends ListActivity {
 
-	List<Category> categories;
-	CategoryStorage storage;
+	private List<Category> categories;
+
+	private ObjectContainer db;
+
+	private CategoryListAdapter listAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		db = Database.getInstance(getContext());
 		categories = new ArrayList<Category>();
-		storage = CategoryStorage.getInstance(getContext());
-
-		categories.addAll(storage.getAll());
+		categories.addAll(db.query(Category.class));
 		setContentView(R.layout.overview_activity);
-		setListAdapter(new CategoryListAdapter(LayoutInflater.from(this), categories));
-		setAddListener();
+		listAdapter = new CategoryListAdapter(LayoutInflater.from(this), categories);
+		setListAdapter(listAdapter);
+		addCategoryListener();
+		requeryCategories();
 	}
 
-	private void setAddListener() {
+	private void requeryCategories() {
+		categories.clear();
+		categories.addAll(db.query(Category.class));
+		listAdapter.notifyDataSetChanged();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == RequestCode.CreateCategory.ordinal() && resultCode == RESULT_OK) {
+			requeryCategories();
+		}
+	}
+
+	private void addCategoryListener() {
 		findViewById(R.id.button_list_add).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(getContext(), CategoryActivity.class));
+				Intent intent = new Intent(getContext(), CategoryActivity.class);
+				startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
 			}
 		});
 	}

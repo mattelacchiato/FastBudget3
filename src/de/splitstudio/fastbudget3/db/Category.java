@@ -1,6 +1,5 @@
 package de.splitstudio.fastbudget3.db;
 
-
 public class Category {
 
 	public String name;
@@ -9,6 +8,10 @@ public class Category {
 	public Category(String name, int budget) {
 		this.name = name;
 		this.budget = budget;
+	}
+
+	public Category(String name) {
+		this.name = name;
 	}
 
 }
