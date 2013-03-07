@@ -2,7 +2,9 @@ package de.splitstudio.fastbudget3;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.robolectric.Robolectric.shadowOf;
 
 import java.util.Locale;
 
@@ -10,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowIntent;
 
 import android.widget.TextView;
 
@@ -17,6 +20,7 @@ import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
+import de.splitstudio.fastbudget3.enums.Extras;
 
 @RunWith(RobolectricTestRunner.class)
 public class OverviewActivityWith3Categories {
@@ -44,7 +48,7 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void hasAnAddView() throws Exception {
-		assertThat(overview.findViewById(R.id.button_list_add), is(notNullValue()));
+		assertThat(overview.findViewById(R.id.button_add_category), is(notNullValue()));
 	}
 
 	@Test
@@ -64,6 +68,23 @@ public class OverviewActivityWith3Categories {
 		assertThatTextAtPositionIs(R.id.category_budget, 0, "$1.11");
 		assertThatTextAtPositionIs(R.id.category_budget, 1, "$2.22");
 		assertThatTextAtPositionIs(R.id.category_budget, 2, "$3.33");
+	}
+
+	@Test
+	public void add_opensExpenditureActivity() {
+		overview.findViewById(R.id.button_add_expenditure).performClick();
+
+		ShadowIntent shadowIntent = shadowOf(shadowOf(overview).getNextStartedActivity());
+		assertThat(shadowIntent.getComponent().getClassName(), equalTo(ExpenditureActivity.class.getName()));
+	}
+
+	@Test
+	public void add_sendsCategoryName() {
+		overview.findViewById(R.id.button_add_expenditure).performClick();
+
+		ShadowIntent shadowIntent = shadowOf(shadowOf(overview).getNextStartedActivity());
+		assertThat(shadowIntent.getExtras(), is(notNullValue()));
+		assertThat(shadowIntent.getExtras().getString(Extras.CategoryName.name()), is(NAME1));
 	}
 
 	private void assertThatTextAtPositionIs(int viewId, int position, String expected) {

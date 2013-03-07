@@ -49,14 +49,16 @@ public class CategoryActivity extends Activity {
 
 		db.store(new Category(name, amount));
 		db.commit();
-		goToOverview();
+
+		setResultAndFinish(RESULT_OK);
 	}
 
 	public void cancel(View view) {
-		goToOverview();
+		setResultAndFinish(RESULT_CANCELED);
 	}
 
-	private void goToOverview() {
+	private void setResultAndFinish(int resultCode) {
+		setResult(resultCode);
 		finish();
 	}
 

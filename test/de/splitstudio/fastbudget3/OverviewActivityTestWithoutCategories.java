@@ -38,7 +38,7 @@ public class OverviewActivityTestWithoutCategories {
 
 	@Test
 	public void hasAnAddView() throws Exception {
-		assertThat(overview.findViewById(R.id.button_list_add), is(notNullValue()));
+		assertThat(overview.findViewById(R.id.button_add_category), is(notNullValue()));
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class OverviewActivityTestWithoutCategories {
 
 	@Test
 	public void listFooter_click_categoryActivityStarts() throws Exception {
-		overview.findViewById(R.id.button_list_add).performClick();
+		overview.findViewById(R.id.button_add_category).performClick();
 
 		Intent startedIntent = shadowOf(overview).getNextStartedActivity();
 		assertThat("No intend was started!", startedIntent, is(notNullValue()));
@@ -63,7 +63,7 @@ public class OverviewActivityTestWithoutCategories {
 
 	@Test
 	public void listFooter_click_dbChange_resultRecieved_listUpdate() throws Exception {
-		overview.findViewById(R.id.button_list_add).performClick();
+		overview.findViewById(R.id.button_add_category).performClick();
 
 		String categoryName = "i was added";
 		db.store(new Category(categoryName, 123));

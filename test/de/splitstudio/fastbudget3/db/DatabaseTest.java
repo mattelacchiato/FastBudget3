@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
@@ -25,6 +26,7 @@ public class DatabaseTest {
 	@Before
 	public void setUp() {
 		db = Database.getInstance(ANY_CONTEXT);
+		Database.clear();
 	}
 
 	@Test
@@ -39,6 +41,18 @@ public class DatabaseTest {
 		db.store(object);
 		Database.clear();
 		assertThat(db.query().execute(), is(empty()));
+	}
+
+	@Test
+	public void changingAnObject_store_stillOneObjectInDb() {
+		db.store(new Category("foo"));
+		Category category = db.query(Category.class).get(0);
+
+		category.name = "bar";
+		db.store(category);
+
+		assertThat(db.query(Category.class), hasSize(1));
+		assertThat(db.query(Category.class).get(0).name, is("bar"));
 	}
 
 }

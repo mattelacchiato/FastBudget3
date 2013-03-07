@@ -10,13 +10,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
 import de.splitstudio.fastbudget3.db.Database;
+import de.splitstudio.fastbudget3.enums.Extras;
+import de.splitstudio.fastbudget3.enums.RequestCode;
 
 public class OverviewActivity extends ListActivity {
 
@@ -35,14 +37,7 @@ public class OverviewActivity extends ListActivity {
 		setContentView(R.layout.overview_activity);
 		listAdapter = new CategoryListAdapter(LayoutInflater.from(this), categories);
 		setListAdapter(listAdapter);
-		addCategoryListener();
 		requeryCategories();
-	}
-
-	private void requeryCategories() {
-		categories.clear();
-		categories.addAll(db.query(Category.class));
-		listAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -52,24 +47,43 @@ public class OverviewActivity extends ListActivity {
 		}
 	}
 
-	private void addCategoryListener() {
-		findViewById(R.id.button_list_add).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getContext(), CategoryActivity.class);
-				startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
-			}
-		});
-	}
-
-	private Context getContext() {
-		return this;
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.overview_activity, menu);
 		return true;
+	}
+
+	/*
+	 * START Listeners
+	 */
+
+	public void addExpenditure(View view) {
+		View parent = (View) view.getParent();
+		TextView nameTextView = (TextView) parent.findViewById(R.id.category_name);
+		String categoryName = nameTextView.getText().toString();
+
+		Intent intent = new Intent(getContext(), ExpenditureActivity.class);
+		intent.putExtra(Extras.CategoryName.name(), categoryName);
+		startActivityForResult(intent, RequestCode.CreateExpenditure.ordinal());
+	}
+
+	public void addCategory(View view) {
+		Intent intent = new Intent(getContext(), CategoryActivity.class);
+		startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
+	}
+
+	/*
+	 * END Listeners
+	 */
+
+	private void requeryCategories() {
+		categories.clear();
+		categories.addAll(db.query(Category.class));
+		listAdapter.notifyDataSetChanged();
+	}
+
+	private Context getContext() {
+		return this;
 	}
 
 }

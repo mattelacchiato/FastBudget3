@@ -7,11 +7,12 @@
     android:orientation="horizontal" >
 
     <Button
-        android:id="@+id/button_list_add"
+        android:id="@+id/button_add_category"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create Category"
-        tools:ignore="HardcodedText" />
+        android:onClick="addCategory"
+        android:text="@string/add_category"
+        />
 
 </RelativeLayout>

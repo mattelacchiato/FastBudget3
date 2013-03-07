@@ -4,39 +4,32 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp" >
+    android:padding="0dp" >
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/category_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="0dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp"
-                android:text="Category Name"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/category_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:text="Category Name"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
 
         <ProgressBar
             android:id="@+id/category_fill"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_marginTop="-6dp"
-            android:layout_weight="0.97"
             android:indeterminate="false"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
@@ -46,40 +39,46 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal" 
+            android:layout_marginTop="-8dp"
+            >
 
             <TextView
                 android:id="@+id/category_amount"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
                 android:padding="8dp"
                 android:text="-100,23€"
-                android:textAppearance="?android:attr/textAppearanceSmallInverse"
+                android:textSize="12sp"
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/category_budget"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
                 android:padding="8sp"
                 android:text="-122,30€"
-                android:textAppearance="?android:attr/textAppearanceSmallInverse"
+                android:textSize="12sp"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
     </LinearLayout>
 
+    <include layout="@layout/horizontal_divider" />
+
     <Button
-        android:id="@+id/button_list_add"
+        android:id="@+id/button_add_expenditure"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="add"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:onClick="addExpenditure"
         android:text="+"
-        android:width="20dp"
+        android:textColor="#bebebe"
+        android:textSize="30sp"
         tools:ignore="HardcodedText" />
 
 </LinearLayout>
