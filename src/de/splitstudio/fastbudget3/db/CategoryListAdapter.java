@@ -23,7 +23,7 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 	public void bindView(View view, Category category) {
 		String budget = NumberUtils.formatAsCurrency(category.budget, locale);
 
-		((TextView) view.findViewById(R.id.category_name)).setText(category.name);
+		((TextView) view.findViewById(R.id.name)).setText(category.name);
 		((TextView) view.findViewById(R.id.category_budget)).setText(budget);
 	}
 }

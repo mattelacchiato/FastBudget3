@@ -59,7 +59,7 @@ public class OverviewActivity extends ListActivity {
 
 	public void addExpenditure(View view) {
 		View parent = (View) view.getParent();
-		TextView nameTextView = (TextView) parent.findViewById(R.id.category_name);
+		TextView nameTextView = (TextView) parent.findViewById(R.id.name);
 		String categoryName = nameTextView.getText().toString();
 
 		Intent intent = new Intent(getContext(), ExpenditureActivity.class);

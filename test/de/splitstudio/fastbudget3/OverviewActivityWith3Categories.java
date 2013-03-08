@@ -2,7 +2,6 @@ package de.splitstudio.fastbudget3;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.shadowOf;
 
@@ -58,9 +57,9 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void showsTheNameOfEachCategory() throws Exception {
-		assertThatTextAtPositionIs(R.id.category_name, 0, NAME1);
-		assertThatTextAtPositionIs(R.id.category_name, 1, NAME2);
-		assertThatTextAtPositionIs(R.id.category_name, 2, NAME3);
+		assertThatTextAtPositionIs(R.id.name, 0, NAME1);
+		assertThatTextAtPositionIs(R.id.name, 1, NAME2);
+		assertThatTextAtPositionIs(R.id.name, 2, NAME3);
 	}
 
 	@Test
@@ -71,15 +70,7 @@ public class OverviewActivityWith3Categories {
 	}
 
 	@Test
-	public void add_opensExpenditureActivity() {
-		overview.findViewById(R.id.button_add_expenditure).performClick();
-
-		ShadowIntent shadowIntent = shadowOf(shadowOf(overview).getNextStartedActivity());
-		assertThat(shadowIntent.getComponent().getClassName(), equalTo(ExpenditureActivity.class.getName()));
-	}
-
-	@Test
-	public void add_sendsCategoryName() {
+	public void add_sendsCategoryNameToExpenditureActivity() {
 		overview.findViewById(R.id.button_add_expenditure).performClick();
 
 		ShadowIntent shadowIntent = shadowOf(shadowOf(overview).getNextStartedActivity());

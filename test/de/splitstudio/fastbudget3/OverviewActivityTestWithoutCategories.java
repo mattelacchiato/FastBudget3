@@ -69,7 +69,7 @@ public class OverviewActivityTestWithoutCategories {
 		db.store(new Category(categoryName, 123));
 		shadowOf(overview).receiveResult(new Intent(overview, CategoryActivity.class), Activity.RESULT_OK, null);
 
-		TextView name1 = (TextView) overview.getListView().getChildAt(0).findViewById(R.id.category_name);
+		TextView name1 = (TextView) overview.getListView().getChildAt(0).findViewById(R.id.name);
 		assertThat(name1, is(notNullValue()));
 		assertThat(name1.getText().toString(), is(categoryName));
 	}

@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.shadowOf;
 
@@ -17,6 +16,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowToast;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
@@ -51,20 +51,20 @@ public class CategoryActivityTest {
 
 	@Test
 	public void itHasAFieldToEnterTheCategoryName() throws Exception {
-		View nameTextEdit = categoryActivity.findViewById(R.id.category_name);
+		View nameTextEdit = categoryActivity.findViewById(R.id.name);
 		assertThat(nameTextEdit, is(notNullValue()));
 		assertThat(nameTextEdit, is(EditText.class));
 	}
 
 	@Test
 	public void categoryNameHasFocus() throws Exception {
-		EditText nameEdit = (EditText) categoryActivity.findViewById(R.id.category_name);
+		EditText nameEdit = (EditText) categoryActivity.findViewById(R.id.name);
 		assertThat(nameEdit.hasFocus(), is(true));
 	}
 
 	@Test
 	public void categoryNameHasAnHint() throws Exception {
-		EditText nameEdit = (EditText) categoryActivity.findViewById(R.id.category_name);
+		EditText nameEdit = (EditText) categoryActivity.findViewById(R.id.name);
 		String expectedHint = categoryActivity.getString(R.string.hint_category_name);
 		assertThat(nameEdit.getHint().toString(), is(expectedHint));
 	}
@@ -143,13 +143,19 @@ public class CategoryActivityTest {
 		fillBudget("1.00");
 		clickSaveButton();
 
-		assertThat(db.query().execute(), hasSize(1));
+		assertThat(db.query(Category.class).size(), is(1));
 	}
 
 	@Test
 	public void cancelButton_nothingAdded() {
 		categoryActivity.findViewById(R.id.button_cancel).performClick();
 		assertThat(db.query().execute(), is(empty()));
+	}
+
+	@Test
+	public void cancel_resultIsCancelled() {
+		categoryActivity.findViewById(R.id.button_cancel).performClick();
+		assertThat(shadowOf(categoryActivity).getResultCode(), is(Activity.RESULT_CANCELED));
 	}
 
 	private void assertNoIntentWasStarted() {
@@ -162,7 +168,7 @@ public class CategoryActivityTest {
 	}
 
 	private void fillName(String name) {
-		EditText nameEdit = (EditText) categoryActivity.findViewById(R.id.category_name);
+		EditText nameEdit = (EditText) categoryActivity.findViewById(R.id.name);
 		nameEdit.setText(name);
 	}
 

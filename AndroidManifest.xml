@@ -26,6 +26,10 @@
             android:name=".CategoryActivity"
             android:windowSoftInputMode="adjustResize" >
         </activity>
+        <activity
+            android:name=".ExpenditureActivity"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
     </application>
 
 </manifest>

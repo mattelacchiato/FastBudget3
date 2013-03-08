@@ -13,7 +13,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/category_name"
+            android:id="@+id/name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
@@ -72,8 +72,8 @@
     <Button
         android:id="@+id/button_add_expenditure"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:onClick="addExpenditure"
         android:text="+"

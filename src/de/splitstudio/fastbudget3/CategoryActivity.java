@@ -13,7 +13,7 @@ import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
-import de.splitstudio.utils.NumberUtils;
+import de.splitstudio.utils.view.Calculator;
 
 public class CategoryActivity extends Activity {
 
@@ -31,8 +31,7 @@ public class CategoryActivity extends Activity {
 	}
 
 	public void save(View view) {
-		String name = ((EditText) findViewById(R.id.category_name)).getText().toString();
-		int amount = parseAmount();
+		String name = ((EditText) findViewById(R.id.name)).getText().toString();
 
 		if (name.trim().isEmpty()) {
 			Toast.makeText(this, R.string.error_name_empty, Toast.LENGTH_LONG).show();
@@ -42,7 +41,10 @@ public class CategoryActivity extends Activity {
 			Toast.makeText(this, R.string.error_name_duplicated, Toast.LENGTH_LONG).show();
 			return;
 		}
-		if (amount == 0) {
+		int amount;
+		try {
+			amount = ((Calculator) findViewById(R.id.calculator)).parseAmountInCent();
+		} catch (ParseException e) {
 			Toast.makeText(this, R.string.error_invalid_number, Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -62,12 +64,4 @@ public class CategoryActivity extends Activity {
 		finish();
 	}
 
-	private int parseAmount() {
-		String amountString = ((EditText) findViewById(R.id.calculator_amount)).getText().toString();
-		try {
-			return NumberUtils.parseCent(amountString, locale);
-		} catch (ParseException e) {
-			return 0;
-		}
-	}
 }
