@@ -39,9 +39,8 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" 
             android:layout_marginTop="-8dp"
-            >
+            android:orientation="horizontal" >
 
             <TextView
                 android:id="@+id/category_spent"
@@ -69,17 +68,14 @@
 
     <include layout="@layout/horizontal_divider" />
 
-    <Button
+    <ImageButton
         android:id="@+id/button_add_expenditure"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="40dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:contentDescription="@string/add_category"
         android:onClick="addExpenditure"
-        android:text="+"
-        android:textColor="#bebebe"
-        android:paddingBottom="2dp"
-        android:textSize="38sp"
-        tools:ignore="HardcodedText" />
+        android:src="@drawable/ic_add" />
 
 </LinearLayout>
