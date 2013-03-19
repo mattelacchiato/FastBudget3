@@ -38,6 +38,8 @@ public class OverviewActivityWith3Categories {
 	private static final String NAME3 = "Third Category";
 
 	private Category category1;
+	private Category category2;
+	private Category category3;
 
 	@Before
 	public void setUp() {
@@ -47,9 +49,11 @@ public class OverviewActivityWith3Categories {
 		Database.clear();
 
 		category1 = new Category(NAME1, 111);
+		category2 = new Category(NAME2, 222);
+		category3 = new Category(NAME3, 333);
 		db.store(category1);
-		db.store(new Category(NAME2, 222));
-		db.store(new Category(NAME3, 333));
+		db.store(category2);
+		db.store(category3);
 		overview.onCreate(null);
 	}
 
@@ -121,9 +125,24 @@ public class OverviewActivityWith3Categories {
 		assertThat(progressBar.getProgress(), is(20));
 	}
 
+	@Test
+	public void itSortsCategoriesByTheirExpenditureCount() {
+		category1.expenditures.add(new Expenditure(0, new Date(), ""));
+		category2.expenditures.add(new Expenditure(0, new Date(), ""));
+		category2.expenditures.add(new Expenditure(0, new Date(), ""));
+		db.store(category1);
+		db.store(category2);
+
+		overview.requeryCategories();
+
+		assertThatTextAtPositionIs(R.id.name, 0, NAME2);
+		assertThatTextAtPositionIs(R.id.name, 1, NAME1);
+		assertThatTextAtPositionIs(R.id.name, 2, NAME3);
+	}
+
 	private void assertThatTextAtPositionIs(int viewId, int position, String expected) {
 		TextView name1 = (TextView) overview.getListView().getChildAt(position).findViewById(viewId);
 		assertThat(name1, is(notNullValue()));
-		assertThat(name1.getText().toString(), is(expected));
+		assertThat("At Position " + position, name1.getText().toString(), is(expected));
 	}
 }

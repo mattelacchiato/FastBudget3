@@ -1,6 +1,7 @@
 package de.splitstudio.fastbudget3;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.app.ListActivity;
@@ -89,6 +90,7 @@ public class OverviewActivity extends ListActivity {
 	void requeryCategories() {
 		categories.clear();
 		categories.addAll(db.query(Category.class));
+		Collections.sort(categories);
 		listAdapter.notifyDataSetChanged();
 	}
 

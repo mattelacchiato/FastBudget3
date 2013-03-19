@@ -73,12 +73,13 @@
         android:id="@+id/button_add_expenditure"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:onClick="addExpenditure"
         android:text="+"
         android:textColor="#bebebe"
-        android:textSize="30sp"
+        android:paddingBottom="2dp"
+        android:textSize="38sp"
         tools:ignore="HardcodedText" />
 
 </LinearLayout>

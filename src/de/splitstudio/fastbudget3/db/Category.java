@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Category {
+public class Category implements Comparable<Category> {
 
 	public String name;
 	public int budget;
@@ -39,6 +39,14 @@ public class Category {
 	@Override
 	public void finalize() throws Throwable {
 		super.finalize();
+	}
+
+	/**
+	 * Sorts descending by expenditures size.
+	 */
+	@Override
+	public int compareTo(Category other) {
+		return other.expenditures.size() - expenditures.size();
 	}
 
 }

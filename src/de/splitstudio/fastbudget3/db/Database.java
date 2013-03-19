@@ -8,7 +8,6 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.EmbeddedObjectContainer;
 import com.db4o.ObjectContainer;
 import com.db4o.config.EmbeddedConfiguration;
-import com.db4o.config.ObjectClass;
 
 public class Database {
 
@@ -26,14 +25,6 @@ public class Database {
 
 	private static EmbeddedConfiguration createConfig() {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-		ObjectClass objectClass = config.common().objectClass(Category.class);
-		objectClass.cascadeOnUpdate(true);
-		objectClass.cascadeOnDelete(true);
-		objectClass.cascadeOnActivate(true);
-		ObjectClass object2Class = config.common().objectClass(Expenditure.class);
-		object2Class.cascadeOnUpdate(true);
-		object2Class.cascadeOnDelete(true);
-		object2Class.cascadeOnActivate(true);
 		return config;
 	}
 
