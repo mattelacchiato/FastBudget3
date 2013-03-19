@@ -22,6 +22,8 @@ import de.splitstudio.fastbudget3.enums.RequestCode;
 
 public class OverviewActivity extends ListActivity {
 
+	//TODO: add ActionBar
+
 	private List<Category> categories;
 
 	private ObjectContainer db;
@@ -41,9 +43,17 @@ public class OverviewActivity extends ListActivity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == RequestCode.CreateCategory.ordinal() && resultCode == RESULT_OK) {
-			requeryCategories();
+	protected void onActivityResult(int requestCodeOrdinal, int resultCode, Intent data) {
+		RequestCode requestCode = RequestCode.values()[requestCodeOrdinal];
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+			case CreateCategory:
+			case CreateExpenditure:
+				requeryCategories();
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -76,7 +86,7 @@ public class OverviewActivity extends ListActivity {
 	 * END Listeners
 	 */
 
-	private void requeryCategories() {
+	void requeryCategories() {
 		categories.clear();
 		categories.addAll(db.query(Category.class));
 		listAdapter.notifyDataSetChanged();

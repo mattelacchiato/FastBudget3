@@ -49,6 +49,8 @@ public class ExpenditureActivity extends Activity {
 			Date date = datePickerButtons.getDate().getTime();
 			String description = descriptionEdit.getText().toString();
 			category.expenditures.add(new Expenditure(amount, date, description));
+			db.store(category.expenditures);
+			db.commit();
 			setResult(RESULT_OK);
 			finish();
 		} catch (ParseException e) {

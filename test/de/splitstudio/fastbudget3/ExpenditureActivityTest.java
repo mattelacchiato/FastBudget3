@@ -103,8 +103,9 @@ public class ExpenditureActivityTest {
 
 	@Test
 	public void save_persistExpenditureInDb() {
+		String description = "stuff";
 		setAmount("30");
-		setDescription("stuff");
+		setDescription(description);
 
 		expenditureActivity.findViewById(R.id.button_save).performClick();
 
@@ -112,7 +113,7 @@ public class ExpenditureActivityTest {
 		assertThat(category.expenditures.get(0), is(notNullValue()));
 		assertThat(category.expenditures.get(0).amount, is(3000));
 		assertThat(category.expenditures.get(0).date, is(notNullValue()));
-		assertThat(category.expenditures.get(0).description, is("stuff"));
+		assertThat(category.expenditures.get(0).description, is(description));
 	}
 
 	@Test

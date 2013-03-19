@@ -44,12 +44,13 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void changingAnObject_store_stillOneObjectInDb() {
+	public void changingAnObject_store_stillOneObjectInDb() throws Throwable {
 		db.store(new Category("foo"));
 		Category category = db.query(Category.class).get(0);
 
 		category.name = "bar";
-		db.store(category);
+//		db.store(category);
+		category.finalize();
 
 		assertThat(db.query(Category.class), hasSize(1));
 		assertThat(db.query(Category.class).get(0).name, is("bar"));

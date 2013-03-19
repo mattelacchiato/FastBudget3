@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.shadowOf;
 
+import java.util.Date;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -13,12 +14,16 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowIntent;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
+import de.splitstudio.fastbudget3.db.Expenditure;
 import de.splitstudio.fastbudget3.enums.Extras;
 
 @RunWith(RobolectricTestRunner.class)
@@ -32,6 +37,8 @@ public class OverviewActivityWith3Categories {
 	private static final String NAME2 = "Second Category";
 	private static final String NAME3 = "Third Category";
 
+	private Category category1;
+
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
@@ -39,7 +46,8 @@ public class OverviewActivityWith3Categories {
 		db = Database.getInstance(overview);
 		Database.clear();
 
-		db.store(new Category(NAME1, 111));
+		category1 = new Category(NAME1, 111);
+		db.store(category1);
 		db.store(new Category(NAME2, 222));
 		db.store(new Category(NAME3, 333));
 		overview.onCreate(null);
@@ -76,6 +84,41 @@ public class OverviewActivityWith3Categories {
 		ShadowIntent shadowIntent = shadowOf(shadowOf(overview).getNextStartedActivity());
 		assertThat(shadowIntent.getExtras(), is(notNullValue()));
 		assertThat(shadowIntent.getExtras().getString(Extras.CategoryName.name()), is(NAME1));
+	}
+
+	@Test
+	public void setsSumOfAllExpenditures() {
+		category1.expenditures.add(new Expenditure(20, new Date(), null));
+		category1.expenditures.add(new Expenditure(40, new Date(), null));
+		overview.requeryCategories();
+
+		TextView spent = (TextView) overview.findViewById(R.id.category_spent);
+		assertThat(spent.getText().toString(), is("$0.60"));
+	}
+
+	@Test
+	public void expenditureAdded_refreshUI() {
+		overview.findViewById(R.id.button_add_expenditure).performClick();
+
+		category1.expenditures.add(new Expenditure(20, new Date(), null));
+		db.store(category1);
+		Intent intent = new Intent(overview, ExpenditureActivity.class);
+		intent.putExtra(Extras.CategoryName.name(), category1.name);
+		shadowOf(overview).receiveResult(intent, Activity.RESULT_OK, null);
+
+		TextView spent = (TextView) overview.findViewById(R.id.category_spent);
+		assertThat(spent.getText().toString(), is("$0.20"));
+	}
+
+	@Test
+	public void setsProgressBar() {
+		category1.expenditures.add(new Expenditure(20, new Date(), null));
+		db.store(category1);
+		overview.requeryCategories();
+
+		ProgressBar progressBar = (ProgressBar) overview.findViewById(R.id.category_fill);
+		assertThat(progressBar.getMax(), is(category1.budget));
+		assertThat(progressBar.getProgress(), is(20));
 	}
 
 	private void assertThatTextAtPositionIs(int viewId, int position, String expected) {
