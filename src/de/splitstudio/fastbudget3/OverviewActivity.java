@@ -89,6 +89,11 @@ public class OverviewActivity extends ListActivity {
 		startActivityForResult(intent, RequestCode.CreateExpenditure.ordinal());
 	}
 
+	public void switchView(View view) {
+		view.findViewById(R.id.category_info).setVisibility(View.INVISIBLE);
+		view.findViewById(R.id.context_row).setVisibility(View.VISIBLE);
+	}
+
 	void requeryCategories() {
 		categories.clear();
 		categories.addAll(db.query(Category.class));
