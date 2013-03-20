@@ -25,6 +25,9 @@ public class Category implements Comparable<Category> {
 		this(name, 0, null);
 	}
 
+	/**
+	 * start or end may be null. in this case it means endless to this direction.
+	 */
 	public int summarizeExpenditures(Date start, Date end) {
 		int sum = 0;
 		for (Expenditure expenditure : expenditures) {
@@ -33,10 +36,6 @@ public class Category implements Comparable<Category> {
 			}
 		}
 		return sum;
-	}
-
-	public int summarizeExpendituresForMonth(int i) {
-		return 0;
 	}
 
 	/**

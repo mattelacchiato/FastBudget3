@@ -1,5 +1,9 @@
 package de.splitstudio.fastbudget3;
 
+import static de.splitstudio.utils.NumberUtils.centToDouble;
+import static java.lang.String.format;
+
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +25,7 @@ import de.splitstudio.fastbudget3.db.CategoryListAdapter;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.fastbudget3.enums.RequestCode;
+import de.splitstudio.utils.DateUtils;
 
 public class OverviewActivity extends ListActivity {
 
@@ -84,16 +89,33 @@ public class OverviewActivity extends ListActivity {
 		startActivityForResult(intent, RequestCode.CreateExpenditure.ordinal());
 	}
 
-	public void addCategory() {
-		Intent intent = new Intent(getContext(), CategoryActivity.class);
-		startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
-	}
-
 	void requeryCategories() {
 		categories.clear();
 		categories.addAll(db.query(Category.class));
 		Collections.sort(categories);
 		listAdapter.notifyDataSetChanged();
+		updateTitle();
+	}
+
+	private void addCategory() {
+		Intent intent = new Intent(getContext(), CategoryActivity.class);
+		startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
+	}
+
+	private void updateTitle() {
+		NumberFormat currency = NumberFormat.getCurrencyInstance();
+		currency.setMaximumFractionDigits(0);
+
+		int budgetCents = 0;
+		int spentCents = 0;
+		for (Category category : categories) {
+			budgetCents += category.calcBudget();
+			spentCents += category.summarizeExpenditures(DateUtils.createFirstDayOfMonth().getTime(), null);
+		}
+
+		String spent = currency.format(centToDouble(spentCents));
+		String budget = currency.format(centToDouble(budgetCents));
+		setTitle(format("%s  %s/%s", getString(R.string.app_name), spent, budget));
 	}
 
 	private Context getContext() {

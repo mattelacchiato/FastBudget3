@@ -2,7 +2,7 @@
 
     <item
         android:id="@+id/add_category"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="withText|never"
         android:title="@string/add_category"/>
 
 </menu>

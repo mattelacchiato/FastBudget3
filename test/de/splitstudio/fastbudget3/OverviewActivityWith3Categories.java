@@ -2,6 +2,7 @@ package de.splitstudio.fastbudget3;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.shadowOf;
 
@@ -146,6 +147,19 @@ public class OverviewActivityWith3Categories {
 		assertThatTextAtPositionIs(R.id.name, 0, NAME2);
 		assertThatTextAtPositionIs(R.id.name, 1, NAME1);
 		assertThatTextAtPositionIs(R.id.name, 2, NAME3);
+	}
+
+	@Test
+	public void itShowsTotalBudgetForThisMonthInTitle() {
+		assertThat(overview.getTitle().toString(), containsString("$7"));
+	}
+
+	@Test
+	public void itShowsTotalSpentsForThisMonthInTitle() {
+		category1.expenditures.add(new Expenditure(20, new Date(), ""));
+		category2.expenditures.add(new Expenditure(200, new Date(), ""));
+		overview.requeryCategories();
+		assertThat(overview.getTitle().toString(), containsString("$2"));
 	}
 
 	@Test
