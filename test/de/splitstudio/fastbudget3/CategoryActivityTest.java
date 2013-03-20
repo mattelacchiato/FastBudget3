@@ -119,7 +119,7 @@ public class CategoryActivityTest {
 	@Test
 	public void clickSave_complainsAboutDuplicateName_noIntentStarted() {
 		String name = "duplicatedName";
-		db.store(new Category(name, ANY_BUDGET));
+		db.store(new Category(name, ANY_BUDGET, null));
 
 		fillName(name);
 		clickSaveButton();
@@ -146,7 +146,11 @@ public class CategoryActivityTest {
 		fillBudget("1.00");
 		clickSaveButton();
 
-		assertThat(db.query(Category.class).size(), is(1));
+		Category category = db.query(Category.class).get(0);
+		assertThat(category, is(notNullValue()));
+		assertThat(category.name, is(ANY_NAME));
+		assertThat(category.budget, is(100));
+		assertThat(category.date, is(notNullValue()));
 	}
 
 	@Test

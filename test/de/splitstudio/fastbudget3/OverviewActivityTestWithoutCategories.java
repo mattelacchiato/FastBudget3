@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.shadowOf;
 
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,7 +68,7 @@ public class OverviewActivityTestWithoutCategories {
 		overview.findViewById(R.id.button_add_category).performClick();
 
 		String categoryName = "i was added";
-		db.store(new Category(categoryName, 123));
+		db.store(new Category(categoryName, 123, new Date()));
 		shadowOf(overview).receiveResult(new Intent(overview, CategoryActivity.class), Activity.RESULT_OK, null);
 
 		TextView name1 = (TextView) overview.getListView().getChildAt(0).findViewById(R.id.name);

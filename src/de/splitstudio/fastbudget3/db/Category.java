@@ -1,31 +1,34 @@
 package de.splitstudio.fastbudget3.db;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import de.splitstudio.utils.DateUtils;
 
 public class Category implements Comparable<Category> {
 
 	public String name;
 	public int budget;
 	public List<Expenditure> expenditures;
+	public Date date;
 
-	public Category(String name, int budget) {
+	public Category(String name, int budget, Date date) {
 		this.name = name;
 		this.budget = budget;
 		this.expenditures = new ArrayList<Expenditure>();
+		this.date = date;
 	}
 
 	public Category(String name) {
-		this(name, 0);
+		this(name, 0, null);
 	}
 
 	public int summarizeExpenditures(Date start, Date end) {
 		int sum = 0;
 		for (Expenditure expenditure : expenditures) {
-			boolean startValid = start == null || expenditure.date.after(start);
-			boolean endValid = end == null || expenditure.date.before(end);
-			if (startValid && endValid) {
+			if (DateUtils.isBetween(start, expenditure.date, end)) {
 				sum += expenditure.amount;
 			}
 		}
@@ -44,4 +47,23 @@ public class Category implements Comparable<Category> {
 		return other.expenditures.size() - expenditures.size();
 	}
 
+	int calcGrossBudget() {
+		int budget = 0;
+		Calendar started = Calendar.getInstance();
+		started.setTime(date);
+
+		Calendar currentMonth = Calendar.getInstance();
+		while (started.before(currentMonth) || started.equals(currentMonth)) {
+			budget += this.budget;
+			currentMonth.add(Calendar.MONTH, -1);
+		}
+
+		return budget;
+	}
+
+	public int calcBudget() {
+		Calendar lastMonth = DateUtils.createFirstDayOfMonth();
+		lastMonth.add(Calendar.MILLISECOND, -1);
+		return calcGrossBudget() - summarizeExpenditures(date, lastMonth.getTime());
+	}
 }

@@ -48,9 +48,9 @@ public class OverviewActivityWith3Categories {
 		db = Database.getInstance(overview);
 		Database.clear();
 
-		category1 = new Category(NAME1, 111);
-		category2 = new Category(NAME2, 222);
-		category3 = new Category(NAME3, 333);
+		category1 = new Category(NAME1, 111, new Date());
+		category2 = new Category(NAME2, 222, new Date());
+		category3 = new Category(NAME3, 333, new Date());
 		db.store(category1);
 		db.store(category2);
 		db.store(category3);

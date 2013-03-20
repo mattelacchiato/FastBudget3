@@ -23,19 +23,19 @@ public class CategoryActivity extends Activity {
 
 	Locale locale;
 
+	private DatePickerButtons datePicker;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		db = Database.getInstance(this);
 		locale = getResources().getConfiguration().locale;
+
 		setContentView(R.layout.category_activity);
 		setTitle(R.string.add_category);
-		initDatePicker();
-	}
 
-	private void initDatePicker() {
-		DatePickerButtons datePicker = (DatePickerButtons) findViewById(R.id.date_picker);
-		datePicker.setAndUpdateDate(DateUtils.createFirstDayOfYear(locale));
+		datePicker = (DatePickerButtons) findViewById(R.id.date_picker);
+		datePicker.setAndUpdateDate(DateUtils.createFirstDayOfYear());
 	}
 
 	public void save(View view) {
@@ -57,7 +57,7 @@ public class CategoryActivity extends Activity {
 			return;
 		}
 
-		db.store(new Category(name, amount));
+		db.store(new Category(name, amount, datePicker.getDate().getTime()));
 		db.commit();
 
 		setResultAndFinish(RESULT_OK);
