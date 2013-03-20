@@ -36,11 +36,6 @@ public class Category implements Comparable<Category> {
 		return 0;
 	}
 
-	@Override
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-
 	/**
 	 * Sorts descending by expenditures size.
 	 */

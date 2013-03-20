@@ -13,7 +13,9 @@ import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
+import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.view.Calculator;
+import de.splitstudio.utils.view.DatePickerButtons;
 
 public class CategoryActivity extends Activity {
 
@@ -28,6 +30,12 @@ public class CategoryActivity extends Activity {
 		locale = getResources().getConfiguration().locale;
 		setContentView(R.layout.category_activity);
 		setTitle(R.string.add_category);
+		initDatePicker();
+	}
+
+	private void initDatePicker() {
+		DatePickerButtons datePicker = (DatePickerButtons) findViewById(R.id.date_picker);
+		datePicker.setAndUpdateDate(DateUtils.createFirstDayOfYear(locale));
 	}
 
 	public void save(View view) {

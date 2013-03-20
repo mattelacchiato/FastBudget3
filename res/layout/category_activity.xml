@@ -25,6 +25,14 @@
 
         <include layout="@layout/calculator" />
 
+        <TextView
+            android:id="@+id/category_date_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hint_category_date" />
+
+        <include layout="@layout/date_picker_buttons" />
+
         <include layout="@layout/cancel_save_buttons" />
     </LinearLayout>
 

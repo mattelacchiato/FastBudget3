@@ -21,7 +21,7 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 	public CategoryListAdapter(LayoutInflater layoutInflater, List<Category> categories) {
 		super(layoutInflater, R.layout.category_row, categories);
 		locale = layoutInflater.getContext().getResources().getConfiguration().locale;
-		start = DateUtils.createFirstDayOfMonth(locale);
+		start = DateUtils.createFirstDayOfMonth(locale).getTime();
 	}
 
 	@Override

@@ -1,12 +1,14 @@
 package de.splitstudio.fastbudget3;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.shadowOf;
 
+import java.util.Calendar;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -21,6 +23,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.db4o.ObjectContainer;
 
@@ -156,6 +159,22 @@ public class CategoryActivityTest {
 	public void cancel_resultIsCancelled() {
 		categoryActivity.findViewById(R.id.button_cancel).performClick();
 		assertThat(shadowOf(categoryActivity).getResultCode(), is(Activity.RESULT_CANCELED));
+	}
+
+	@Test
+	public void itHasADatePicker() {
+		assertThat(categoryActivity.findViewById(R.id.date_picker), is(notNullValue()));
+		assertThat(categoryActivity.findViewById(R.id.category_date_hint), is(TextView.class));
+		assertThat(((TextView) categoryActivity.findViewById(R.id.category_date_hint)).getText().toString(),
+			is(not("")));
+	}
+
+	@Test
+	public void itsDatePickerIsInitializedWith_1stJan() {
+		Button button = (Button) categoryActivity.findViewById(R.id.date_field);
+
+		int year = Calendar.getInstance(Locale.US).get(Calendar.YEAR);
+		assertThat(button.getText().toString(), is("January 1, " + year));
 	}
 
 	private void assertNoIntentWasStarted() {
