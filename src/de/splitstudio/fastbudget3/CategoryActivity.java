@@ -5,7 +5,8 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,7 +39,28 @@ public class CategoryActivity extends Activity {
 		datePicker.setAndUpdateDate(DateUtils.createFirstDayOfYear());
 	}
 
-	public void save(View view) {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.actionbar_save_cancel, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case (R.id.save):
+			save();
+			return true;
+		case (R.id.cancel):
+			cancel();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	//TODO cleanup
+	public void save() {
 		String name = ((EditText) findViewById(R.id.name)).getText().toString();
 
 		if (name.trim().isEmpty()) {
@@ -63,7 +85,7 @@ public class CategoryActivity extends Activity {
 		setResultAndFinish(RESULT_OK);
 	}
 
-	public void cancel(View view) {
+	public void cancel() {
 		setResultAndFinish(RESULT_CANCELED);
 	}
 

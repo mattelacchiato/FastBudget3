@@ -5,7 +5,8 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -34,12 +35,32 @@ public class ExpenditureActivity extends Activity {
 		setContentView(R.layout.expenditure_activity);
 	}
 
-	public void cancel(View view) {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.actionbar_save_cancel, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case (R.id.save):
+			save();
+			return true;
+		case (R.id.cancel):
+			cancel();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	public void cancel() {
 		setResult(RESULT_CANCELED);
 		finish();
 	}
 
-	public void save(View view) {
+	public void save() {
 		Calculator calculator = (Calculator) findViewById(R.id.calculator);
 		DatePickerButtons datePickerButtons = (DatePickerButtons) findViewById(R.id.date_picker);
 		EditText descriptionEdit = (EditText) findViewById(R.id.description);

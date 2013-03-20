@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,9 +24,7 @@ import de.splitstudio.fastbudget3.enums.RequestCode;
 
 public class OverviewActivity extends ListActivity {
 
-	//TODO: add ActionBar
-
-	private List<Category> categories;
+	List<Category> categories;
 
 	private ObjectContainer db;
 
@@ -44,6 +43,23 @@ public class OverviewActivity extends ListActivity {
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.actionbar_overview, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case (R.id.add_category):
+			addCategory();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
 	protected void onActivityResult(int requestCodeOrdinal, int resultCode, Intent data) {
 		RequestCode requestCode = RequestCode.values()[requestCodeOrdinal];
 		if (resultCode == RESULT_OK) {
@@ -58,16 +74,6 @@ public class OverviewActivity extends ListActivity {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.overview_activity, menu);
-		return true;
-	}
-
-	/*
-	 * START Listeners
-	 */
-
 	public void addExpenditure(View view) {
 		View parent = (View) view.getParent();
 		TextView nameTextView = (TextView) parent.findViewById(R.id.name);
@@ -78,14 +84,10 @@ public class OverviewActivity extends ListActivity {
 		startActivityForResult(intent, RequestCode.CreateExpenditure.ordinal());
 	}
 
-	public void addCategory(View view) {
+	public void addCategory() {
 		Intent intent = new Intent(getContext(), CategoryActivity.class);
 		startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
 	}
-
-	/*
-	 * END Listeners
-	 */
 
 	void requeryCategories() {
 		categories.clear();

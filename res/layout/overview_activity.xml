@@ -10,10 +10,4 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
-    <include
-        android:id="@+id/footer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/add_category" />
-
 </LinearLayout>

@@ -13,10 +13,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowToast;
+import org.robolectric.tester.android.view.TestMenu;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.db4o.ObjectContainer;
@@ -36,6 +36,8 @@ public class ExpenditureActivityTest {
 
 	private ObjectContainer db;
 
+	private TestMenu menu;
+
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
@@ -51,6 +53,8 @@ public class ExpenditureActivityTest {
 
 		expenditureActivity.setIntent(intent);
 		expenditureActivity.onCreate(null);
+		menu = new TestMenu();
+		expenditureActivity.onCreateOptionsMenu(menu);
 	}
 
 	@Test
@@ -76,12 +80,12 @@ public class ExpenditureActivityTest {
 
 	@Test
 	public void itHasACancelButton() {
-		assertThat(expenditureActivity.findViewById(R.id.button_cancel), is(Button.class));
+		assertThat(menu.findItem(R.id.cancel), is(notNullValue()));
 	}
 
 	@Test
 	public void itHasASaveButton() {
-		assertThat(expenditureActivity.findViewById(R.id.button_save), is(Button.class));
+		assertThat(menu.findItem(R.id.save), is(notNullValue()));
 	}
 
 	@Test
@@ -91,13 +95,13 @@ public class ExpenditureActivityTest {
 
 	@Test
 	public void cancel_returnsToOverview() {
-		expenditureActivity.findViewById(R.id.button_cancel).performClick();
+		expenditureActivity.onOptionsItemSelected(menu.findItem(R.id.cancel));
 		assertThat(expenditureActivity.isFinishing(), is(true));
 	}
 
 	@Test
 	public void cancel_resultIsCancelled() {
-		expenditureActivity.findViewById(R.id.button_cancel).performClick();
+		expenditureActivity.onOptionsItemSelected(menu.findItem(R.id.cancel));
 		assertThat(shadowOf(expenditureActivity).getResultCode(), is(Activity.RESULT_CANCELED));
 	}
 
@@ -107,7 +111,7 @@ public class ExpenditureActivityTest {
 		setAmount("30");
 		setDescription(description);
 
-		expenditureActivity.findViewById(R.id.button_save).performClick();
+		expenditureActivity.onOptionsItemSelected(menu.findItem(R.id.save));
 
 		Category category = (Category) db.queryByExample(new Category(CATEGORY_NAME)).get(0);
 		assertThat(category.expenditures.get(0), is(notNullValue()));
@@ -121,7 +125,7 @@ public class ExpenditureActivityTest {
 		setAmount("30");
 		setDescription("stuff");
 
-		expenditureActivity.findViewById(R.id.button_save).performClick();
+		expenditureActivity.onOptionsItemSelected(menu.findItem(R.id.save));
 		assertThat(expenditureActivity.isFinishing(), is(true));
 		assertThat(shadowOf(expenditureActivity).getResultCode(), is(Activity.RESULT_OK));
 	}
@@ -138,7 +142,7 @@ public class ExpenditureActivityTest {
 	public void save_amountNotValid_errorShown() {
 		setAmount("-.-..0");
 
-		expenditureActivity.findViewById(R.id.button_save).performClick();
+		expenditureActivity.onOptionsItemSelected(menu.findItem(R.id.save));
 
 		assertToastIsShown(R.string.error_invalid_number);
 	}

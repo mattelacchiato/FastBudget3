@@ -13,6 +13,6 @@
     <string name="hint_category_date">When should this category have started?</string>
     <string name="hint_description">Description</string>
     <string name="save">Save</string>
-    <string name="title_expenditure">Create Expenditure for %1$s</string>
+    <string name="title_expenditure">Expenditure for %1$s</string>
 
 </resources>

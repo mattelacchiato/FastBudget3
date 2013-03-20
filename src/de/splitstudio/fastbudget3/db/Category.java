@@ -44,7 +44,11 @@ public class Category implements Comparable<Category> {
 	 */
 	@Override
 	public int compareTo(Category other) {
-		return other.expenditures.size() - expenditures.size();
+		int compareBySize = other.expenditures.size() - expenditures.size();
+		if (compareBySize != 0) {
+			return compareBySize;
+		}
+		return name.compareTo(other.name);
 	}
 
 	int calcGrossBudget() {

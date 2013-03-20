@@ -17,9 +17,11 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowToast;
+import org.robolectric.tester.android.view.TestMenu;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,6 +42,7 @@ public class CategoryActivityTest {
 	private CategoryActivity categoryActivity;
 
 	private ObjectContainer db;
+	private Menu menu;
 
 	@Before
 	public void setUp() {
@@ -50,6 +53,8 @@ public class CategoryActivityTest {
 		for (Object object : db.query().execute()) {
 			db.delete(object);
 		}
+		menu = new TestMenu();
+		categoryActivity.onCreateOptionsMenu(menu);
 	}
 
 	@Test
@@ -87,14 +92,12 @@ public class CategoryActivityTest {
 
 	@Test
 	public void itHasASaveButton() {
-		Button button = (Button) categoryActivity.findViewById(R.id.button_save);
-		assertThat(button, is(notNullValue()));
+		assertThat(menu.findItem(R.id.save), is(notNullValue()));
 	}
 
 	@Test
 	public void itHasACancelButton() {
-		Button button = (Button) categoryActivity.findViewById(R.id.button_cancel);
-		assertThat(button, is(notNullValue()));
+		assertThat(menu.findItem(R.id.cancel), is(notNullValue()));
 	}
 
 	@Test
@@ -103,14 +106,14 @@ public class CategoryActivityTest {
 
 		fillBudget("1");
 		fillName("bla");
-		clickSaveButton();
+		clickMenuItem(R.id.save);
 
 		assertThat(shadowActivity.isFinishing(), is(true));
 	}
 
 	@Test
 	public void clickSave_complainsAboutEmptyName_noIntentStarted() {
-		clickSaveButton();
+		clickMenuItem(R.id.save);
 
 		assertToastIsShown(R.string.error_name_empty);
 		assertNoIntentWasStarted();
@@ -122,7 +125,7 @@ public class CategoryActivityTest {
 		db.store(new Category(name, ANY_BUDGET, null));
 
 		fillName(name);
-		clickSaveButton();
+		clickMenuItem(R.id.save);
 
 		assertToastIsShown(R.string.error_name_duplicated);
 		assertNoIntentWasStarted();
@@ -132,7 +135,7 @@ public class CategoryActivityTest {
 	public void clickSave_complainsAboutInvalidNumber() {
 		fillName(ANY_NAME);
 		fillBudget("-,.-");
-		clickSaveButton();
+		clickMenuItem(R.id.save);
 
 		assertToastIsShown(R.string.error_invalid_number);
 		assertNoIntentWasStarted();
@@ -144,7 +147,7 @@ public class CategoryActivityTest {
 
 		fillName(ANY_NAME);
 		fillBudget("1.00");
-		clickSaveButton();
+		clickMenuItem(R.id.save);
 
 		Category category = db.query(Category.class).get(0);
 		assertThat(category, is(notNullValue()));
@@ -155,13 +158,13 @@ public class CategoryActivityTest {
 
 	@Test
 	public void cancelButton_nothingAdded() {
-		categoryActivity.findViewById(R.id.button_cancel).performClick();
+		clickMenuItem(R.id.cancel);
 		assertThat(db.query().execute(), is(empty()));
 	}
 
 	@Test
 	public void cancel_resultIsCancelled() {
-		categoryActivity.findViewById(R.id.button_cancel).performClick();
+		clickMenuItem(R.id.cancel);
 		assertThat(shadowOf(categoryActivity).getResultCode(), is(Activity.RESULT_CANCELED));
 	}
 
@@ -186,8 +189,8 @@ public class CategoryActivityTest {
 		assertThat("An intend was started, but shouldn't", startedIntent, is(nullValue()));
 	}
 
-	private void clickSaveButton() {
-		categoryActivity.findViewById(R.id.button_save).performClick();
+	private void clickMenuItem(int itemId) {
+		categoryActivity.onOptionsItemSelected(menu.findItem(itemId));
 	}
 
 	private void fillName(String name) {

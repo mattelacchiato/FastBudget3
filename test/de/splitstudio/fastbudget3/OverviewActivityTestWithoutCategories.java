@@ -13,9 +13,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowIntent;
+import org.robolectric.tester.android.view.TestMenu;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.Menu;
 import android.widget.TextView;
 
 import com.db4o.ObjectContainer;
@@ -29,6 +31,7 @@ public class OverviewActivityTestWithoutCategories {
 
 	private OverviewActivity overview;
 	private ObjectContainer db;
+	private Menu menu;
 
 	@Before
 	public void setUp() {
@@ -36,11 +39,13 @@ public class OverviewActivityTestWithoutCategories {
 		db = Database.getInstance(overview);
 		Database.clear();
 		overview.onCreate(null);
+		menu = new TestMenu();
+		overview.onCreateOptionsMenu(menu);
 	}
 
 	@Test
 	public void hasAnAddView() throws Exception {
-		assertThat(overview.findViewById(R.id.button_add_category), is(notNullValue()));
+		menu.findItem(R.id.add_category);
 	}
 
 	@Test
@@ -54,8 +59,8 @@ public class OverviewActivityTestWithoutCategories {
 	}
 
 	@Test
-	public void listFooter_click_categoryActivityStarts() throws Exception {
-		overview.findViewById(R.id.button_add_category).performClick();
+	public void addCategoryClick_categoryActivityStarts() throws Exception {
+		overview.onOptionsItemSelected(menu.findItem(R.id.add_category));
 
 		Intent startedIntent = shadowOf(overview).getNextStartedActivity();
 		assertThat("No intend was started!", startedIntent, is(notNullValue()));
@@ -65,7 +70,7 @@ public class OverviewActivityTestWithoutCategories {
 
 	@Test
 	public void listFooter_click_dbChange_resultRecieved_listUpdate() throws Exception {
-		overview.findViewById(R.id.button_add_category).performClick();
+		overview.onOptionsItemSelected(menu.findItem(R.id.add_category));
 
 		String categoryName = "i was added";
 		db.store(new Category(categoryName, 123, new Date()));

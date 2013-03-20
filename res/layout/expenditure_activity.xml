@@ -27,7 +27,6 @@
 
         <include layout="@layout/date_picker_buttons" />
 
-        <include layout="@layout/cancel_save_buttons" />
     </LinearLayout>
 
 </ScrollView>

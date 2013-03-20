@@ -5,14 +5,16 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.shadowOf;
 
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowIntent;
+import org.robolectric.tester.android.view.TestMenu;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -33,33 +35,39 @@ public class OverviewActivityWith3Categories {
 
 	private ObjectContainer db;
 
-	private static final String NAME1 = "First Category";
-	private static final String NAME2 = "Second Category";
-	private static final String NAME3 = "Third Category";
+	private static final String NAME1 = "aFirst Category";
+	private static final String NAME2 = "bSecond Category";
+	private static final String NAME3 = "cThird Category";
 
 	private Category category1;
 	private Category category2;
 	private Category category3;
 
+	private TestMenu menu;
+
 	@Before
 	public void setUp() {
-		Locale.setDefault(Locale.US);
 		overview = new OverviewActivity();
 		db = Database.getInstance(overview);
 		Database.clear();
 
-		category1 = new Category(NAME1, 111, new Date());
-		category2 = new Category(NAME2, 222, new Date());
-		category3 = new Category(NAME3, 333, new Date());
+		Calendar started = Calendar.getInstance();
+		started.add(Calendar.MONTH, -1);
+		Date now = new Date();
+		category1 = new Category(NAME1, 111, now);
+		category2 = new Category(NAME2, 222, now);
+		category3 = new Category(NAME3, 333, now);
 		db.store(category1);
 		db.store(category2);
 		db.store(category3);
 		overview.onCreate(null);
+		menu = new TestMenu();
+		overview.onCreateOptionsMenu(menu);
 	}
 
 	@Test
 	public void hasAnAddView() throws Exception {
-		assertThat(overview.findViewById(R.id.button_add_category), is(notNullValue()));
+		assertThat(menu.findItem(R.id.add_category), is(notNullValue()));
 	}
 
 	@Test
@@ -138,6 +146,19 @@ public class OverviewActivityWith3Categories {
 		assertThatTextAtPositionIs(R.id.name, 0, NAME2);
 		assertThatTextAtPositionIs(R.id.name, 1, NAME1);
 		assertThatTextAtPositionIs(R.id.name, 2, NAME3);
+	}
+
+	@Test
+	@Ignore
+	public void itShowsTheNetBudget() {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -1);
+		category1.expenditures.add(new Expenditure(20, cal.getTime(), ""));
+		db.store(category1);
+
+		overview.requeryCategories();
+
+		assertThatTextAtPositionIs(R.id.category_budget, 0, "$0.91");
 	}
 
 	private void assertThatTextAtPositionIs(int viewId, int position, String expected) {
