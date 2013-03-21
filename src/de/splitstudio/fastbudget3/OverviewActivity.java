@@ -97,6 +97,7 @@ public class OverviewActivity extends ListActivity {
 				public void run() {
 					Category category = Database.findCategory((String) view.getTag());
 					db.delete(category);
+					db.commit();
 					requeryCategories();
 				}
 			});
