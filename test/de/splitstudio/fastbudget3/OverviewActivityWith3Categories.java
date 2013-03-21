@@ -14,10 +14,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.tester.android.view.TestMenu;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -174,6 +176,61 @@ public class OverviewActivityWith3Categories {
 
 		assertThatTextAtPositionIs(R.id.category_budget, 0, "$0.91");
 	}
+
+	@Test
+	public void deleteCategory_opensConfirmationBox() {
+		overview.findViewById(R.id.delete_category).performClick();
+		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+		assertThat(dialog, is(notNullValue()));
+	}
+
+	@Test
+	public void deleteCategory_cancelDoesNothing() {
+		overview.findViewById(R.id.delete_category).performClick();
+		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+		assertThat(dialog.isShowing(), is(true));
+
+		dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick();
+
+		assertThat(dialog.isShowing(), is(false));
+		assertThat(db.ext().isStored(category1), is(true));
+		assertThatTextAtPositionIs(R.id.name, 0, NAME1);
+	}
+
+	@Test
+	public void deleteCategory_okDeletesCategoryFromDb() {
+		overview.findViewById(R.id.delete_category).performClick();
+		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+
+		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+
+		assertThat(db.ext().isStored(category1), is(false));
+	}
+
+	@Test
+	public void deleteCategory_okDeletesCategorysExpendituresFromDb() {
+		Expenditure expenditure = new Expenditure(20, new Date(), null);
+		category1.expenditures.add(expenditure);
+		db.store(category1.expenditures);
+		overview.findViewById(R.id.delete_category).performClick();
+		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+
+		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+
+		assertThat(db.ext().isStored(expenditure), is(false));
+	}
+
+	@Test
+	public void deleteCategory_requeriesList() {
+		overview.findViewById(R.id.delete_category).performClick();
+		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+
+		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+
+		assertThatTextAtPositionIs(R.id.name, 0, NAME2);
+	}
+
+	//TODO requery
 
 	private void assertThatTextAtPositionIs(int viewId, int position, String expected) {
 		TextView name1 = (TextView) overview.getListView().getChildAt(position).findViewById(viewId);

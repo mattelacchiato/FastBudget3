@@ -69,4 +69,5 @@ public class Category implements Comparable<Category> {
 		lastMonth.add(Calendar.MILLISECOND, -1);
 		return calcGrossBudget() - summarizeExpenditures(date, lastMonth.getTime());
 	}
+
 }

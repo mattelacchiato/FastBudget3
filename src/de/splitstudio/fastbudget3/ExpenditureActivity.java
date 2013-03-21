@@ -30,7 +30,7 @@ public class ExpenditureActivity extends Activity {
 		super.onCreate(bundle);
 		String categoryName = getIntent().getExtras().getString(Extras.CategoryName.name());
 		db = Database.getInstance(this);
-		category = (Category) db.queryByExample(new Category(categoryName)).get(0);
+		category = Database.findCategory(categoryName);
 		setTitle(getString(R.string.title_expenditure, categoryName));
 		setContentView(R.layout.expenditure_activity);
 	}

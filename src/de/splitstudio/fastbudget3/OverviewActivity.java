@@ -26,6 +26,7 @@ import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.fastbudget3.enums.RequestCode;
 import de.splitstudio.utils.DateUtils;
+import de.splitstudio.utils.activity.DialogHelper;
 
 public class OverviewActivity extends ListActivity {
 
@@ -87,6 +88,18 @@ public class OverviewActivity extends ListActivity {
 		Intent intent = new Intent(getContext(), ExpenditureActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), categoryName);
 		startActivityForResult(intent, RequestCode.CreateExpenditure.ordinal());
+	}
+
+	public void deleteCategory(final View view) {
+		DialogHelper.createQuestion(this, R.string.warning, R.string.warning_delete_category, R.string.cancel,
+			R.string.ok, new Runnable() {
+				@Override
+				public void run() {
+					Category category = Database.findCategory((String) view.getTag());
+					db.delete(category);
+					requeryCategories();
+				}
+			});
 	}
 
 	public void switchView(View view) {

@@ -15,5 +15,7 @@
     <string name="hint_description">Description</string>
     <string name="save">Save</string>
     <string name="title_expenditure">Expenditure for %1$s</string>
+    <string name="warning">Warning</string>
+    <string name="warning_delete_category">Do you really want to delete this category? All expenditures will get lost.</string>
 
 </resources>
