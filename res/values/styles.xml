@@ -17,4 +17,8 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="headline">
+        <item name="android:textSize">20sp</item>
+    </style>
+
 </resources>

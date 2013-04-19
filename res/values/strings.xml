@@ -13,6 +13,7 @@
     <string name="hint_category_name">Category Name</string>
     <string name="hint_category_date">When should this category have started?</string>
     <string name="hint_description">Description</string>
+    <string name="hint_empty_expenditures">You\'re lucky! You haven\'t spent anything</string>
     <string name="save">Save</string>
     <string name="title_expenditure">Expenditure for %1$s</string>
     <string name="warning">Warning</string>

@@ -11,13 +11,12 @@ public class Category implements Comparable<Category> {
 
 	public String name;
 	public int budget;
-	public List<Expenditure> expenditures;
+	public List<Expenditure> expenditures = new ArrayList<Expenditure>();
 	public Date date;
 
 	public Category(String name, int budget, Date date) {
 		this.name = name;
 		this.budget = budget;
-		this.expenditures = new ArrayList<Expenditure>();
 		this.date = date;
 	}
 
@@ -68,6 +67,16 @@ public class Category implements Comparable<Category> {
 		Calendar lastMonth = DateUtils.createFirstDayOfMonth();
 		lastMonth.add(Calendar.MILLISECOND, -1);
 		return calcGrossBudget() - summarizeExpenditures(date, lastMonth.getTime());
+	}
+
+	public List<Expenditure> findExpenditures(Date start, Date end) {
+		List<Expenditure> list = new ArrayList<Expenditure>(expenditures.size());
+		for (Expenditure expenditure : expenditures) {
+			if (DateUtils.isBetween(start, expenditure.date, end)) {
+				list.add(expenditure);
+			}
+		}
+		return list;
 	}
 
 }

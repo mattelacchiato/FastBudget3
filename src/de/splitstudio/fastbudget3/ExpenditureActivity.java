@@ -16,6 +16,7 @@ import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expenditure;
 import de.splitstudio.fastbudget3.enums.Extras;
+import de.splitstudio.utils.NumberUtils;
 import de.splitstudio.utils.view.Calculator;
 import de.splitstudio.utils.view.DatePickerButtons;
 
@@ -66,7 +67,7 @@ public class ExpenditureActivity extends Activity {
 		EditText descriptionEdit = (EditText) findViewById(R.id.description);
 
 		try {
-			int amount = calculator.parseAmountInCent();
+			int amount = NumberUtils.parseCent(calculator.getAmount());
 			Date date = datePickerButtons.getDate().getTime();
 			String description = descriptionEdit.getText().toString();
 			category.expenditures.add(new Expenditure(amount, date, description));

@@ -44,6 +44,7 @@ public class ExpenditureActivityTest {
 		expenditureActivity = new ExpenditureActivity();
 		Intent intent = new Intent(new OverviewActivity(), ExpenditureActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
+		expenditureActivity.setIntent(intent);
 
 		db = Database.getInstance(expenditureActivity);
 		Database.clear();
@@ -51,7 +52,6 @@ public class ExpenditureActivityTest {
 		db.store(new Category(CATEGORY_NAME));
 		db.store(new Category("not me too"));
 
-		expenditureActivity.setIntent(intent);
 		expenditureActivity.onCreate(null);
 		menu = new TestMenu();
 		expenditureActivity.onCreateOptionsMenu(menu);
