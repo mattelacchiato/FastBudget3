@@ -1,7 +1,5 @@
 package de.splitstudio.fastbudget3;
 
-import static android.widget.Toast.LENGTH_LONG;
-
 import java.util.Calendar;
 import java.util.List;
 
@@ -10,7 +8,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+
+import com.db4o.ObjectContainer;
+
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expenditure;
@@ -21,15 +21,14 @@ import de.splitstudio.utils.activity.DialogHelper;
 
 public class ExpenditureListActivity extends ListActivity {
 
+	private ObjectContainer db;
+
 	Calendar start;
 	Calendar end;
 
 	final Runnable update = new Runnable() {
 		@Override
 		public void run() {
-			if (end.before(start)) {
-				Toast.makeText(getApplicationContext(), R.string.error_end_before_start, LENGTH_LONG).show();
-			}
 			((Button) findViewById(R.id.date_start)).setText(DateUtils.formatAsShortDate(start.getTime()));
 			((Button) findViewById(R.id.date_end)).setText(DateUtils.formatAsShortDate(end.getTime()));
 			adapter.update(category.findExpenditures(start.getTime(), end.getTime()));
@@ -47,7 +46,7 @@ public class ExpenditureListActivity extends ListActivity {
 		setTitle(categoryName);
 		setContentView(R.layout.expenditure_list_activity);
 
-		Database.getInstance(this);
+		db = Database.getInstance(this);
 		start = DateUtils.createFirstDayOfMonth();
 		end = DateUtils.createLastDayOfMonth();
 		category = Database.findCategory(categoryName);

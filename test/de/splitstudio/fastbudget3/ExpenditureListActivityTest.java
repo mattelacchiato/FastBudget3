@@ -1,12 +1,13 @@
 package de.splitstudio.fastbudget3;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -14,7 +15,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.shadows.ShadowToast;
 
 import android.content.Intent;
 import android.view.View;
@@ -97,16 +97,17 @@ public class ExpenditureListActivityTest {
 
 	@Test
 	public void itShowsTheDate() throws Exception {
-		Calendar cal = DateUtils.createFirstDayOfMonth();
-		Date date = cal.getTime();
+		Calendar calendar = new GregorianCalendar(2013, 2, 23);
+		Date date = calendar.getTime();
 		category.expenditures.add(new Expenditure(20, date, "bla"));
 
 		activity.onCreate(null);
+		updateDateBoundariesToYesterdayAndTomorrow(calendar);
 
 		View row = activity.getListView().getChildAt(0);
-		TextView dateTextView = (TextView) row.findViewById(R.id.date_field);
-		assertThat(dateTextView, is(notNullValue()));
-		assertThat(dateTextView.getText().toString(), is(DateUtils.formatAsShortDate(date)));
+		TextView amountTextView = (TextView) row.findViewById(R.id.date_field);
+		assertThat(amountTextView, is(notNullValue()));
+		assertThat(amountTextView.getText().toString(), is("3/23/13"));
 	}
 
 	@Test
@@ -147,34 +148,11 @@ public class ExpenditureListActivityTest {
 		//test that datepicker is shown
 	}
 
-	@Test
-	public void update_startIsAfterEnd_buttonsUpdatedAnyway() {
-		activity.onCreate(null);
-		activity.start.set(1985, 4, 14);
-		activity.end.set(1985, 4, 13);
-
-		activity.update.run();
-
-		Button startButton = (Button) activity.findViewById(R.id.date_start);
-		assertThat(startButton.getText().toString(), is("5/14/85"));
-		Button endButton = (Button) activity.findViewById(R.id.date_end);
-		assertThat(endButton.getText().toString(), is("5/13/85"));
-	}
-
-	@Test
-	public void update_startIsAfterEnd_showToast() {
-		activity.onCreate(null);
-		activity.start.set(1985, 4, 14);
-		activity.end.set(1985, 4, 13);
-
-		activity.update.run();
-
-		assertThat(ShadowToast.getTextOfLatestToast(), is(notNullValue()));
-		assertThat(ShadowToast.getTextOfLatestToast(), is(activity.getString(R.string.error_end_before_start)));
-	}
+	//TODO complains abeout mixed up dates
 
 	@Test
 	public void itShowsOnlyExpendituresForCurrentPeriod() throws Exception {
+		String description = "Foo";
 		Calendar cal = Calendar.getInstance();
 		category.expenditures.add(new Expenditure(30, cal.getTime(), ANY_DESCRIPTION));
 		category.expenditures.add(new Expenditure(30, cal.getTime(), ANY_DESCRIPTION));
@@ -217,4 +195,13 @@ public class ExpenditureListActivityTest {
 
 		assertThat(activity.getListView().getChildCount(), is(1));
 	}
+
+	private void updateDateBoundariesToYesterdayAndTomorrow(Calendar calendar) {
+		calendar.add(Calendar.DAY_OF_MONTH, -1);
+		activity.start = (Calendar) calendar.clone();
+		calendar.add(Calendar.DAY_OF_MONTH, 2);
+		activity.end = (Calendar) calendar.clone();
+		activity.update.run();
+	}
+
 }
