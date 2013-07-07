@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import android.content.Intent;
@@ -42,7 +43,7 @@ public class ExpenditureListActivityTest {
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		activity = new ExpenditureListActivity();
+		activity = Robolectric.buildActivity(ExpenditureListActivity.class).get();
 		db = Database.getInstance(activity);
 		Database.clear();
 		intent = new Intent(new OverviewActivity(), ExpenditureListActivity.class);

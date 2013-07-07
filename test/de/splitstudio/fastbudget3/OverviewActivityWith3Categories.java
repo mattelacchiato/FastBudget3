@@ -21,6 +21,7 @@ import org.robolectric.tester.android.view.TestMenu;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -63,7 +64,7 @@ public class OverviewActivityWith3Categories {
 		db.store(category1);
 		db.store(category2);
 		db.store(category3);
-		overview.onCreate(null);
+		overview.onCreate(new Bundle());
 		menu = new TestMenu();
 		overview.onCreateOptionsMenu(menu);
 	}

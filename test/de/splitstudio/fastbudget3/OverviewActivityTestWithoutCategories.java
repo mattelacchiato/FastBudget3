@@ -3,6 +3,7 @@ package de.splitstudio.fastbudget3;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.shadowOf;
 
@@ -18,7 +19,6 @@ import org.robolectric.tester.android.view.TestMenu;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
-import android.widget.TextView;
 
 import com.db4o.ObjectContainer;
 
@@ -76,8 +76,8 @@ public class OverviewActivityTestWithoutCategories {
 		db.store(new Category(categoryName, 123, new Date()));
 		shadowOf(overview).receiveResult(new Intent(overview, CategoryActivity.class), Activity.RESULT_OK, null);
 
-		TextView name1 = (TextView) overview.getListView().getChildAt(0).findViewById(R.id.name);
-		assertThat(name1, is(notNullValue()));
-		assertThat(name1.getText().toString(), is(categoryName));
+		assertThat(overview.getListAdapter().getCount(), is(not(0)));
+		Category category = (Category) overview.getListAdapter().getItem(0);
+		assertThat(category.name, is(categoryName));
 	}
 }

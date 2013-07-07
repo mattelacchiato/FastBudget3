@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
@@ -44,15 +43,15 @@ public class ExpenditureListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		String categoryName = getIntent().getExtras().getString(Extras.CategoryName.name());
 		setTitle(categoryName);
-		setContentView(R.layout.expenditure_list_activity);
 
 		db = Database.getInstance(this);
 		start = DateUtils.createFirstDayOfMonth();
 		end = DateUtils.createLastDayOfMonth();
 		category = Database.findCategory(categoryName);
 		List<Expenditure> expenditures = category.findExpenditures(start.getTime(), end.getTime());
-		adapter = new ExpenditureListAdapter(LayoutInflater.from(this), expenditures);
+		adapter = new ExpenditureListAdapter(getLayoutInflater(), expenditures);
 		setListAdapter(adapter);
+		setContentView(R.layout.expenditure_list_activity);
 		update.run();
 	}
 
