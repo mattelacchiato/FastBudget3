@@ -51,10 +51,12 @@ public class OverviewActivityWith3Categories {
 
 	private TestMenu menu;
 
+	private ActivityController<OverviewActivity> activityController;
+
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		ActivityController<OverviewActivity> activityController = buildActivity(OverviewActivity.class);
+		activityController = buildActivity(OverviewActivity.class);
 		overview = activityController.get();
 		db = Database.getInstance(overview.getApplicationContext());
 		Database.clear();
@@ -236,6 +238,25 @@ public class OverviewActivityWith3Categories {
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
 
 		assertThatTextAtPositionIs(0, R.id.name, NAME2);
+	}
+
+	@Test
+	public void hidesContextRow() {
+		activityController.start();
+		assertThat(findListView(R.id.context_row).getVisibility(), is(View.GONE));
+	}
+
+	@Test
+	public void clickOnListItem_togglesContextRow() {
+		activityController.start();
+		View contextSwitcher = findListView(R.id.context_switcher);
+		View contextRow = contextSwitcher.findViewById(R.id.context_row);
+
+		assertThat(contextRow.getVisibility(), is(View.GONE));
+		contextSwitcher.performClick();
+		assertThat(contextRow.getVisibility(), is(View.VISIBLE));
+		contextSwitcher.performClick();
+		assertThat(contextRow.getVisibility(), is(View.GONE));
 	}
 
 	private void assertThatTextAtPositionIs(int position, int viewId, String expected) {

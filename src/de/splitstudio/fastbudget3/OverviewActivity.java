@@ -1,5 +1,7 @@
 package de.splitstudio.fastbudget3;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static de.splitstudio.utils.NumberUtils.centToDouble;
 import static java.lang.String.format;
 
@@ -103,8 +105,9 @@ public class OverviewActivity extends ListActivity {
 	}
 
 	public void switchView(View view) {
-		view.findViewById(R.id.category_info).setVisibility(View.INVISIBLE);
-		view.findViewById(R.id.context_row).setVisibility(View.VISIBLE);
+		View contextRow = view.findViewById(R.id.context_row);
+		int current = contextRow.getVisibility();
+		contextRow.setVisibility(current == VISIBLE ? GONE : VISIBLE);
 	}
 
 	void requeryCategories() {
