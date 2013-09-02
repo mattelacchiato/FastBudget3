@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -87,16 +86,16 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void showsTheNameOfEachCategory() throws Exception {
-		assertThatTextAtPositionIs(R.id.name, 0, NAME1);
-		assertThatTextAtPositionIs(R.id.name, 1, NAME2);
-		assertThatTextAtPositionIs(R.id.name, 2, NAME3);
+		assertThatTextAtPositionIs(0, R.id.name, NAME1);
+		assertThatTextAtPositionIs(1, R.id.name, NAME2);
+		assertThatTextAtPositionIs(2, R.id.name, NAME3);
 	}
 
 	@Test
 	public void showsTheAmountOfEachBudget() throws Exception {
-		assertThatTextAtPositionIs(R.id.category_budget, 0, "$1.11");
-		assertThatTextAtPositionIs(R.id.category_budget, 1, "$2.22");
-		assertThatTextAtPositionIs(R.id.category_budget, 2, "$3.33");
+		assertThatTextAtPositionIs(0, R.id.category_budget, "$1.11");
+		assertThatTextAtPositionIs(1, R.id.category_budget, "$2.22");
+		assertThatTextAtPositionIs(2, R.id.category_budget, "$3.33");
 	}
 
 	@Test
@@ -155,9 +154,9 @@ public class OverviewActivityWith3Categories {
 
 		overview.requeryCategories();
 
-		assertThatTextAtPositionIs(R.id.name, 0, NAME2);
-		assertThatTextAtPositionIs(R.id.name, 1, NAME1);
-		assertThatTextAtPositionIs(R.id.name, 2, NAME3);
+		assertThatTextAtPositionIs(0, R.id.name, NAME2);
+		assertThatTextAtPositionIs(1, R.id.name, NAME1);
+		assertThatTextAtPositionIs(2, R.id.name, NAME3);
 	}
 
 	@Test
@@ -174,7 +173,6 @@ public class OverviewActivityWith3Categories {
 	}
 
 	@Test
-	@Ignore
 	public void itShowsTheNetBudget() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -1);
@@ -183,7 +181,7 @@ public class OverviewActivityWith3Categories {
 
 		overview.requeryCategories();
 
-		assertThatTextAtPositionIs(R.id.category_budget, 0, "$0.91");
+		assertThatTextAtPositionIs(0, R.id.category_budget, "$0.91");
 	}
 
 	@Test
@@ -203,7 +201,7 @@ public class OverviewActivityWith3Categories {
 
 		assertThat(dialog.isShowing(), is(false));
 		assertThat(db.ext().isStored(category1), is(true));
-		assertThatTextAtPositionIs(R.id.name, 0, NAME1);
+		assertThatTextAtPositionIs(0, R.id.name, NAME1);
 	}
 
 	@Test
@@ -236,12 +234,10 @@ public class OverviewActivityWith3Categories {
 
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
 
-		assertThatTextAtPositionIs(R.id.name, 0, NAME2);
+		assertThatTextAtPositionIs(0, R.id.name, NAME2);
 	}
 
-	//TODO requery
-
-	private void assertThatTextAtPositionIs(int viewId, int position, String expected) {
+	private void assertThatTextAtPositionIs(int position, int viewId, String expected) {
 		TextView name1 = (TextView) overview.getListAdapter().getView(position, null, null).findViewById(viewId);
 		assertThat(name1, is(notNullValue()));
 		assertThat("At Position " + position, name1.getText().toString(), is(expected));
