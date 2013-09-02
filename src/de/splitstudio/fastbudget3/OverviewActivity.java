@@ -110,6 +110,12 @@ public class OverviewActivity extends ListActivity {
 		contextRow.setVisibility(current == VISIBLE ? GONE : VISIBLE);
 	}
 
+	public void openExpenditureList(View view) {
+		Intent intent = new Intent(getContext(), ExpenditureListActivity.class);
+		intent.putExtra(Extras.CategoryName.name(), (String) view.getTag());
+		startActivity(intent);
+	}
+
 	void requeryCategories() {
 		categories.clear();
 		categories.addAll(db.query(Category.class));

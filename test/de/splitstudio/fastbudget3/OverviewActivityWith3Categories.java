@@ -3,6 +3,7 @@ package de.splitstudio.fastbudget3;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
@@ -189,14 +190,14 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void deleteCategory_opensConfirmationBox() {
-		findListView(R.id.delete_category).performClick();
+		findListView(R.id.button_delete).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 		assertThat(dialog, is(notNullValue()));
 	}
 
 	@Test
 	public void deleteCategory_cancelDoesNothing() {
-		findListView(R.id.delete_category).performClick();
+		findListView(R.id.button_delete).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 		assertThat(dialog.isShowing(), is(true));
 
@@ -209,7 +210,7 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void deleteCategory_okDeletesCategoryFromDb() {
-		findListView(R.id.delete_category).performClick();
+		findListView(R.id.button_delete).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
@@ -222,7 +223,7 @@ public class OverviewActivityWith3Categories {
 		Expenditure expenditure = new Expenditure(20, new Date(), null);
 		category1.expenditures.add(expenditure);
 		db.store(category1.expenditures);
-		findListView(R.id.delete_category).performClick();
+		findListView(R.id.button_delete).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
@@ -232,7 +233,7 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void deleteCategory_requeriesList() {
-		findListView(R.id.delete_category).performClick();
+		findListView(R.id.button_delete).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
@@ -257,6 +258,20 @@ public class OverviewActivityWith3Categories {
 		assertThat(contextRow.getVisibility(), is(View.VISIBLE));
 		contextSwitcher.performClick();
 		assertThat(contextRow.getVisibility(), is(View.GONE));
+	}
+
+	@Test
+	public void clickOnListIcon_opensExpenditureListActivity() {
+		activityController.start();
+		findListView(R.id.button_list).performClick();
+
+		Intent startedIntent = shadowOf(overview).getNextStartedActivity();
+		assertThat("No intend was started!", startedIntent, is(notNullValue()));
+		assertThat(startedIntent.getExtras().isEmpty(), is(false));
+		assertThat((String) startedIntent.getExtras().get(Extras.CategoryName.name()), is(category1.name));
+
+		ShadowIntent shadowIntent = shadowOf(startedIntent);
+		assertThat(shadowIntent.getComponent().getClassName(), equalTo(ExpenditureListActivity.class.getName()));
 	}
 
 	private void assertThatTextAtPositionIs(int position, int viewId, String expected) {

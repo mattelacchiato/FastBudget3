@@ -35,7 +35,8 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 		progressBar.setMax(budget);
 		progressBar.setProgress(expendituresCent);
 
-		view.findViewById(R.id.delete_category).setTag(category.name);
+		view.findViewById(R.id.button_list).setTag(category.name);
+		view.findViewById(R.id.button_delete).setTag(category.name);
 		((TextView) view.findViewById(R.id.name)).setText(category.name);
 		((TextView) view.findViewById(R.id.category_budget)).setText(budgetLiteral);
 		((TextView) view.findViewById(R.id.category_spent)).setText(expenditures);

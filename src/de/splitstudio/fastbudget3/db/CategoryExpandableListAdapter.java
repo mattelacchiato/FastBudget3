@@ -42,7 +42,7 @@ public class CategoryExpandableListAdapter extends ObjectExpandableListAdapter<C
 
 	@Override
 	public void bindChildView(View view, Category category) {
-		view.findViewById(R.id.delete_category).setTag(category.name);
+		view.findViewById(R.id.button_delete).setTag(category.name);
 	}
 
 }

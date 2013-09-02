@@ -76,7 +76,7 @@
             android:visibility="gone" >
 
             <ImageButton
-                android:id="@+id/delete_category"
+                android:id="@+id/button_delete"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -84,6 +84,16 @@
                 android:contentDescription="@string/delete_category"
                 android:onClick="deleteCategory"
                 android:src="@drawable/ic_delete" />
+
+            <ImageButton
+                android:id="@+id/button_list"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/expenditures"
+                android:onClick="openExpenditureList"
+                android:src="@drawable/ic_list" />
         </LinearLayout>
     </LinearLayout>
 
