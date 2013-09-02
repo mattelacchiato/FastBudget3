@@ -30,10 +30,11 @@ public class Database {
 		return config;
 	}
 
-	public static void clear() {
+	public static ObjectContainer clear() {
 		for (Object object : db.query().execute()) {
 			db.delete(object);
 		}
+		return db;
 	}
 
 	public static Category findCategory(final String name) {

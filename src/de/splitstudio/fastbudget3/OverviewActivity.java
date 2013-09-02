@@ -12,7 +12,6 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,11 +38,11 @@ public class OverviewActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.overview_activity);
 		db = Database.getInstance(getContext());
 		categories = new ArrayList<Category>();
 		categories.addAll(db.query(Category.class));
-		setContentView(R.layout.overview_activity);
-		listAdapter = new CategoryListAdapter(LayoutInflater.from(this), categories);
+		listAdapter = new CategoryListAdapter(getLayoutInflater(), categories);
 		setListAdapter(listAdapter);
 		requeryCategories();
 	}

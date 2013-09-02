@@ -4,10 +4,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
+import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -17,11 +19,12 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.tester.android.view.TestMenu;
+import org.robolectric.util.ActivityController;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -51,8 +54,10 @@ public class OverviewActivityWith3Categories {
 
 	@Before
 	public void setUp() {
-		overview = new OverviewActivity();
-		db = Database.getInstance(overview);
+		Locale.setDefault(Locale.US);
+		ActivityController<OverviewActivity> activityController = buildActivity(OverviewActivity.class);
+		overview = activityController.get();
+		db = Database.getInstance(overview.getApplicationContext());
 		Database.clear();
 
 		Calendar started = Calendar.getInstance();
@@ -64,7 +69,8 @@ public class OverviewActivityWith3Categories {
 		db.store(category1);
 		db.store(category2);
 		db.store(category3);
-		overview.onCreate(new Bundle());
+		db.commit();
+		activityController.create();
 		menu = new TestMenu();
 		overview.onCreateOptionsMenu(menu);
 	}
@@ -95,9 +101,11 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void add_sendsCategoryNameToExpenditureActivity() {
-		overview.findViewById(R.id.button_add_expenditure).performClick();
+		findListView(R.id.button_add_expenditure).performClick();
 
-		ShadowIntent shadowIntent = shadowOf(shadowOf(overview).getNextStartedActivity());
+		Intent nextStartedActivity = shadowOf(overview).getNextStartedActivity();
+		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
+		ShadowIntent shadowIntent = shadowOf(nextStartedActivity);
 		assertThat(shadowIntent.getExtras(), is(notNullValue()));
 		assertThat(shadowIntent.getExtras().getString(Extras.CategoryName.name()), is(NAME1));
 	}
@@ -108,13 +116,13 @@ public class OverviewActivityWith3Categories {
 		category1.expenditures.add(new Expenditure(40, new Date(), null));
 		overview.requeryCategories();
 
-		TextView spent = (TextView) overview.findViewById(R.id.category_spent);
+		TextView spent = (TextView) findListView(R.id.category_spent);
 		assertThat(spent.getText().toString(), is("$0.60"));
 	}
 
 	@Test
 	public void expenditureAdded_refreshUI() {
-		overview.findViewById(R.id.button_add_expenditure).performClick();
+		findListView(R.id.button_add_expenditure).performClick();
 
 		category1.expenditures.add(new Expenditure(20, new Date(), null));
 		db.store(category1);
@@ -122,7 +130,7 @@ public class OverviewActivityWith3Categories {
 		intent.putExtra(Extras.CategoryName.name(), category1.name);
 		shadowOf(overview).receiveResult(intent, Activity.RESULT_OK, null);
 
-		TextView spent = (TextView) overview.findViewById(R.id.category_spent);
+		TextView spent = (TextView) findListView(R.id.category_spent);
 		assertThat(spent.getText().toString(), is("$0.20"));
 	}
 
@@ -132,7 +140,7 @@ public class OverviewActivityWith3Categories {
 		db.store(category1);
 		overview.requeryCategories();
 
-		ProgressBar progressBar = (ProgressBar) overview.findViewById(R.id.category_fill);
+		ProgressBar progressBar = (ProgressBar) findListView(R.id.category_fill);
 		assertThat(progressBar.getMax(), is(category1.budget));
 		assertThat(progressBar.getProgress(), is(20));
 	}
@@ -180,14 +188,14 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void deleteCategory_opensConfirmationBox() {
-		overview.findViewById(R.id.delete_category).performClick();
+		findListView(R.id.delete_category).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 		assertThat(dialog, is(notNullValue()));
 	}
 
 	@Test
 	public void deleteCategory_cancelDoesNothing() {
-		overview.findViewById(R.id.delete_category).performClick();
+		findListView(R.id.delete_category).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 		assertThat(dialog.isShowing(), is(true));
 
@@ -200,7 +208,7 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void deleteCategory_okDeletesCategoryFromDb() {
-		overview.findViewById(R.id.delete_category).performClick();
+		findListView(R.id.delete_category).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
@@ -213,7 +221,7 @@ public class OverviewActivityWith3Categories {
 		Expenditure expenditure = new Expenditure(20, new Date(), null);
 		category1.expenditures.add(expenditure);
 		db.store(category1.expenditures);
-		overview.findViewById(R.id.delete_category).performClick();
+		findListView(R.id.delete_category).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
@@ -223,7 +231,7 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void deleteCategory_requeriesList() {
-		overview.findViewById(R.id.delete_category).performClick();
+		findListView(R.id.delete_category).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
@@ -234,8 +242,12 @@ public class OverviewActivityWith3Categories {
 	//TODO requery
 
 	private void assertThatTextAtPositionIs(int viewId, int position, String expected) {
-		TextView name1 = (TextView) overview.getListView().getChildAt(position).findViewById(viewId);
+		TextView name1 = (TextView) overview.getListAdapter().getView(position, null, null).findViewById(viewId);
 		assertThat(name1, is(notNullValue()));
 		assertThat("At Position " + position, name1.getText().toString(), is(expected));
+	}
+
+	private View findListView(int viewId) {
+		return overview.getListAdapter().getView(0, null, null).findViewById(viewId);
 	}
 }
