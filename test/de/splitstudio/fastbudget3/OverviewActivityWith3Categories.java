@@ -174,6 +174,7 @@ public class OverviewActivityWith3Categories {
 
 	@Test
 	public void itShowsTheNetBudget() {
+		assertThatTextAtPositionIs(0, R.id.category_budget, "$1.11");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -1);
 		category1.expenditures.add(new Expenditure(20, cal.getTime(), ""));
