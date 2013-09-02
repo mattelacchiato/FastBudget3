@@ -232,4 +232,10 @@ public class ExpenditureListActivityTest {
 
 		assertThat(activity.getListAdapter().getCount(), is(1));
 	}
+
+	@Test
+	public void onCreate_noIntentGiven_isFinishing() {
+		ExpenditureListActivity activityWithoutIntent = buildActivity(ExpenditureListActivity.class).create().get();
+		assertThat(activityWithoutIntent.isFinishing(), is(true));
+	}
 }

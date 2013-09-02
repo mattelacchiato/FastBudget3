@@ -43,7 +43,10 @@ public class ExpenditureListActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//TODO (31.08.2013): exit when intent hasn't any extras or this string
+		if (!getIntent().hasExtra(Extras.CategoryName.name())) {
+			finish();
+			return;
+		}
 		String categoryName = getIntent().getExtras().getString(Extras.CategoryName.name());
 		setTitle(categoryName);
 		setContentView(R.layout.expenditure_list_activity);
