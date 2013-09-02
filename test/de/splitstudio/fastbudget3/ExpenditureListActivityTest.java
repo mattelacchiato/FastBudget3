@@ -12,15 +12,15 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowDatePickerDialog;
 import org.robolectric.shadows.ShadowToast;
 import org.robolectric.util.ActivityController;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -91,12 +91,7 @@ public class ExpenditureListActivityTest {
 		String description = "jo!";
 		category.expenditures.add(new Expenditure(20, new Date(), description));
 
-		//TODO (19.08.2013): rm (un)pause here and everywhere else
-		//when fixed: https://github.com/robolectric/robolectric/issues/557
-		//UPDATE: not needed anymore, because we're using buildActivity now?
-		Robolectric.getUiThreadScheduler().pause();
 		ExpenditureListActivity activity = createActivity();
-		Robolectric.getUiThreadScheduler().unPause();
 
 		ListAdapter listAdapter = activity.getListAdapter();
 		assertThat(listAdapter.getCount(), is(greaterThan(0)));
@@ -160,11 +155,11 @@ public class ExpenditureListActivityTest {
 	}
 
 	@Test
-	@Ignore
 	public void clickOnStartDateButton_opensDatePicker() throws Exception {
 		ExpenditureListActivity activity = createActivity();
 		activity.findViewById(R.id.date_start).performClick();
-		//test that datepicker is shown
+		DatePickerDialog dialog = (DatePickerDialog) ShadowDatePickerDialog.getLatestDialog();
+		assertThat(dialog.isShowing(), is(true));
 	}
 
 	@Test
