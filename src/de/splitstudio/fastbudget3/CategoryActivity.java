@@ -1,5 +1,8 @@
 package de.splitstudio.fastbudget3;
 
+import static de.splitstudio.fastbudget3.enums.Extras.CategoryName;
+
+import java.util.Calendar;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -14,7 +17,9 @@ import com.db4o.ObjectContainer;
 import de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
+import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
+import de.splitstudio.utils.NumberUtils;
 import de.splitstudio.utils.view.Calculator;
 import de.splitstudio.utils.view.DatePickerButtons;
 
@@ -26,6 +31,12 @@ public class CategoryActivity extends Activity {
 
 	private DatePickerButtons datePicker;
 
+	private EditText nameEdit;
+
+	private Calculator calculator;
+
+	private Category category;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,7 +47,24 @@ public class CategoryActivity extends Activity {
 		setTitle(R.string.add_category);
 
 		datePicker = (DatePickerButtons) findViewById(R.id.date_picker);
-		datePicker.setAndUpdateDate(DateUtils.createFirstDayOfYear());
+		nameEdit = (EditText) findViewById(R.id.name);
+		calculator = (Calculator) findViewById(R.id.calculator);
+
+		initFields();
+	}
+
+	private void initFields() {
+		if (getIntent().hasExtra(Extras.CategoryName.name())) {
+			String name = getIntent().getExtras().getString(CategoryName.name());
+			category = Database.findCategory(name);
+			nameEdit.setText(category.name);
+			calculator.setAmount(NumberUtils.formatAsDecimal(category.budget));
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(category.date);
+			datePicker.setAndUpdateDate(calendar);
+		} else {
+			datePicker.setAndUpdateDate(DateUtils.createFirstDayOfYear());
+		}
 	}
 
 	@Override
@@ -61,8 +89,8 @@ public class CategoryActivity extends Activity {
 
 	//TODO cleanup
 	public void save() {
-		String name = ((EditText) findViewById(R.id.name)).getText().toString();
-		String amount = ((Calculator) findViewById(R.id.calculator)).getAmount();
+		String name = nameEdit.getText().toString();
+		String amount = calculator.getAmount();
 
 		CategoryValidator validator = new CategoryValidator(db, name, amount);
 		if (validator.getResult() != CategoryValidationResult.Ok) {
@@ -70,6 +98,7 @@ public class CategoryActivity extends Activity {
 			return;
 		}
 
+		//TODO use Datebase?
 		db.store(new Category(name, validator.getAmountInCent(), datePicker.getDate().getTime()));
 		db.commit();
 

@@ -92,6 +92,12 @@ public class OverviewActivity extends ListActivity {
 		startActivityForResult(intent, RequestCode.CreateExpenditure.ordinal());
 	}
 
+	public void editCategory(View view) {
+		Intent intent = new Intent(getContext(), CategoryActivity.class);
+		intent.putExtra(Extras.CategoryName.name(), (String) view.getTag());
+		startActivityForResult(intent, RequestCode.EditCategory.ordinal());
+	}
+
 	public void deleteCategory(final View view) {
 		DialogHelper.createQuestion(this, R.string.warning, R.string.warning_delete_category, R.string.cancel,
 			R.string.ok, new Runnable() {

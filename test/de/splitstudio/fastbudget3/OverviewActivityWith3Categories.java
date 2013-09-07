@@ -105,8 +105,19 @@ public class OverviewActivityWith3Categories {
 	}
 
 	@Test
-	public void add_sendsCategoryNameToExpenditureActivity() {
+	public void addExpenditure_sendsCategoryNameToExpenditureActivity() {
 		findListView(R.id.button_add_expenditure).performClick();
+
+		Intent nextStartedActivity = shadowOf(overview).getNextStartedActivity();
+		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
+		ShadowIntent shadowIntent = shadowOf(nextStartedActivity);
+		assertThat(shadowIntent.getExtras(), is(notNullValue()));
+		assertThat(shadowIntent.getExtras().getString(Extras.CategoryName.name()), is(NAME1));
+	}
+
+	@Test
+	public void editCategory_sendsCategoryNameToCategoryActivity() {
+		findListView(R.id.button_edit).performClick();
 
 		Intent nextStartedActivity = shadowOf(overview).getNextStartedActivity();
 		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
@@ -242,6 +253,7 @@ public class OverviewActivityWith3Categories {
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
 
 		assertThatTextAtPositionIs(0, R.id.name, NAME2);
+		//TODO (07.09.2013): assert that all contexts are collapsed
 	}
 
 	@Test
