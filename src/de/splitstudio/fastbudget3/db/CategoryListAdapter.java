@@ -37,6 +37,7 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 
 		view.findViewById(R.id.button_list).setTag(category.name);
 		view.findViewById(R.id.button_delete).setTag(category.name);
+		view.findViewById(R.id.context_row).setTag(category.name);
 		((TextView) view.findViewById(R.id.name)).setText(category.name);
 		((TextView) view.findViewById(R.id.category_budget)).setText(budgetLiteral);
 		((TextView) view.findViewById(R.id.category_spent)).setText(expenditures);

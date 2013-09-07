@@ -28,6 +28,7 @@ import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.fastbudget3.enums.RequestCode;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.activity.DialogHelper;
+import de.splitstudio.utils.view.ViewHelper;
 
 public class OverviewActivity extends ListActivity {
 
@@ -105,9 +106,16 @@ public class OverviewActivity extends ListActivity {
 	}
 
 	public void switchView(View view) {
-		View contextRow = view.findViewById(R.id.context_row);
-		int current = contextRow.getVisibility();
-		contextRow.setVisibility(current == VISIBLE ? GONE : VISIBLE);
+		View currentContextRow = view.findViewById(R.id.context_row);
+		for (View otherView : ViewHelper.getViewsById(getListView(), R.id.context_row)) {
+			boolean otherViewIsCurrentView = otherView.getTag().equals(currentContextRow.getTag());
+			if (otherViewIsCurrentView) {
+				boolean isVisible = currentContextRow.getVisibility() == VISIBLE;
+				currentContextRow.setVisibility(isVisible ? GONE : VISIBLE);
+			} else {
+				otherView.setVisibility(GONE);
+			}
+		}
 	}
 
 	public void openExpenditureList(View view) {

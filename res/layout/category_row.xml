@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/context_switcher"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:onClick="switchView"
+    android:orientation="vertical"
     android:padding="0dp" >
 
     <LinearLayout
-        android:layout_width="0dip"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:id="@+id/context_switcher"
-        android:onClick="switchView" >
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:id="@+id/category_info"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/name"
+                style="@style/headline"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="4dp"
@@ -29,9 +30,7 @@
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
                 android:text="Category Name"
-                tools:ignore="HardcodedText"
-                style="@style/headline"
-                 />
+                tools:ignore="HardcodedText" />
 
             <ProgressBar
                 android:id="@+id/category_fill"
@@ -67,46 +66,55 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/context_row"
-            android:layout_width="fill_parent"
+        <include layout="@layout/horizontal_divider" />
+
+        <ImageButton
+            android:id="@+id/button_add_expenditure"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="0dp"
-            android:visibility="gone" >
-
-            <ImageButton
-                android:id="@+id/button_delete"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/delete_category"
-                android:onClick="deleteCategory"
-                android:src="@drawable/ic_delete" />
-
-            <ImageButton
-                android:id="@+id/button_list"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/expenditures"
-                android:onClick="openExpenditureList"
-                android:src="@drawable/ic_list" />
-        </LinearLayout>
+            android:layout_gravity="center"
+            android:contentDescription="@string/add_category"
+            android:onClick="addExpenditure"
+            android:src="@drawable/ic_add" />
     </LinearLayout>
 
-    <include layout="@layout/horizontal_divider" />
-
-    <ImageButton
-        android:id="@+id/button_add_expenditure"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/context_row"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:contentDescription="@string/add_category"
-        android:onClick="addExpenditure"
-        android:src="@drawable/ic_add" />
+        android:background="@color/background_context"
+        android:orientation="horizontal"
+        android:paddingBottom="0dp"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/button_delete"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:contentDescription="@string/delete_category"
+            android:drawableTop="@drawable/ic_delete"
+            android:onClick="deleteCategory"
+            android:padding="4dp"
+            android:text="@string/delete_category"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/button_list"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:contentDescription="@string/expenditures"
+            android:drawableTop="@drawable/ic_list"
+            android:onClick="openExpenditureList"
+            android:padding="4dp"
+            android:text="@string/expenditures"
+            android:textSize="12sp" />
+    </LinearLayout>
 
 </LinearLayout>

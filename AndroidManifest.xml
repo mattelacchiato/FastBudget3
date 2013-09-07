@@ -23,15 +23,30 @@
         </activity>
         <activity
             android:name=".CategoryActivity"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize" 
+            android:parentActivityName=".OverviewActivity" >
+	        <!-- Parent activity meta-data to support API level 7+ -->
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value=".OverviewActivity" />
         </activity>
         <activity
             android:name=".ExpenditureListActivity"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".OverviewActivity" >
+	        <!-- Parent activity meta-data to support API level 7+ -->
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value=".OverviewActivity" />            
         </activity>
         <activity
             android:name=".ExpenditureActivity"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize" 
+            android:parentActivityName=".OverviewActivity" >
+	        <!-- Parent activity meta-data to support API level 7+ -->
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value=".OverviewActivity" />
         </activity>
     </application>
 
