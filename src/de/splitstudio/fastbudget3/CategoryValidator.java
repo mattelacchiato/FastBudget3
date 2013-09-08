@@ -1,5 +1,10 @@
 package de.splitstudio.fastbudget3;
 
+import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.Duplicate;
+import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.Empty;
+import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.InvalidNumber;
+import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.Ok;
+
 import java.text.ParseException;
 
 import com.db4o.ObjectContainer;
@@ -7,6 +12,7 @@ import com.db4o.ObjectContainer;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.utils.NumberUtils;
 
+//TODO (08.09.2013): use better android validation
 public class CategoryValidator {
 
 	public enum CategoryValidationResult {
@@ -44,15 +50,15 @@ public class CategoryValidator {
 
 	private CategoryValidationResult validate() {
 		if (isNameEmpty()) {
-			return CategoryValidationResult.Empty;
-		}
-		if (isCategoryNameDuplicated()) {
-			return CategoryValidationResult.Duplicate;
+			return Empty;
 		}
 		if (isAmountNotANumber()) {
-			return CategoryValidationResult.InvalidNumber;
+			return InvalidNumber;
 		}
-		return CategoryValidationResult.Ok;
+		if (isCategoryNameDuplicated()) {
+			return Duplicate;
+		}
+		return Ok;
 	}
 
 	private boolean isAmountNotANumber() {

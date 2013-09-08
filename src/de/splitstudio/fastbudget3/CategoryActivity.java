@@ -1,5 +1,7 @@
 package de.splitstudio.fastbudget3;
 
+import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.Duplicate;
+import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.Ok;
 import static de.splitstudio.fastbudget3.enums.Extras.CategoryName;
 
 import java.util.Calendar;
@@ -14,7 +16,6 @@ import android.widget.Toast;
 
 import com.db4o.ObjectContainer;
 
-import de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.enums.Extras;
@@ -37,6 +38,8 @@ public class CategoryActivity extends Activity {
 
 	private Category category;
 
+	private boolean updateCategory = true;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,7 +57,8 @@ public class CategoryActivity extends Activity {
 	}
 
 	private void initFields() {
-		if (getIntent().hasExtra(Extras.CategoryName.name())) {
+		updateCategory = getIntent().hasExtra(Extras.CategoryName.name());
+		if (updateCategory) {
 			String name = getIntent().getExtras().getString(CategoryName.name());
 			category = Database.findCategory(name);
 			nameEdit.setText(category.name);
@@ -93,7 +97,7 @@ public class CategoryActivity extends Activity {
 		category.name = nameEdit.getText().toString();
 
 		CategoryValidator validator = new CategoryValidator(db, category.name, amountString);
-		if (validator.getResult() != CategoryValidationResult.Ok) {
+		if (!isValid(validator)) {
 			Toast.makeText(this, validator.getResult().stringId, Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -102,6 +106,12 @@ public class CategoryActivity extends Activity {
 
 		Database.store(category);
 		setResultAndFinish(RESULT_OK);
+	}
+
+	private boolean isValid(CategoryValidator validator) {
+		boolean valid = validator.getResult() == Ok;
+		boolean duplicateNameAndUpdating = validator.getResult() == Duplicate && updateCategory;
+		return valid || duplicateNameAndUpdating;
 	}
 
 	public void cancel() {

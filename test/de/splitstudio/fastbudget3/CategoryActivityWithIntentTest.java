@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
+import static org.robolectric.Robolectric.shadowOf;
 
 import java.util.Date;
 import java.util.Locale;
@@ -14,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowToast;
 import org.robolectric.tester.android.view.TestMenu;
 import org.robolectric.util.ActivityController;
 
@@ -85,6 +87,23 @@ public class CategoryActivityWithIntentTest {
 		assertThat(persistedCategory.budget, is(ANY_BUDGET));
 	}
 
+	@Test
+	public void changeBudget_updatesCategory() {
+		fillBudget("2.33");
+		clickMenuItem(R.id.save);
+
+		assertThat(ShadowToast.getTextOfLatestToast(), is(nullValue()));
+
+		Category persistedCategory = Database.findCategory(ANY_NAME);
+		assertThat(persistedCategory, is(notNullValue()));
+		assertThat(persistedCategory.budget, is(233));
+	}
+
+	private void assertNoIntentWasStarted() {
+		Intent startedIntent = shadowOf(categoryActivity).getNextStartedActivity();
+		assertThat("An intend was started, but shouldn't", startedIntent, is(nullValue()));
+	}
+
 	private void clickMenuItem(int itemId) {
 		MenuItem menuItem = menu.findItem(itemId);
 		assertThat(menuItem, is(notNullValue()));
@@ -93,6 +112,15 @@ public class CategoryActivityWithIntentTest {
 
 	private void fillName(String name) {
 		((EditText) categoryActivity.findViewById(R.id.name)).setText(name);
+	}
+
+	private void fillBudget(String string) {
+		((EditText) categoryActivity.findViewById(R.id.calculator_amount)).setText(string);
+	}
+
+	private void assertToastIsShown(int stringId) {
+		assertThat(ShadowToast.getTextOfLatestToast(), is(notNullValue()));
+		assertThat(ShadowToast.getTextOfLatestToast(), is(categoryActivity.getString(stringId)));
 	}
 
 }

@@ -123,6 +123,7 @@ public class CategoryActivityTest {
 		db.store(new Category(name, ANY_BUDGET, null));
 
 		fillName(name);
+		fillBudget("1.00");
 		clickMenuItem(R.id.save);
 
 		assertToastIsShown(R.string.error_name_duplicated);
