@@ -2,7 +2,6 @@ package de.splitstudio.fastbudget3.db;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +14,10 @@ import de.splitstudio.utils.ObjectExpandableListAdapter;
 
 public class CategoryExpandableListAdapter extends ObjectExpandableListAdapter<Category> {
 
-	private final Locale locale;
 	private final Date start;
 
 	public CategoryExpandableListAdapter(LayoutInflater layoutInflater, List<Category> categories) {
 		super(layoutInflater, categories, R.layout.category_row, 0);
-		locale = layoutInflater.getContext().getResources().getConfiguration().locale;
 		start = DateUtils.createFirstDayOfMonth().getTime();
 	}
 
@@ -28,8 +25,8 @@ public class CategoryExpandableListAdapter extends ObjectExpandableListAdapter<C
 	public void bindGroupView(View view, Category category) {
 		int expendituresCent = category.summarizeExpenditures(start, null);
 		int budget = category.calcBudget();
-		String budgetLiteral = NumberUtils.formatAsCurrency(budget, locale);
-		String expenditures = NumberUtils.formatAsCurrency(expendituresCent, locale);
+		String budgetLiteral = NumberUtils.formatAsCurrency(budget);
+		String expenditures = NumberUtils.formatAsCurrency(expendituresCent);
 
 		ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.category_fill);
 		progressBar.setMax(budget);

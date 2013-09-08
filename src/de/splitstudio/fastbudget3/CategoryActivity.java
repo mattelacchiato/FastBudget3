@@ -87,7 +87,6 @@ public class CategoryActivity extends Activity {
 		}
 	}
 
-	//TODO cleanup
 	public void save() {
 		String name = nameEdit.getText().toString();
 		String amount = calculator.getAmount();
@@ -98,10 +97,7 @@ public class CategoryActivity extends Activity {
 			return;
 		}
 
-		//TODO use Datebase?
-		db.store(new Category(name, validator.getAmountInCent(), datePicker.getDate().getTime()));
-		db.commit();
-
+		Database.store(new Category(name, validator.getAmountInCent(), datePicker.getDate().getTime()));
 		setResultAndFinish(RESULT_OK);
 	}
 

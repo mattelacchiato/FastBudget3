@@ -37,6 +37,12 @@ public class Database {
 		return db;
 	}
 
+	public static <T> T store(T object) {
+		db.store(object);
+		db.commit();
+		return object;
+	}
+
 	public static Category findCategory(final String name) {
 		return db.query(new Predicate<Category>() {
 			private static final long serialVersionUID = 1L;
