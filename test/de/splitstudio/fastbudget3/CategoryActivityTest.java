@@ -1,6 +1,5 @@
 package de.splitstudio.fastbudget3;
 
-import static de.splitstudio.fastbudget3.enums.Extras.CategoryName;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -11,7 +10,6 @@ import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -35,12 +33,10 @@ import com.db4o.ObjectContainer;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.utils.view.Calculator;
-import de.splitstudio.utils.view.DatePickerButtons;
 
 @RunWith(RobolectricTestRunner.class)
 public class CategoryActivityTest {
 
-	private static final Date ANY_DATE = new Date();
 	private static final String ANY_NAME = "category name";
 	private static final int ANY_BUDGET = 100;
 
@@ -54,9 +50,7 @@ public class CategoryActivityTest {
 		Locale.setDefault(Locale.US);
 		categoryActivity = buildActivity(CategoryActivity.class).create().get();
 		db = Database.getInstance(categoryActivity);
-		for (Object object : db.query().execute()) {
-			db.delete(object);
-		}
+		Database.clear();
 		menu = new TestMenu();
 		categoryActivity.onCreateOptionsMenu(menu);
 	}
@@ -184,29 +178,9 @@ public class CategoryActivityTest {
 	public void itsDatePickerIsInitializedWith_1stJan() {
 		Button button = (Button) categoryActivity.findViewById(R.id.date_field);
 
-		//TODO (07.09.2013): rm Locale?
-		int year = Calendar.getInstance(Locale.US).get(Calendar.YEAR);
+		int year = Calendar.getInstance().get(Calendar.YEAR);
 		assertThat(button.getText().toString(), is("January 1, " + year));
 	}
-
-	@Test
-	public void onCreate_withIntent_displaysCategory() {
-		db.store(new Category(ANY_NAME, 123, ANY_DATE));
-		Intent intent = new Intent(new OverviewActivity(), CategoryActivity.class);
-		intent.putExtra(CategoryName.name(), ANY_NAME);
-
-		CategoryActivity categoryActivity = buildActivity(CategoryActivity.class).withIntent(intent).create().get();
-
-		String name = ((EditText) categoryActivity.findViewById(R.id.name)).getText().toString();
-		String amount = ((Calculator) categoryActivity.findViewById(R.id.calculator)).getAmount();
-		DatePickerButtons datePicker = (DatePickerButtons) categoryActivity.findViewById(R.id.date_picker);
-		assertThat(name, is(ANY_NAME));
-		assertThat(datePicker.getDate().getTime(), is(ANY_DATE));
-		assertThat(amount, is("1.23"));
-	}
-
-	//TODO (07.09.2013): with intent, change something, updated (not new category created)
-	//TODO (07.09.2013): with intent, delete -> same behaviour like in context menu
 
 	private void assertNoIntentWasStarted() {
 		Intent startedIntent = shadowOf(categoryActivity).getNextStartedActivity();

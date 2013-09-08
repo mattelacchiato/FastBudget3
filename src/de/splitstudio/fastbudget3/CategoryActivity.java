@@ -63,6 +63,7 @@ public class CategoryActivity extends Activity {
 			calendar.setTime(category.date);
 			datePicker.setAndUpdateDate(calendar);
 		} else {
+			category = new Category();
 			datePicker.setAndUpdateDate(DateUtils.createFirstDayOfYear());
 		}
 	}
@@ -88,16 +89,18 @@ public class CategoryActivity extends Activity {
 	}
 
 	public void save() {
-		String name = nameEdit.getText().toString();
-		String amount = calculator.getAmount();
+		String amountString = calculator.getAmount();
+		category.name = nameEdit.getText().toString();
 
-		CategoryValidator validator = new CategoryValidator(db, name, amount);
+		CategoryValidator validator = new CategoryValidator(db, category.name, amountString);
 		if (validator.getResult() != CategoryValidationResult.Ok) {
 			Toast.makeText(this, validator.getResult().stringId, Toast.LENGTH_LONG).show();
 			return;
 		}
+		category.budget = validator.getAmountInCent();
+		category.date = datePicker.getDate().getTime();
 
-		Database.store(new Category(name, validator.getAmountInCent(), datePicker.getDate().getTime()));
+		Database.store(category);
 		setResultAndFinish(RESULT_OK);
 	}
 

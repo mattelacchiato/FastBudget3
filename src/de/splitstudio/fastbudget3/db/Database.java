@@ -7,10 +7,13 @@ import android.content.Context;
 import com.db4o.Db4oEmbedded;
 import com.db4o.EmbeddedObjectContainer;
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.query.Predicate;
 
 public class Database {
+
+	//TODO (08.09.2013): static ist vielleicht doch nicht so eine gute Idee...
 
 	private static EmbeddedObjectContainer db;
 
@@ -44,14 +47,19 @@ public class Database {
 	}
 
 	public static Category findCategory(final String name) {
-		return db.query(new Predicate<Category>() {
+		ObjectSet<Category> set = db.query(new Predicate<Category>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public boolean match(Category category) {
 				return category.name.equals(name);
 			}
-		}).get(0);
+		});
+
+		if (set.isEmpty()) {
+			return null;
+		}
+		return set.get(0);
 	}
 
 }

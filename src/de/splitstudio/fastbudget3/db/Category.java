@@ -24,6 +24,8 @@ public class Category implements Comparable<Category> {
 		this(name, 0, null);
 	}
 
+	public Category() {}
+
 	/**
 	 * start or end may be null. in this case it means endless to this direction.
 	 */
