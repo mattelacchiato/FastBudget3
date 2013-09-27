@@ -47,7 +47,6 @@ public class CategoryActivity extends Activity {
 		locale = getResources().getConfiguration().locale;
 
 		setContentView(R.layout.category_activity);
-		setTitle(R.string.add_category);
 
 		datePicker = (DatePickerButtons) findViewById(R.id.date_picker);
 		nameEdit = (EditText) findViewById(R.id.name);
@@ -59,6 +58,7 @@ public class CategoryActivity extends Activity {
 	private void initFields() {
 		updateCategory = getIntent().hasExtra(Extras.CategoryName.name());
 		if (updateCategory) {
+			setTitle(R.string.edit_category);
 			String name = getIntent().getExtras().getString(CategoryName.name());
 			category = Database.findCategory(name);
 			nameEdit.setText(category.name);
@@ -67,6 +67,7 @@ public class CategoryActivity extends Activity {
 			calendar.setTime(category.date);
 			datePicker.setAndUpdateDate(calendar);
 		} else {
+			setTitle(R.string.add_category);
 			category = new Category();
 			datePicker.setAndUpdateDate(DateUtils.createFirstDayOfYear());
 		}

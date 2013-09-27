@@ -99,6 +99,12 @@ public class CategoryActivityWithIntentTest {
 		assertThat(persistedCategory.budget, is(233));
 	}
 
+	@Test
+	public void titleIsSet() throws Exception {
+		String expectedTitle = categoryActivity.getString(R.string.edit_category);
+		assertThat(categoryActivity.getTitle().toString(), is(expectedTitle));
+	}
+
 	private void assertNoIntentWasStarted() {
 		Intent startedIntent = shadowOf(categoryActivity).getNextStartedActivity();
 		assertThat("An intend was started, but shouldn't", startedIntent, is(nullValue()));
