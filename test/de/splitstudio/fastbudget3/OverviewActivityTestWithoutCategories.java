@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
 
 import java.util.Date;
@@ -14,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.tester.android.view.TestMenu;
+import org.robolectric.util.ActivityController;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -36,10 +38,11 @@ public class OverviewActivityTestWithoutCategories {
 
 	@Before
 	public void setUp() {
-		this.overview = new OverviewActivity();
+		ActivityController<OverviewActivity> activityController = buildActivity(OverviewActivity.class);
+		overview = activityController.get();
 		db = Database.getInstance(overview);
 		Database.clear();
-		overview.onCreate(null);
+		activityController.create();
 		menu = new TestMenu();
 		overview.onCreateOptionsMenu(menu);
 	}

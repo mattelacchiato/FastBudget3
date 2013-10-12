@@ -53,6 +53,7 @@ public class CategoryActivityTest {
 		Database.clear();
 		menu = new TestMenu();
 		categoryActivity.onCreateOptionsMenu(menu);
+		shadowOf(categoryActivity.findViewById(R.id.calculator)).callOnAttachedToWindow();
 	}
 
 	@Test

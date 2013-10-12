@@ -238,4 +238,5 @@ public class ExpenditureListActivityTest {
 		ExpenditureListActivity activityWithoutIntent = buildActivity(ExpenditureListActivity.class).create().get();
 		assertThat(activityWithoutIntent.isFinishing(), is(true));
 	}
+
 }

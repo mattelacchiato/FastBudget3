@@ -26,9 +26,9 @@
             style="@style/headline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="20,23€"
-            android:gravity="right"
             android:layout_weight="1"
+            android:gravity="right"
+            android:text="20,23€"
             android:textIsSelectable="false" />
     </LinearLayout>
 
@@ -38,5 +38,36 @@
         android:layout_height="wrap_content"
         android:text="Description"
         android:textIsSelectable="false" />
+
+    <LinearLayout
+        android:id="@+id/context_row"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_context"
+        android:orientation="horizontal"
+        android:paddingBottom="0dp"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/button_edit"
+            style="@style/contextButton"
+            android:drawableTop="@drawable/ic_edit"
+            android:onClick="editCategory"
+            android:text="@string/edit_category" />
+
+        <Button
+            android:id="@+id/button_delete"
+            style="@style/contextButton"
+            android:drawableTop="@drawable/ic_delete"
+            android:onClick="deleteCategory"
+            android:text="@string/delete_category" />
+
+        <Button
+            android:id="@+id/button_list"
+            style="@style/contextButton"
+            android:drawableTop="@drawable/ic_list"
+            android:onClick="openExpenditureList"
+            android:text="@string/expenditures" />
+    </LinearLayout>
 
 </LinearLayout>

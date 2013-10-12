@@ -47,7 +47,8 @@ public class CategoryActivityWithIntentTest {
 	public void setUp() {
 		Locale.setDefault(Locale.US);
 
-		Intent intent = new Intent(new OverviewActivity(), CategoryActivity.class);
+		OverviewActivity overviewActivity = buildActivity(OverviewActivity.class).create().get();
+		Intent intent = new Intent(overviewActivity, CategoryActivity.class);
 		intent.putExtra(CategoryName.name(), ANY_NAME);
 		ActivityController<CategoryActivity> controller = buildActivity(CategoryActivity.class).withIntent(intent);
 
@@ -58,6 +59,7 @@ public class CategoryActivityWithIntentTest {
 		menu = new TestMenu();
 		categoryActivity = controller.create().get();
 		categoryActivity.onCreateOptionsMenu(menu);
+		shadowOf(categoryActivity.findViewById(R.id.calculator)).callOnAttachedToWindow();
 	}
 
 	@Test

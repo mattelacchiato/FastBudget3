@@ -39,7 +39,7 @@ import de.splitstudio.fastbudget3.db.Expenditure;
 import de.splitstudio.fastbudget3.enums.Extras;
 
 @RunWith(RobolectricTestRunner.class)
-public class OverviewActivityWith3Categories {
+public class OverviewActivityWith3CategoriesTest {
 
 	private OverviewActivity overview;
 
@@ -263,13 +263,13 @@ public class OverviewActivityWith3Categories {
 	}
 
 	@Test
-	@Ignore
 	public void clickOnListItem_togglesContextRow() {
 		activityController.start();
 		View contextSwitcher = findListView(R.id.context_switcher);
 		View contextRow = contextSwitcher.findViewById(R.id.context_row);
 
 		assertThat(contextRow.getVisibility(), is(GONE));
+		contextSwitcher.callOnClick();
 		contextSwitcher.performClick();
 		assertThat(contextRow.getVisibility(), is(VISIBLE));
 		contextSwitcher.performClick();

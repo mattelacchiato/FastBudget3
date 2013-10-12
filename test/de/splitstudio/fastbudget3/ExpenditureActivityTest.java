@@ -4,8 +4,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
+import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
 
+import java.util.Date;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -14,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowToast;
 import org.robolectric.tester.android.view.TestMenu;
+import org.robolectric.util.ActivityController;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,6 +27,7 @@ import com.db4o.ObjectContainer;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.enums.Extras;
+import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.view.Calculator;
 import de.splitstudio.utils.view.DatePickerButtons;
 
@@ -31,6 +35,10 @@ import de.splitstudio.utils.view.DatePickerButtons;
 public class ExpenditureActivityTest {
 
 	private static final String CATEGORY_NAME = "Category One";
+
+	private static final Date ANY_DATE = DateUtils.createFirstDayOfYear().getTime();
+
+	private static final int ANY_BUDGET = 0;
 
 	private ExpenditureActivity expenditureActivity;
 
@@ -41,20 +49,23 @@ public class ExpenditureActivityTest {
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		expenditureActivity = new ExpenditureActivity();
-		Intent intent = new Intent(new OverviewActivity(), ExpenditureActivity.class);
+		OverviewActivity overviewActivity = buildActivity(OverviewActivity.class).create().get();
+		Intent intent = new Intent(overviewActivity, ExpenditureActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
-		expenditureActivity.setIntent(intent);
+		ActivityController<ExpenditureActivity> activityController = buildActivity(ExpenditureActivity.class)
+				.withIntent(intent);
+		expenditureActivity = activityController.get();
 
 		db = Database.getInstance(expenditureActivity);
 		Database.clear();
-		db.store(new Category("not me"));
-		db.store(new Category(CATEGORY_NAME));
-		db.store(new Category("not me too"));
+		db.store(new Category("not me", ANY_BUDGET, ANY_DATE));
+		db.store(new Category(CATEGORY_NAME, ANY_BUDGET, ANY_DATE));
+		db.store(new Category("not me too", ANY_BUDGET, ANY_DATE));
 
-		expenditureActivity.onCreate(null);
+		activityController.create();
 		menu = new TestMenu();
 		expenditureActivity.onCreateOptionsMenu(menu);
+		shadowOf(expenditureActivity.findViewById(R.id.calculator)).callOnAttachedToWindow();
 	}
 
 	@Test
