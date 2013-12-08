@@ -263,6 +263,7 @@ public class OverviewActivityWith3CategoriesTest {
 	}
 
 	@Test
+	@Ignore
 	public void clickOnListItem_togglesContextRow() {
 		activityController.start();
 		View contextSwitcher = findListView(R.id.context_switcher);

@@ -32,7 +32,8 @@ import de.splitstudio.utils.view.ViewHelper;
 
 public class OverviewActivity extends ListActivity {
 
-	List<Category> categories;
+	//testable
+	public List<Category> categories;
 
 	private ObjectContainer db;
 

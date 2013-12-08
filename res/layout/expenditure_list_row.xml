@@ -46,7 +46,7 @@
         android:background="@color/background_context"
         android:orientation="horizontal"
         android:paddingBottom="0dp"
-        android:visibility="gone" >
+        android:visibility="visible" >
 
         <Button
             android:id="@+id/button_edit"
