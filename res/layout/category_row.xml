@@ -90,6 +90,13 @@
         android:visibility="gone" >
 
         <Button
+            android:id="@+id/button_list"
+            style="@style/contextButton"
+            android:drawableTop="@drawable/ic_list"
+            android:onClick="openExpenditureList"
+            android:text="@string/expenditures" />
+
+        <Button
             android:id="@+id/button_edit"
             style="@style/contextButton"
             android:drawableTop="@drawable/ic_edit"
@@ -102,13 +109,6 @@
             android:drawableTop="@drawable/ic_delete"
             android:onClick="deleteCategory"
             android:text="@string/delete_category" />
-
-        <Button
-            android:id="@+id/button_list"
-            style="@style/contextButton"
-            android:drawableTop="@drawable/ic_list"
-            android:onClick="openExpenditureList"
-            android:text="@string/expenditures" />
     </LinearLayout>
 
 </LinearLayout>

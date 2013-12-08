@@ -11,21 +11,39 @@
 
         <Button
             android:id="@+id/date_start"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="pickDate" />
+            android:onClick="pickDate"
+            android:text="01.01.2014"
+            tools:ignore="HardcodedText" />
 
-        <include layout="@layout/horizontal_divider" />
+        <!-- <ImageView -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="match_parent" -->
+        <!-- android:contentDescription="@string/date" -->
+        <!-- android:src="@drawable/ic_settings" /> -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:text="-"
+            android:textSize="28sp"
+            tools:ignore="HardcodedText" />
+
+        <!-- style="?android:attr/buttonBarButtonStyle" -->
 
         <Button
             android:id="@+id/date_end"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="pickDate" />
+            android:onClick="pickDate"
+            android:text="01.02.2014"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <include layout="@layout/vertical_divider" />

@@ -5,6 +5,7 @@
     <string name="amount">Amount</string>
     <string name="app_name">FastBudget</string>
     <string name="cancel">Cancel</string>
+    <string name="date">Date</string>
     <string name="delete_category">Delete Category</string>
     <string name="edit_category">Edit Category</string>
     <string name="error_end_before_start">Be aware: Selected end is before start!</string>
