@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
@@ -79,6 +80,7 @@ public class OverviewActivityWith3CategoriesTest {
 		activityController.create();
 		menu = new TestMenu();
 		overview.onCreateOptionsMenu(menu);
+		assertThat(overview.getListAdapter().getCount(), is(greaterThan(0)));
 	}
 
 	@Test
