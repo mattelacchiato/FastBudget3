@@ -1,7 +1,6 @@
 package de.splitstudio.fastbudget3;
 
 import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsString;
@@ -16,10 +15,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowIntent;
@@ -263,47 +260,6 @@ public class OverviewActivityWith3CategoriesTest {
 	public void hidesContextRow() {
 		activityController.start();
 		assertThat(findListView(R.id.context_row).getVisibility(), is(GONE));
-	}
-
-	@Test
-	public void clickOnListItem_togglesContextRow() {
-		activityController.start();
-
-		View contextSwitcher = findListView(R.id.context_switcher);
-		View contextRow = contextSwitcher.findViewById(R.id.context_row);
-
-		assertThat(contextRow.getVisibility(), is(GONE));
-
-		contextSwitcher.callOnClick();
-		contextSwitcher.performClick();
-
-		assertThat(contextSwitcher.getVisibility(), is(VISIBLE));
-		assertThat(contextSwitcher.getParent(), is(notNullValue()));
-		assertThat(contextSwitcher.isShown(), is(true));
-		Robolectric.clickOn(contextSwitcher);
-
-		assertThat(contextRow.getVisibility(), is(VISIBLE));
-		contextSwitcher.performClick();
-		assertThat(contextRow.getVisibility(), is(GONE));
-	}
-
-	@Test
-	@Ignore
-	public void clickOnListItem_hidesPreviousShownRow() {
-		activityController.start();
-		View contextSwitcher1 = findListView(0, R.id.context_switcher);
-		View contextSwitcher2 = findListView(1, R.id.context_switcher);
-		View contextRow1 = contextSwitcher1.findViewById(R.id.context_row);
-		View contextRow2 = contextSwitcher2.findViewById(R.id.context_row);
-
-		assertThat(contextRow1.getVisibility(), is(GONE));
-		assertThat(contextRow2.getVisibility(), is(GONE));
-		contextSwitcher1.performClick();
-		assertThat(contextRow1.getVisibility(), is(VISIBLE));
-		assertThat(contextRow2.getVisibility(), is(GONE));
-		contextSwitcher2.performClick();
-		assertThat(contextRow1.getVisibility(), is(GONE));
-		assertThat(contextRow2.getVisibility(), is(VISIBLE));
 	}
 
 	@Test

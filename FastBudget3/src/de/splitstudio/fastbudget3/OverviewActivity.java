@@ -42,7 +42,6 @@ public class OverviewActivity extends ListActivity {
 		List<Category> categories = new ArrayList<Category>(db.query(Category.class));
 		listAdapter = new CategoryListAdapter(getLayoutInflater(), categories);
 		setListAdapter(listAdapter);
-		//TODO (Dec 22, 2013): is requery really needed???
 		requeryCategories(categories);
 	}
 
