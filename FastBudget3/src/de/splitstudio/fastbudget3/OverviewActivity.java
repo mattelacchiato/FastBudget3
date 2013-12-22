@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,10 +38,11 @@ public class OverviewActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.overview_activity);
-		db = Database.getInstance(getContext());
+		db = Database.getInstance(getApplicationContext());
 		List<Category> categories = new ArrayList<Category>(db.query(Category.class));
 		listAdapter = new CategoryListAdapter(getLayoutInflater(), categories);
 		setListAdapter(listAdapter);
+		//TODO (Dec 22, 2013): is requery really needed???
 		requeryCategories(categories);
 	}
 
@@ -83,13 +83,13 @@ public class OverviewActivity extends ListActivity {
 		TextView nameTextView = (TextView) parent.findViewById(R.id.name);
 		String categoryName = nameTextView.getText().toString();
 
-		Intent intent = new Intent(getContext(), ExpenditureActivity.class);
+		Intent intent = new Intent(getApplicationContext(), ExpenditureActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), categoryName);
 		startActivityForResult(intent, RequestCode.CreateExpenditure.ordinal());
 	}
 
 	public void editCategory(View view) {
-		Intent intent = new Intent(getContext(), CategoryActivity.class);
+		Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), (String) view.getTag());
 		startActivityForResult(intent, RequestCode.EditCategory.ordinal());
 	}
@@ -124,7 +124,7 @@ public class OverviewActivity extends ListActivity {
 	}
 
 	public void openExpenditureList(View view) {
-		Intent intent = new Intent(getContext(), ExpenditureListActivity.class);
+		Intent intent = new Intent(getApplicationContext(), ExpenditureListActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), (String) view.getTag());
 		startActivity(intent);
 	}
@@ -140,7 +140,7 @@ public class OverviewActivity extends ListActivity {
 	}
 
 	private void addCategory() {
-		Intent intent = new Intent(getContext(), CategoryActivity.class);
+		Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
 		startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
 	}
 
@@ -158,10 +158,6 @@ public class OverviewActivity extends ListActivity {
 		String spent = currency.format(centToDouble(spentCents));
 		String budget = currency.format(centToDouble(budgetCents));
 		setTitle(format("%s  %s/%s", getString(R.string.app_name), spent, budget));
-	}
-
-	private Context getContext() {
-		return this;
 	}
 
 }
