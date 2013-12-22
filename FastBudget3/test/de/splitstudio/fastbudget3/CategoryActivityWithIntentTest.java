@@ -19,6 +19,7 @@ import org.robolectric.shadows.ShadowToast;
 import org.robolectric.tester.android.view.TestMenu;
 import org.robolectric.util.ActivityController;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,19 +48,26 @@ public class CategoryActivityWithIntentTest {
 	public void setUp() {
 		Locale.setDefault(Locale.US);
 
-		OverviewActivity overviewActivity = buildActivity(OverviewActivity.class).create().get();
+		ActivityController<OverviewActivity> overviewController = buildActivity(OverviewActivity.class);
+		initDb(overviewController.get().getApplicationContext());
+		OverviewActivity overviewActivity = overviewController.create().get();
 		Intent intent = new Intent(overviewActivity, CategoryActivity.class);
 		intent.putExtra(CategoryName.name(), ANY_NAME);
-		ActivityController<CategoryActivity> controller = buildActivity(CategoryActivity.class).withIntent(intent);
+		ActivityController<CategoryActivity> categoryController = buildActivity(CategoryActivity.class).withIntent(
+			intent);
 
-		db = Database.getInstance(controller.get());
-		Database.clear();
-		db.store(new Category(ANY_NAME, ANY_BUDGET, ANY_DATE));
-
+		categoryActivity = categoryController.get();
 		menu = new TestMenu();
-		categoryActivity = controller.create().get();
+		categoryController.create();
 		categoryActivity.onCreateOptionsMenu(menu);
 		shadowOf(categoryActivity.findViewById(R.id.calculator)).callOnAttachedToWindow();
+	}
+
+	private void initDb(Context context) {
+		//TODO (Dec 22, 2013): create method getClearedInstance(..)?
+		db = Database.getInstance(context);
+		Database.clear();
+		db.store(new Category(ANY_NAME, ANY_BUDGET, ANY_DATE));
 	}
 
 	@Test
