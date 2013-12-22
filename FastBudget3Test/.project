@@ -22,9 +22,19 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>src</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/FastBudget3/FastBudget3/src</locationURI>
+		</link>
+		<link>
 			<name>test</name>
 			<type>2</type>
 			<location>/home/mb/code/FastBudget3/test</location>
+		</link>
+		<link>
+			<name>test2</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/FastBudget3/FastBudget3/test</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
