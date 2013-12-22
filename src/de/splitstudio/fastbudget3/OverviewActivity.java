@@ -7,7 +7,6 @@ import static java.lang.String.format;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import android.app.ListActivity;
@@ -32,9 +31,6 @@ import de.splitstudio.utils.view.ViewHelper;
 
 public class OverviewActivity extends ListActivity {
 
-	//testable
-	public List<Category> categories;
-
 	private ObjectContainer db;
 
 	private CategoryListAdapter listAdapter;
@@ -44,11 +40,10 @@ public class OverviewActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.overview_activity);
 		db = Database.getInstance(getContext());
-		categories = new ArrayList<Category>();
-		categories.addAll(db.query(Category.class));
+		List<Category> categories = new ArrayList<Category>(db.query(Category.class));
 		listAdapter = new CategoryListAdapter(getLayoutInflater(), categories);
 		setListAdapter(listAdapter);
-		requeryCategories();
+		requeryCategories(categories);
 	}
 
 	@Override
@@ -112,13 +107,16 @@ public class OverviewActivity extends ListActivity {
 			});
 	}
 
+	//TODO (Dec 9, 2013): generalisieren!
 	public void switchView(View view) {
 		View currentContextRow = view.findViewById(R.id.context_row);
 		for (View otherView : ViewHelper.getViewsById(getListView(), R.id.context_row)) {
 			boolean otherViewIsCurrentView = otherView.getTag().equals(currentContextRow.getTag());
 			if (otherViewIsCurrentView) {
 				boolean isVisible = currentContextRow.getVisibility() == VISIBLE;
-				currentContextRow.setVisibility(isVisible ? GONE : VISIBLE);
+				int newVisibility = isVisible ? GONE : VISIBLE;
+				currentContextRow.setVisibility(newVisibility);
+				System.err.println("Set row visibility to " + newVisibility);
 			} else {
 				otherView.setVisibility(GONE);
 			}
@@ -131,12 +129,14 @@ public class OverviewActivity extends ListActivity {
 		startActivity(intent);
 	}
 
-	void requeryCategories() {
-		categories.clear();
-		categories.addAll(db.query(Category.class));
-		Collections.sort(categories);
-		listAdapter.notifyDataSetChanged();
-		updateTitle();
+	public void requeryCategories() {
+		List<Category> categories = new ArrayList<Category>(db.query(Category.class));
+		requeryCategories(categories);
+	}
+
+	private void requeryCategories(List<Category> categories) {
+		listAdapter.update(categories);
+		updateTitle(categories);
 	}
 
 	private void addCategory() {
@@ -144,7 +144,7 @@ public class OverviewActivity extends ListActivity {
 		startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
 	}
 
-	private void updateTitle() {
+	private void updateTitle(List<Category> categories) {
 		NumberFormat currency = NumberFormat.getCurrencyInstance();
 		currency.setMaximumFractionDigits(0);
 

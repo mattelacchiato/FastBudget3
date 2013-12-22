@@ -1,5 +1,7 @@
 package de.splitstudio.fastbudget3;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
 
 import java.util.Calendar;
@@ -18,13 +20,14 @@ import de.splitstudio.fastbudget3.db.ExpenditureListAdapter;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.activity.DialogHelper;
+import de.splitstudio.utils.view.ViewHelper;
 
 public class ExpenditureListActivity extends ListActivity {
 
 	Calendar start;
 	Calendar end;
 
-	final Runnable update = new Runnable() {
+	public final Runnable update = new Runnable() {
 		@Override
 		public void run() {
 			if (end.before(start)) {
@@ -59,6 +62,19 @@ public class ExpenditureListActivity extends ListActivity {
 		adapter = new ExpenditureListAdapter(LayoutInflater.from(this), expenditures);
 		setListAdapter(adapter);
 		update.run();
+	}
+
+	public void switchView(View view) {
+		View currentContextRow = view.findViewById(R.id.context_row);
+		for (View otherView : ViewHelper.getViewsById(getListView(), R.id.context_row)) {
+			boolean otherViewIsCurrentView = otherView.getTag().equals(currentContextRow.getTag());
+			if (otherViewIsCurrentView) {
+				boolean isVisible = currentContextRow.getVisibility() == VISIBLE;
+				currentContextRow.setVisibility(isVisible ? GONE : VISIBLE);
+			} else {
+				otherView.setVisibility(GONE);
+			}
+		}
 	}
 
 	public void pickDate(View view) {

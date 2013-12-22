@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/context_switcher"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:onClick="switchView"
     android:orientation="vertical"
     android:padding="8dp"
     tools:ignore="HardcodedText" >
@@ -46,7 +48,7 @@
         android:background="@color/background_context"
         android:orientation="horizontal"
         android:paddingBottom="0dp"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
         <Button
             android:id="@+id/button_edit"

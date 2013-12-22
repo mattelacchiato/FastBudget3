@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowIntent;
@@ -263,15 +264,22 @@ public class OverviewActivityWith3CategoriesTest {
 	}
 
 	@Test
-	@Ignore
 	public void clickOnListItem_togglesContextRow() {
 		activityController.start();
+
 		View contextSwitcher = findListView(R.id.context_switcher);
 		View contextRow = contextSwitcher.findViewById(R.id.context_row);
 
 		assertThat(contextRow.getVisibility(), is(GONE));
+
 		contextSwitcher.callOnClick();
 		contextSwitcher.performClick();
+
+		assertThat(contextSwitcher.getVisibility(), is(VISIBLE));
+		assertThat(contextSwitcher.getParent(), is(notNullValue()));
+		assertThat(contextSwitcher.isShown(), is(true));
+		Robolectric.clickOn(contextSwitcher);
+
 		assertThat(contextRow.getVisibility(), is(VISIBLE));
 		contextSwitcher.performClick();
 		assertThat(contextRow.getVisibility(), is(GONE));
@@ -321,6 +329,6 @@ public class OverviewActivityWith3CategoriesTest {
 	}
 
 	private View findListView(int position, int viewId) {
-		return overview.getListAdapter().getView(position, null, null).findViewById(viewId);
+		return overview.getListAdapter().getView(position, null, overview.getListView()).findViewById(viewId);
 	}
 }

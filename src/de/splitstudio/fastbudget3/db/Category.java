@@ -66,6 +66,7 @@ public class Category implements Comparable<Category> {
 	}
 
 	public int calcBudget() {
+		//TODO (Dec 22, 2013): put this in DateUtils!
 		Calendar lastMonth = DateUtils.createFirstDayOfMonth();
 		lastMonth.add(Calendar.MILLISECOND, -1);
 		return calcGrossBudget() - summarizeExpenditures(null, lastMonth.getTime());

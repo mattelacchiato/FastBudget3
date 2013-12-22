@@ -1,5 +1,6 @@
 package de.splitstudio.fastbudget3.db;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,14 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 		((TextView) view.findViewById(R.id.name)).setText(category.name);
 		((TextView) view.findViewById(R.id.category_budget)).setText(budgetLiteral);
 		((TextView) view.findViewById(R.id.category_spent)).setText(expenditures);
+	}
+
+	@Override
+	public void update(List<Category> categories) {
+		objects.clear();
+		objects.addAll(categories);
+		Collections.sort(objects);
+		notifyDataSetChanged();
 	}
 
 }
