@@ -13,15 +13,13 @@ import com.db4o.query.Predicate;
 
 public class Database {
 
-	//TODO (08.09.2013): static ist vielleicht doch nicht so eine gute Idee...
-
 	private static EmbeddedObjectContainer db;
 
 	private Database() {}
 
-	public static ObjectContainer getInstance(Context context) {
+	public static synchronized ObjectContainer getInstance(Context context) {
 		if (db == null) {
-			String databaseFileName = new File(context.getFilesDir(), "db").getAbsolutePath();
+			String databaseFileName = new File(context.getApplicationContext().getFilesDir(), "db").getAbsolutePath();
 			db = Db4oEmbedded.openFile(createConfig(), databaseFileName);
 		}
 		return db;
