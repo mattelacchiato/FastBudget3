@@ -27,6 +27,14 @@ public class Database {
 		return db;
 	}
 
+	/*
+	 * Helper method for testing.
+	 */
+	public static ObjectContainer getClearedInstance(Context context) {
+		getInstance(context);
+		return clear();
+	}
+
 	private static EmbeddedConfiguration createConfig() {
 		EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
 		config.common().objectClass(Category.class).cascadeOnDelete(true);

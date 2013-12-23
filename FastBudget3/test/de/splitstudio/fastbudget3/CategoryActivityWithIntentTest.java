@@ -64,9 +64,7 @@ public class CategoryActivityWithIntentTest {
 	}
 
 	private void initDb(Context context) {
-		//TODO (Dec 22, 2013): create method getClearedInstance(..)?
-		db = Database.getInstance(context);
-		Database.clear();
+		db = Database.getClearedInstance(context);
 		db.store(new Category(ANY_NAME, ANY_BUDGET, ANY_DATE));
 	}
 
