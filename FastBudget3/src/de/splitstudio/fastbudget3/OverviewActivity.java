@@ -3,6 +3,7 @@ package de.splitstudio.fastbudget3;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static de.splitstudio.utils.NumberUtils.centToDouble;
+import static de.splitstudio.utils.view.ViewHelper.getViewsById;
 import static java.lang.String.format;
 
 import java.text.NumberFormat;
@@ -74,6 +75,13 @@ public class OverviewActivity extends ListActivity {
 			default:
 				break;
 			}
+		}
+		hideAllContexts();
+	}
+
+	private void hideAllContexts() {
+		for (View view : getViewsById(getListView(), R.id.context_row)) {
+			view.setVisibility(GONE);
 		}
 	}
 

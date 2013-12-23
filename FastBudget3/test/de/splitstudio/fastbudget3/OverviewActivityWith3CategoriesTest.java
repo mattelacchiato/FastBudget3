@@ -253,7 +253,6 @@ public class OverviewActivityWith3CategoriesTest {
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
 
 		assertThatTextAtPositionIs(0, R.id.name, NAME2);
-		//TODO (07.09.2013): assert that all contexts are collapsed
 	}
 
 	@Test

@@ -80,6 +80,14 @@ public class OverviewActivityIntegrationTest extends FilledStateTestCase<Overvie
 		contextMenuAt(2).check(matches(isDisplayed()));
 	}
 
+	public void test_openCategoryActivity_goBack_allContextsAreGone() {
+		onData(is(Category.class)).atPosition(0).perform(click());
+		onData(is(Category.class)).atPosition(0).onChildView(withId(R.id.button_edit)).perform(click());
+		onView(withId(R.id.cancel)).perform(click());
+
+		contextMenuAt(0).check(matches(not(isDisplayed())));
+	}
+
 	private DataInteraction contextMenuAt(int position) {
 		return onData(is(Category.class)).atPosition(position).onChildView(withId(R.id.context_row));
 	}
