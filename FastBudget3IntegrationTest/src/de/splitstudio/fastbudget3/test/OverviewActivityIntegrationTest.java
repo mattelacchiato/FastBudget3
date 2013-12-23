@@ -19,7 +19,6 @@ import de.splitstudio.fastbudget3.OverviewActivity;
 import de.splitstudio.fastbudget3.R;
 import de.splitstudio.fastbudget3.db.Category;
 
-//TODO (Dec 20, 2013): put app, test, int-test in one git repo!
 public class OverviewActivityIntegrationTest extends FilledStateTestCase<OverviewActivity> {
 
 	private static final String CATEGORY_NAME = "My Category";
