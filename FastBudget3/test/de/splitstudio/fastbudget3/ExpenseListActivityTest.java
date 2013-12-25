@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
+import static org.robolectric.Robolectric.shadowOf;
 
 import java.util.Locale;
 
@@ -14,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowDatePickerDialog;
+import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.shadows.ShadowToast;
 import org.robolectric.util.ActivityController;
 
@@ -38,6 +40,8 @@ public class ExpenseListActivityTest {
 
 	private static final String DESCRIPTION = "desc";
 
+	private Expense expense;
+
 	private Category category;
 
 	private ExpenseListActivity activity;
@@ -57,7 +61,8 @@ public class ExpenseListActivityTest {
 		Database.clear();
 
 		category = new Category(CATEGORY_NAME);
-		category.expenses.add(new Expense(10, createFirstDayOfMonth().getTime(), DESCRIPTION));
+		expense = new Expense(10, createFirstDayOfMonth().getTime(), DESCRIPTION);
+		category.expenses.add(expense);
 		db.store(category);
 		db.commit();
 	}
@@ -163,13 +168,18 @@ public class ExpenseListActivityTest {
 	public void hasEditButton() {
 		Button button = (Button) findListView(R.id.button_edit);
 		assertThat(button.getText().toString(), is(activity.getString(R.string.edit)));
+	}
 
-//		Intent nextStartedActivity = shadowOf(overview).getNextStartedActivity();
-//		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
-//		ShadowIntent shadowIntent = shadowOf(nextStartedActivity);
-//		assertThat(shadowIntent.getExtras(), is(notNullValue()));
-//		assertThat(shadowIntent.getExtras().getString(Extras.CategoryName.name()), is(NAME1));
+	@Test
+	public void clickEditButton_opensExpenditureActivity() {
+		findListView(R.id.button_edit).performClick();
 
+		Intent nextStartedActivity = shadowOf(activity).getNextStartedActivity();
+		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
+
+		ShadowIntent intent = shadowOf(nextStartedActivity);
+		assertThat(intent.getExtras(), is(notNullValue()));
+		assertThat(intent.getExtras().getString(Extras.Id.name()), is(expense.uuid));
 	}
 
 	private View findListView(int viewId) {

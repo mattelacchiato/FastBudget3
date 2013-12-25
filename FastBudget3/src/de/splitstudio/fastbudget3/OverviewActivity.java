@@ -28,6 +28,7 @@ import de.splitstudio.fastbudget3.enums.RequestCode;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.activity.DialogHelper;
 
+//TODO (Dec 25, 2013): rename to CategoryListActivity
 public class OverviewActivity extends ListActivity {
 
 	private ObjectContainer db;

@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.db.ExpenseListAdapter;
 import de.splitstudio.fastbudget3.enums.Extras;
+import de.splitstudio.fastbudget3.enums.RequestCode;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.activity.DialogHelper;
 
@@ -74,6 +76,12 @@ public class ExpenseListActivity extends ListActivity {
 		} else if (view.getId() == R.id.date_end) {
 			DialogHelper.pickDate(this, end, update);
 		}
+	}
+
+	public void editExpense(View view) {
+		Intent intent = new Intent(this, ExpenseActivity.class);
+		intent.putExtra(Extras.Id.name(), view.getTag().toString());
+		startActivityForResult(intent, RequestCode.EditExpense.ordinal());
 	}
 
 }
