@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import de.splitstudio.utils.activity.DialogHelper;
 
 public class ExpenseListActivity extends ListActivity {
 
+	private static final String TAG = ListActivity.class.getSimpleName();
 	Calendar start;
 	Calendar end;
 
@@ -48,6 +50,7 @@ public class ExpenseListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (!getIntent().hasExtra(Extras.CategoryName.name())) {
+			Log.e(TAG, "No category name given!");
 			finish();
 			return;
 		}

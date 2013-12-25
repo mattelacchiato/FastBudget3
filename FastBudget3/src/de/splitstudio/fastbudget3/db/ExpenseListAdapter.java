@@ -18,11 +18,6 @@ public class ExpenseListAdapter extends ObjectListAdapter<Expense> {
 
 	@Override
 	public void bindView(View view, Expense expense) {
-		view.findViewById(R.id.button_list).setTag(expense.hashCode());
-		view.findViewById(R.id.button_delete).setTag(expense.hashCode());
-		view.findViewById(R.id.button_edit).setTag(expense.hashCode());
-		view.findViewById(R.id.context_row).setTag(expense.hashCode());
-
 		((TextView) view.findViewById(R.id.description)).setText(expense.description);
 		((TextView) view.findViewById(R.id.amount)).setText(NumberUtils.formatAsCurrency(expense.amount));
 		((TextView) view.findViewById(R.id.date_field)).setText(DateUtils.formatAsShortDate(expense.date));

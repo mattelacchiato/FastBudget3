@@ -109,7 +109,7 @@ public class CategoryActivityWithIntentTest {
 
 	@Test
 	public void titleIsSet() throws Exception {
-		String expectedTitle = categoryActivity.getString(R.string.edit_category);
+		String expectedTitle = categoryActivity.getString(R.string.edit);
 		assertThat(categoryActivity.getTitle().toString(), is(expectedTitle));
 	}
 

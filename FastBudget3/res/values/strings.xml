@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="add_category">Create a category</string>
+    <string name="add_category">Create a Category</string>
     <string name="amount">Amount</string>
     <string name="app_name">FastBudget</string>
     <string name="cancel">Cancel</string>
     <string name="date">Date</string>
-    <string name="delete_category">Delete Category</string>
-    <string name="edit_category">Edit Category</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
     <string name="error_end_before_start">Be aware: Selected end is before start!</string>
     <string name="error_invalid_number">The number you have entered is not valid</string>
     <string name="error_name_duplicated">This category name is already given</string>

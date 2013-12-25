@@ -51,7 +51,7 @@ public class OverviewActivityIntegrationTest extends FilledStateTestCase<Overvie
 		onView(withText(CATEGORY_NAME)).check(doesNotExist());
 
 		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-		onView(withText("Create a category")).perform(click());
+		onView(withText(R.string.add_category)).perform(click());
 		//TODO (Dec 20, 2013): find a way to check the title
 		onView(withId(R.id.category_date_hint)).check(matches(isDisplayed()));
 

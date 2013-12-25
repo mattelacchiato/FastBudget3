@@ -54,21 +54,14 @@
             style="@style/contextButton"
             android:drawableTop="@drawable/ic_edit"
             android:onClick="editCategory"
-            android:text="@string/edit_category" />
+            android:text="@string/edit" />
 
         <Button
             android:id="@+id/button_delete"
             style="@style/contextButton"
             android:drawableTop="@drawable/ic_delete"
             android:onClick="deleteCategory"
-            android:text="@string/delete_category" />
-
-        <Button
-            android:id="@+id/button_list"
-            style="@style/contextButton"
-            android:drawableTop="@drawable/ic_list"
-            android:onClick="openExpenseList"
-            android:text="@string/expenses" />
+            android:text="@string/delete" />
     </LinearLayout>
 
 </LinearLayout>

@@ -100,14 +100,14 @@
             style="@style/contextButton"
             android:drawableTop="@drawable/ic_edit"
             android:onClick="editCategory"
-            android:text="@string/edit_category" />
+            android:text="@string/edit" />
 
         <Button
             android:id="@+id/button_delete"
             style="@style/contextButton"
             android:drawableTop="@drawable/ic_delete"
             android:onClick="deleteCategory"
-            android:text="@string/delete_category" />
+            android:text="@string/delete" />
     </LinearLayout>
 
 </LinearLayout>

@@ -58,7 +58,7 @@ public class CategoryActivity extends Activity {
 	private void initFields() {
 		updateCategory = getIntent().hasExtra(Extras.CategoryName.name());
 		if (updateCategory) {
-			setTitle(R.string.edit_category);
+			setTitle(R.string.edit);
 			String name = getIntent().getExtras().getString(CategoryName.name());
 			category = Database.findCategory(name);
 			nameEdit.setText(category.name);
