@@ -1,5 +1,5 @@
 package de.splitstudio.fastbudget3.enums;
 
 public enum RequestCode {
-	CreateCategory, CreateExpenditure, EditCategory;
+	CreateCategory, CreateExpense, EditCategory;
 }

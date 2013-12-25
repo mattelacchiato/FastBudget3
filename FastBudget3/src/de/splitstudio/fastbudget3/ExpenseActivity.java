@@ -14,13 +14,13 @@ import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
-import de.splitstudio.fastbudget3.db.Expenditure;
+import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.NumberUtils;
 import de.splitstudio.utils.view.Calculator;
 import de.splitstudio.utils.view.DatePickerButtons;
 
-public class ExpenditureActivity extends Activity {
+public class ExpenseActivity extends Activity {
 
 	Category category;
 
@@ -32,8 +32,8 @@ public class ExpenditureActivity extends Activity {
 		String categoryName = getIntent().getExtras().getString(Extras.CategoryName.name());
 		db = Database.getInstance(this);
 		category = Database.findCategory(categoryName);
-		setTitle(getString(R.string.title_expenditure, categoryName));
-		setContentView(R.layout.expenditure_activity);
+		setTitle(getString(R.string.title_expense, categoryName));
+		setContentView(R.layout.expense_activity);
 	}
 
 	@Override
@@ -70,8 +70,8 @@ public class ExpenditureActivity extends Activity {
 			int amount = NumberUtils.parseCent(calculator.getAmount());
 			Date date = datePickerButtons.getDate().getTime();
 			String description = descriptionEdit.getText().toString();
-			category.expenditures.add(new Expenditure(amount, date, description));
-			db.store(category.expenditures);
+			category.expenses.add(new Expense(amount, date, description));
+			db.store(category.expenses);
 			db.commit();
 			setResult(RESULT_OK);
 			finish();

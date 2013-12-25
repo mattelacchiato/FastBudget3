@@ -11,7 +11,7 @@ public class Category implements Comparable<Category> {
 
 	public String name;
 	public int budget;
-	public List<Expenditure> expenditures = new ArrayList<Expenditure>();
+	public List<Expense> expenses = new ArrayList<Expense>();
 	public Date date;
 
 	public Category(String name, int budget, Date date) {
@@ -29,22 +29,22 @@ public class Category implements Comparable<Category> {
 	/**
 	 * start or end may be null. in this case it means endless to this direction.
 	 */
-	public int summarizeExpenditures(Date start, Date end) {
+	public int summarizeExpenses(Date start, Date end) {
 		int sum = 0;
-		for (Expenditure expenditure : expenditures) {
-			if (DateUtils.isBetween(start, expenditure.date, end)) {
-				sum += expenditure.amount;
+		for (Expense expense : expenses) {
+			if (DateUtils.isBetween(start, expense.date, end)) {
+				sum += expense.amount;
 			}
 		}
 		return sum;
 	}
 
 	/**
-	 * Sorts descending by expenditures size.
+	 * Sorts descending by expenses size.
 	 */
 	@Override
 	public int compareTo(Category other) {
-		int compareBySize = other.expenditures.size() - expenditures.size();
+		int compareBySize = other.expenses.size() - expenses.size();
 		if (compareBySize != 0) {
 			return compareBySize;
 		}
@@ -68,14 +68,14 @@ public class Category implements Comparable<Category> {
 	public int calcBudget() {
 		Calendar lastMonth = DateUtils.createFirstDayOfMonth();
 		lastMonth.add(Calendar.MILLISECOND, -1);
-		return calcGrossBudget() - summarizeExpenditures(null, lastMonth.getTime());
+		return calcGrossBudget() - summarizeExpenses(null, lastMonth.getTime());
 	}
 
-	public List<Expenditure> findExpenditures(Date start, Date end) {
-		List<Expenditure> list = new ArrayList<Expenditure>(expenditures.size());
-		for (Expenditure expenditure : expenditures) {
-			if (DateUtils.isBetween(start, expenditure.date, end)) {
-				list.add(expenditure);
+	public List<Expense> findExpenses(Date start, Date end) {
+		List<Expense> list = new ArrayList<Expense>(expenses.size());
+		for (Expense expense : expenses) {
+			if (DateUtils.isBetween(start, expense.date, end)) {
+				list.add(expense);
 			}
 		}
 		return list;

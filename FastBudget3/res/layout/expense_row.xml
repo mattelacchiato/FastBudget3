@@ -4,7 +4,6 @@
     android:id="@+id/context_switcher"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:onClick="switchView"
     android:orientation="vertical"
     android:padding="8dp"
     tools:ignore="HardcodedText" >
@@ -68,8 +67,8 @@
             android:id="@+id/button_list"
             style="@style/contextButton"
             android:drawableTop="@drawable/ic_list"
-            android:onClick="openExpenditureList"
-            android:text="@string/expenditures" />
+            android:onClick="openExpenseList"
+            android:text="@string/expenses" />
     </LinearLayout>
 
 </LinearLayout>

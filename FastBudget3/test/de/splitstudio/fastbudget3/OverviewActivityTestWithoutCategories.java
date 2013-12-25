@@ -3,6 +3,8 @@ package de.splitstudio.fastbudget3;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
@@ -26,7 +28,6 @@ import android.widget.TextView;
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
-import de.splitstudio.fastbudget3.db.CategoryListAdapter;
 import de.splitstudio.fastbudget3.db.Database;
 
 @RunWith(RobolectricTestRunner.class)
@@ -59,7 +60,7 @@ public class OverviewActivityTestWithoutCategories {
 
 	@Test
 	public void assignsAListAdapter() throws Exception {
-		assertThat(overview.getListAdapter(), is(CategoryListAdapter.class));
+		assertThat(overview.getListAdapter(), is(not(nullValue())));
 	}
 
 	@Test

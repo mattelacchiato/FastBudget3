@@ -1,7 +1,6 @@
 package de.splitstudio.fastbudget3;
 
 import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static de.splitstudio.utils.NumberUtils.centToDouble;
 import static de.splitstudio.utils.view.ViewHelper.getViewsById;
 import static java.lang.String.format;
@@ -19,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.db4o.ObjectContainer;
+import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
@@ -27,7 +27,6 @@ import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.fastbudget3.enums.RequestCode;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.activity.DialogHelper;
-import de.splitstudio.utils.view.ViewHelper;
 
 public class OverviewActivity extends ListActivity {
 
@@ -42,8 +41,8 @@ public class OverviewActivity extends ListActivity {
 		db = Database.getInstance(getApplicationContext());
 		List<Category> categories = new ArrayList<Category>(db.query(Category.class));
 		listAdapter = new CategoryListAdapter(getLayoutInflater(), categories);
-		setListAdapter(listAdapter);
-		requeryCategories(categories);
+		setListAdapter(new SlideExpandableListAdapter(listAdapter, R.id.context_switcher, R.id.context_row));
+		updateView(categories);
 	}
 
 	@Override
@@ -69,8 +68,8 @@ public class OverviewActivity extends ListActivity {
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case CreateCategory:
-			case CreateExpenditure:
-				requeryCategories();
+			case CreateExpense:
+				updateView();
 				break;
 			default:
 				break;
@@ -85,14 +84,14 @@ public class OverviewActivity extends ListActivity {
 		}
 	}
 
-	public void addExpenditure(View view) {
+	public void addExpense(View view) {
 		View parent = (View) view.getParent();
 		TextView nameTextView = (TextView) parent.findViewById(R.id.name);
 		String categoryName = nameTextView.getText().toString();
 
-		Intent intent = new Intent(getApplicationContext(), ExpenditureActivity.class);
+		Intent intent = new Intent(getApplicationContext(), ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), categoryName);
-		startActivityForResult(intent, RequestCode.CreateExpenditure.ordinal());
+		startActivityForResult(intent, RequestCode.CreateExpense.ordinal());
 	}
 
 	public void editCategory(View view) {
@@ -109,39 +108,23 @@ public class OverviewActivity extends ListActivity {
 					Category category = Database.findCategory((String) view.getTag());
 					db.delete(category);
 					db.commit();
-					requeryCategories();
+					updateView();
 				}
 			});
 	}
 
-	//TODO (Dec 9, 2013): generalisieren!
-	public void switchView(View view) {
-		View currentContextRow = view.findViewById(R.id.context_row);
-		for (View otherView : ViewHelper.getViewsById(getListView(), R.id.context_row)) {
-			boolean otherViewIsCurrentView = otherView.getTag().equals(currentContextRow.getTag());
-			if (otherViewIsCurrentView) {
-				boolean isVisible = currentContextRow.getVisibility() == VISIBLE;
-				int newVisibility = isVisible ? GONE : VISIBLE;
-				currentContextRow.setVisibility(newVisibility);
-				System.err.println("Set row visibility to " + newVisibility);
-			} else {
-				otherView.setVisibility(GONE);
-			}
-		}
-	}
-
-	public void openExpenditureList(View view) {
-		Intent intent = new Intent(getApplicationContext(), ExpenditureListActivity.class);
+	public void openExpenseList(View view) {
+		Intent intent = new Intent(getApplicationContext(), ExpenseListActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), (String) view.getTag());
 		startActivity(intent);
 	}
 
-	public void requeryCategories() {
+	public void updateView() {
 		List<Category> categories = new ArrayList<Category>(db.query(Category.class));
-		requeryCategories(categories);
+		updateView(categories);
 	}
 
-	private void requeryCategories(List<Category> categories) {
+	private void updateView(List<Category> categories) {
 		listAdapter.update(categories);
 		updateTitle(categories);
 	}
@@ -159,7 +142,7 @@ public class OverviewActivity extends ListActivity {
 		int spentCents = 0;
 		for (Category category : categories) {
 			budgetCents += category.calcBudget();
-			spentCents += category.summarizeExpenditures(DateUtils.createFirstDayOfMonth().getTime(), null);
+			spentCents += category.summarizeExpenses(DateUtils.createFirstDayOfMonth().getTime(), null);
 		}
 
 		String spent = currency.format(centToDouble(spentCents));

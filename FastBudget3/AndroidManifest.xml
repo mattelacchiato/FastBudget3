@@ -31,7 +31,7 @@
 	            android:value=".OverviewActivity" />
         </activity>
         <activity
-            android:name=".ExpenditureListActivity"
+            android:name=".ExpenseListActivity"
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".OverviewActivity" >
 	        <!-- Parent activity meta-data to support API level 7+ -->
@@ -40,7 +40,7 @@
 	            android:value=".OverviewActivity" />            
         </activity>
         <activity
-            android:name=".ExpenditureActivity"
+            android:name=".ExpenseActivity"
             android:windowSoftInputMode="adjustResize" 
             android:parentActivityName=".OverviewActivity" >
 	        <!-- Parent activity meta-data to support API level 7+ -->

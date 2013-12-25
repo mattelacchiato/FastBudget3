@@ -12,7 +12,6 @@ import com.db4o.ObjectContainer;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.utils.NumberUtils;
 
-//TODO (08.09.2013): use better android validation
 public class CategoryValidator {
 
 	public enum CategoryValidationResult {

@@ -38,7 +38,7 @@ public class OverviewActivityIntegrationTest extends FilledStateTestCase<Overvie
 		return new Runnable() {
 			@Override
 			public void run() {
-				initialActivity.requeryCategories();
+				initialActivity.updateView();
 			}
 		};
 	}

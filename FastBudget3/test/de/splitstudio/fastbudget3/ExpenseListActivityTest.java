@@ -32,24 +32,24 @@ import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
-import de.splitstudio.fastbudget3.db.Expenditure;
+import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
 
 @RunWith(RobolectricTestRunner.class)
-public class ExpenditureListActivityTest {
+public class ExpenseListActivityTest {
 
 	private static final String CATEGORY_NAME = "foobar";
 	private static final String ANY_DESCRIPTION = "description";
 
 	private Category category;
 
-	private ActivityController<ExpenditureListActivity> activityController;
+	private ActivityController<ExpenseListActivity> activityController;
 
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		activityController = buildActivity(ExpenditureListActivity.class).withIntent(createIntent());
+		activityController = buildActivity(ExpenseListActivity.class).withIntent(createIntent());
 		initDb();
 	}
 
@@ -64,11 +64,11 @@ public class ExpenditureListActivityTest {
 	}
 
 	private Intent createIntent() {
-		Intent intent = new Intent(new OverviewActivity(), ExpenditureListActivity.class);
+		Intent intent = new Intent(new OverviewActivity(), ExpenseListActivity.class);
 		return intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
 	}
 
-	private ExpenditureListActivity createActivity() {
+	private ExpenseListActivity createActivity() {
 		return activityController.create().get();
 	}
 
@@ -78,20 +78,20 @@ public class ExpenditureListActivityTest {
 	}
 
 	@Test
-	public void noExpendituresGiven_itShowsAHint() throws Exception {
+	public void noExpensesGiven_itShowsAHint() throws Exception {
 		Activity activity = createActivity();
 		TextView hint = (TextView) activity.findViewById(android.R.id.empty);
 		assertThat(hint, is(notNullValue()));
 		assertThat(hint.getText(), is(notNullValue()));
-		assertThat(hint.getText().toString(), is(activity.getString(R.string.hint_empty_expenditures)));
+		assertThat(hint.getText().toString(), is(activity.getString(R.string.hint_empty_expenses)));
 	}
 
 	@Test
 	public void itShowsTheDescription() throws Exception {
 		String description = "jo!";
-		category.expenditures.add(new Expenditure(20, new Date(), description));
+		category.expenses.add(new Expense(20, new Date(), description));
 
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 
 		ListAdapter listAdapter = activity.getListAdapter();
 		assertThat(listAdapter.getCount(), is(greaterThan(0)));
@@ -104,7 +104,7 @@ public class ExpenditureListActivityTest {
 
 	@Test
 	public void itShowsTheAmount() throws Exception {
-		category.expenditures.add(new Expenditure(20, new Date(), "bla"));
+		category.expenses.add(new Expense(20, new Date(), "bla"));
 
 		View row = createActivity().getListAdapter().getView(0, null, null);
 		TextView amountTextView = (TextView) row.findViewById(R.id.amount);
@@ -116,7 +116,7 @@ public class ExpenditureListActivityTest {
 	public void itShowsTheDate() throws Exception {
 		Calendar cal = DateUtils.createFirstDayOfMonth();
 		Date date = cal.getTime();
-		category.expenditures.add(new Expenditure(20, date, "bla"));
+		category.expenses.add(new Expense(20, date, "bla"));
 
 		View row = createActivity().getListAdapter().getView(0, null, null);
 		TextView dateTextView = (TextView) row.findViewById(R.id.date_field);
@@ -126,14 +126,14 @@ public class ExpenditureListActivityTest {
 
 	@Test
 	public void itShowsAButtonToSelectStartDate() throws Exception {
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 		Button button = (Button) activity.findViewById(R.id.date_start);
 		assertThat(button, is(notNullValue()));
 	}
 
 	@Test
 	public void itShowsAButtonToSelectEndDate() throws Exception {
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 		Button button = (Button) activity.findViewById(R.id.date_end);
 		assertThat(button, is(notNullValue()));
 	}
@@ -141,7 +141,7 @@ public class ExpenditureListActivityTest {
 	@Test
 	public void startButtonIsInitializedWithFirstDayOfMonth() throws Exception {
 		String startDate = DateUtils.formatAsShortDate(DateUtils.createFirstDayOfMonth().getTime());
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 		Button button = (Button) activity.findViewById(R.id.date_start);
 		assertThat(button.getText().toString(), is(startDate));
 	}
@@ -149,14 +149,14 @@ public class ExpenditureListActivityTest {
 	@Test
 	public void endButtonIsInitializedWithLastDayOfMonth() throws Exception {
 		String startDate = DateUtils.formatAsShortDate(DateUtils.createLastDayOfMonth().getTime());
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 		Button button = (Button) activity.findViewById(R.id.date_end);
 		assertThat(button.getText().toString(), is(startDate));
 	}
 
 	@Test
 	public void clickOnStartDateButton_opensDatePicker() throws Exception {
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 		activity.findViewById(R.id.date_start).performClick();
 		DatePickerDialog dialog = (DatePickerDialog) ShadowDatePickerDialog.getLatestDialog();
 		assertThat(dialog.isShowing(), is(true));
@@ -164,7 +164,7 @@ public class ExpenditureListActivityTest {
 
 	@Test
 	public void update_startIsAfterEnd_buttonsUpdatedAnyway() {
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 		activity.start.set(1985, 4, 14);
 		activity.end.set(1985, 4, 13);
 
@@ -178,7 +178,7 @@ public class ExpenditureListActivityTest {
 
 	@Test
 	public void update_startIsAfterEnd_showToast() {
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 		activity.start.set(1985, 4, 14);
 		activity.end.set(1985, 4, 13);
 
@@ -189,21 +189,21 @@ public class ExpenditureListActivityTest {
 	}
 
 	@Test
-	public void itShowsOnlyExpendituresForCurrentPeriod() throws Exception {
+	public void itShowsOnlyExpensesForCurrentPeriod() throws Exception {
 		Calendar cal = Calendar.getInstance();
-		category.expenditures.add(new Expenditure(30, cal.getTime(), ANY_DESCRIPTION));
-		category.expenditures.add(new Expenditure(30, cal.getTime(), ANY_DESCRIPTION));
+		category.expenses.add(new Expense(30, cal.getTime(), ANY_DESCRIPTION));
+		category.expenses.add(new Expense(30, cal.getTime(), ANY_DESCRIPTION));
 		cal.add(Calendar.MONTH, -1);
-		category.expenditures.add(new Expenditure(30, cal.getTime(), ANY_DESCRIPTION));
+		category.expenses.add(new Expense(30, cal.getTime(), ANY_DESCRIPTION));
 
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 
 		assertThat(activity.getListAdapter().getCount(), is(2));
 	}
 
 	@Test
 	public void update_startButtonUpdated() throws Exception {
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 		activity.start.set(1985, 4, 14);
 		activity.update.run();
 		Button startButton = (Button) activity.findViewById(R.id.date_start);
@@ -212,7 +212,7 @@ public class ExpenditureListActivityTest {
 
 	@Test
 	public void update_endButtonUpdated() throws Exception {
-		ExpenditureListActivity activity = createActivity();
+		ExpenseListActivity activity = createActivity();
 		activity.end.set(1985, 4, 14);
 		activity.update.run();
 		Button startButton = (Button) activity.findViewById(R.id.date_end);
@@ -223,8 +223,8 @@ public class ExpenditureListActivityTest {
 	public void update_listViewUpdated() throws Exception {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -1);
-		category.expenditures.add(new Expenditure(30, cal.getTime(), null));
-		ExpenditureListActivity activity = createActivity();
+		category.expenses.add(new Expense(30, cal.getTime(), null));
+		ExpenseListActivity activity = createActivity();
 		assertThat(activity.getListAdapter().getCount(), is(0));
 
 		activity.start.add(Calendar.MONTH, -1);
@@ -235,7 +235,7 @@ public class ExpenditureListActivityTest {
 
 	@Test
 	public void onCreate_noIntentGiven_isFinishing() {
-		ExpenditureListActivity activityWithoutIntent = buildActivity(ExpenditureListActivity.class).create().get();
+		ExpenseListActivity activityWithoutIntent = buildActivity(ExpenseListActivity.class).create().get();
 		assertThat(activityWithoutIntent.isFinishing(), is(true));
 	}
 

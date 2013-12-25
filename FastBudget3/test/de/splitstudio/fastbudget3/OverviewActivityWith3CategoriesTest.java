@@ -34,7 +34,7 @@ import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
-import de.splitstudio.fastbudget3.db.Expenditure;
+import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.enums.Extras;
 
 @RunWith(RobolectricTestRunner.class)
@@ -105,8 +105,8 @@ public class OverviewActivityWith3CategoriesTest {
 	}
 
 	@Test
-	public void addExpenditure_sendsCategoryNameToExpenditureActivity() {
-		findListView(R.id.button_add_expenditure).performClick();
+	public void addExpense_sendsCategoryNameToExpenseActivity() {
+		findListView(R.id.button_add_expense).performClick();
 
 		Intent nextStartedActivity = shadowOf(overview).getNextStartedActivity();
 		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
@@ -127,22 +127,22 @@ public class OverviewActivityWith3CategoriesTest {
 	}
 
 	@Test
-	public void setsSumOfAllExpenditures() {
-		category1.expenditures.add(new Expenditure(20, new Date(), null));
-		category1.expenditures.add(new Expenditure(40, new Date(), null));
-		overview.requeryCategories();
+	public void setsSumOfAllExpenses() {
+		category1.expenses.add(new Expense(20, new Date(), null));
+		category1.expenses.add(new Expense(40, new Date(), null));
+		overview.updateView();
 
 		TextView spent = (TextView) findListView(R.id.category_spent);
 		assertThat(spent.getText().toString(), is("$0.60"));
 	}
 
 	@Test
-	public void expenditureAdded_refreshUI() {
-		findListView(R.id.button_add_expenditure).performClick();
+	public void expenseAdded_refreshUI() {
+		findListView(R.id.button_add_expense).performClick();
 
-		category1.expenditures.add(new Expenditure(20, new Date(), null));
+		category1.expenses.add(new Expense(20, new Date(), null));
 		db.store(category1);
-		Intent intent = new Intent(overview, ExpenditureActivity.class);
+		Intent intent = new Intent(overview, ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), category1.name);
 		shadowOf(overview).receiveResult(intent, Activity.RESULT_OK, null);
 
@@ -152,9 +152,9 @@ public class OverviewActivityWith3CategoriesTest {
 
 	@Test
 	public void setsProgressBar() {
-		category1.expenditures.add(new Expenditure(20, new Date(), null));
+		category1.expenses.add(new Expense(20, new Date(), null));
 		db.store(category1);
-		overview.requeryCategories();
+		overview.updateView();
 
 		ProgressBar progressBar = (ProgressBar) findListView(R.id.category_fill);
 		assertThat(progressBar.getMax(), is(category1.budget));
@@ -162,14 +162,14 @@ public class OverviewActivityWith3CategoriesTest {
 	}
 
 	@Test
-	public void itSortsCategoriesByTheirExpenditureCount() {
-		category1.expenditures.add(new Expenditure(0, new Date(), ""));
-		category2.expenditures.add(new Expenditure(0, new Date(), ""));
-		category2.expenditures.add(new Expenditure(0, new Date(), ""));
+	public void itSortsCategoriesByTheirExpenseCount() {
+		category1.expenses.add(new Expense(0, new Date(), ""));
+		category2.expenses.add(new Expense(0, new Date(), ""));
+		category2.expenses.add(new Expense(0, new Date(), ""));
 		db.store(category1);
 		db.store(category2);
 
-		overview.requeryCategories();
+		overview.updateView();
 
 		assertThatTextAtPositionIs(0, R.id.name, NAME2);
 		assertThatTextAtPositionIs(1, R.id.name, NAME1);
@@ -183,9 +183,9 @@ public class OverviewActivityWith3CategoriesTest {
 
 	@Test
 	public void itShowsTotalSpentsForThisMonthInTitle() {
-		category1.expenditures.add(new Expenditure(20, new Date(), ""));
-		category2.expenditures.add(new Expenditure(200, new Date(), ""));
-		overview.requeryCategories();
+		category1.expenses.add(new Expense(20, new Date(), ""));
+		category2.expenses.add(new Expense(200, new Date(), ""));
+		overview.updateView();
 		assertThat(overview.getTitle().toString(), containsString("$2"));
 	}
 
@@ -194,10 +194,10 @@ public class OverviewActivityWith3CategoriesTest {
 		assertThatTextAtPositionIs(0, R.id.category_budget, "$1.11");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -1);
-		category1.expenditures.add(new Expenditure(20, cal.getTime(), ""));
+		category1.expenses.add(new Expense(20, cal.getTime(), ""));
 		db.store(category1);
 
-		overview.requeryCategories();
+		overview.updateView();
 
 		assertThatTextAtPositionIs(0, R.id.category_budget, "$0.91");
 	}
@@ -233,16 +233,16 @@ public class OverviewActivityWith3CategoriesTest {
 	}
 
 	@Test
-	public void deleteCategory_okDeletesCategorysExpendituresFromDb() {
-		Expenditure expenditure = new Expenditure(20, new Date(), null);
-		category1.expenditures.add(expenditure);
-		db.store(category1.expenditures);
+	public void deleteCategory_okDeletesCategorysExpensesFromDb() {
+		Expense expense = new Expense(20, new Date(), null);
+		category1.expenses.add(expense);
+		db.store(category1.expenses);
 		findListView(R.id.button_delete).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 
 		dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
 
-		assertThat(db.ext().isStored(expenditure), is(false));
+		assertThat(db.ext().isStored(expense), is(false));
 	}
 
 	@Test
@@ -262,7 +262,7 @@ public class OverviewActivityWith3CategoriesTest {
 	}
 
 	@Test
-	public void clickOnListIcon_opensExpenditureListActivity() {
+	public void clickOnListIcon_opensExpenseListActivity() {
 		activityController.start();
 		findListView(R.id.button_list).performClick();
 
@@ -272,7 +272,7 @@ public class OverviewActivityWith3CategoriesTest {
 		assertThat((String) startedIntent.getExtras().get(Extras.CategoryName.name()), is(category1.name));
 
 		ShadowIntent shadowIntent = shadowOf(startedIntent);
-		assertThat(shadowIntent.getComponent().getClassName(), equalTo(ExpenditureListActivity.class.getName()));
+		assertThat(shadowIntent.getComponent().getClassName(), equalTo(ExpenseListActivity.class.getName()));
 	}
 
 	private void assertThatTextAtPositionIs(int position, int viewId, String expected) {

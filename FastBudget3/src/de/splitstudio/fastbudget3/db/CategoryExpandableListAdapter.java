@@ -23,18 +23,18 @@ public class CategoryExpandableListAdapter extends ObjectExpandableListAdapter<C
 
 	@Override
 	public void bindGroupView(View view, Category category) {
-		int expendituresCent = category.summarizeExpenditures(start, null);
+		int expensesCent = category.summarizeExpenses(start, null);
 		int budget = category.calcBudget();
 		String budgetLiteral = NumberUtils.formatAsCurrency(budget);
-		String expenditures = NumberUtils.formatAsCurrency(expendituresCent);
+		String expenses = NumberUtils.formatAsCurrency(expensesCent);
 
 		ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.category_fill);
 		progressBar.setMax(budget);
-		progressBar.setProgress(expendituresCent);
+		progressBar.setProgress(expensesCent);
 
 		((TextView) view.findViewById(R.id.name)).setText(category.name);
 		((TextView) view.findViewById(R.id.category_budget)).setText(budgetLiteral);
-		((TextView) view.findViewById(R.id.category_spent)).setText(expenditures);
+		((TextView) view.findViewById(R.id.category_spent)).setText(expenses);
 	}
 
 	@Override

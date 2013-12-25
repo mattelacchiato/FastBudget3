@@ -1,8 +1,7 @@
 package de.splitstudio.fastbudget3;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
+import static de.splitstudio.utils.DateUtils.formatAsShortDate;
 
 import java.util.Calendar;
 import java.util.List;
@@ -13,16 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
+
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
-import de.splitstudio.fastbudget3.db.Expenditure;
-import de.splitstudio.fastbudget3.db.ExpenditureListAdapter;
+import de.splitstudio.fastbudget3.db.Expense;
+import de.splitstudio.fastbudget3.db.ExpenseListAdapter;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.activity.DialogHelper;
-import de.splitstudio.utils.view.ViewHelper;
 
-public class ExpenditureListActivity extends ListActivity {
+public class ExpenseListActivity extends ListActivity {
 
 	Calendar start;
 	Calendar end;
@@ -33,13 +34,13 @@ public class ExpenditureListActivity extends ListActivity {
 			if (end.before(start)) {
 				Toast.makeText(getApplicationContext(), R.string.error_end_before_start, LENGTH_LONG).show();
 			}
-			((Button) findViewById(R.id.date_start)).setText(DateUtils.formatAsShortDate(start.getTime()));
-			((Button) findViewById(R.id.date_end)).setText(DateUtils.formatAsShortDate(end.getTime()));
-			adapter.update(category.findExpenditures(start.getTime(), end.getTime()));
+			((Button) findViewById(R.id.date_start)).setText(formatAsShortDate(start.getTime()));
+			((Button) findViewById(R.id.date_end)).setText(formatAsShortDate(end.getTime()));
+			adapter.update(category.findExpenses(start.getTime(), end.getTime()));
 		}
 	};
 
-	private ExpenditureListAdapter adapter;
+	private ExpenseListAdapter adapter;
 
 	private Category category;
 
@@ -52,29 +53,16 @@ public class ExpenditureListActivity extends ListActivity {
 		}
 		String categoryName = getIntent().getExtras().getString(Extras.CategoryName.name());
 		setTitle(categoryName);
-		setContentView(R.layout.expenditure_list_activity);
+		setContentView(R.layout.expense_list_activity);
 
 		Database.getInstance(this);
 		start = DateUtils.createFirstDayOfMonth();
 		end = DateUtils.createLastDayOfMonth();
 		category = Database.findCategory(categoryName);
-		List<Expenditure> expenditures = category.findExpenditures(start.getTime(), end.getTime());
-		adapter = new ExpenditureListAdapter(LayoutInflater.from(this), expenditures);
-		setListAdapter(adapter);
+		List<Expense> expenses = category.findExpenses(start.getTime(), end.getTime());
+		adapter = new ExpenseListAdapter(LayoutInflater.from(this), expenses);
+		setListAdapter(new SlideExpandableListAdapter(adapter, R.id.context_switcher, R.id.context_row));
 		update.run();
-	}
-
-	public void switchView(View view) {
-		View currentContextRow = view.findViewById(R.id.context_row);
-		for (View otherView : ViewHelper.getViewsById(getListView(), R.id.context_row)) {
-			boolean otherViewIsCurrentView = otherView.getTag().equals(currentContextRow.getTag());
-			if (otherViewIsCurrentView) {
-				boolean isVisible = currentContextRow.getVisibility() == VISIBLE;
-				currentContextRow.setVisibility(isVisible ? GONE : VISIBLE);
-			} else {
-				otherView.setVisibility(GONE);
-			}
-		}
 	}
 
 	public void pickDate(View view) {

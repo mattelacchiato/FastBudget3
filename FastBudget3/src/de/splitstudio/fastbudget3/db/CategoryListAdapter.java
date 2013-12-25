@@ -24,14 +24,14 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 
 	@Override
 	public void bindView(View view, Category category) {
-		int expendituresCent = category.summarizeExpenditures(start, null);
+		int expensesCent = category.summarizeExpenses(start, null);
 		int budget = category.calcBudget();
 		String budgetLiteral = NumberUtils.formatAsCurrency(budget);
-		String expenditures = NumberUtils.formatAsCurrency(expendituresCent);
+		String expenses = NumberUtils.formatAsCurrency(expensesCent);
 
 		ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.category_fill);
 		progressBar.setMax(budget);
-		progressBar.setProgress(expendituresCent);
+		progressBar.setProgress(expensesCent);
 
 		view.findViewById(R.id.button_list).setTag(category.name);
 		view.findViewById(R.id.button_delete).setTag(category.name);
@@ -39,7 +39,7 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 		view.findViewById(R.id.context_row).setTag(category.name);
 		((TextView) view.findViewById(R.id.name)).setText(category.name);
 		((TextView) view.findViewById(R.id.category_budget)).setText(budgetLiteral);
-		((TextView) view.findViewById(R.id.category_spent)).setText(expenditures);
+		((TextView) view.findViewById(R.id.category_spent)).setText(expenses);
 	}
 
 	@Override

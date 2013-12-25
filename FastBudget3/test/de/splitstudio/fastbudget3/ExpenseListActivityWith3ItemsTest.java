@@ -23,25 +23,24 @@ import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
-import de.splitstudio.fastbudget3.db.Expenditure;
+import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
 
 @RunWith(RobolectricTestRunner.class)
-public class ExpenditureListActivityWith3ItemsTest {
+public class ExpenseListActivityWith3ItemsTest {
 
 	private static final String CATEGORY_NAME = "foobar";
-	private static final String ANY_DESCRIPTION = "description";
 
 	private Category category;
 
-	private ActivityController<ExpenditureListActivity> activityController;
-	private ExpenditureListActivity activity;
+	private ActivityController<ExpenseListActivity> activityController;
+	private ExpenseListActivity activity;
 
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		activityController = buildActivity(ExpenditureListActivity.class).withIntent(createIntent());
+		activityController = buildActivity(ExpenseListActivity.class).withIntent(createIntent());
 		initDb();
 		activity = activityController.create().get();
 	}
@@ -54,18 +53,18 @@ public class ExpenditureListActivityWith3ItemsTest {
 		category = new Category(CATEGORY_NAME);
 
 		Calendar cal = DateUtils.createFirstDayOfMonth();
-		category.expenditures.add(new Expenditure(20, cal.getTime(), "third"));
+		category.expenses.add(new Expense(20, cal.getTime(), "third"));
 		cal.add(DAY_OF_MONTH, 1);
-		category.expenditures.add(new Expenditure(20, cal.getTime(), "second"));
+		category.expenses.add(new Expense(20, cal.getTime(), "second"));
 		cal.add(DAY_OF_MONTH, 1);
-		category.expenditures.add(new Expenditure(20, cal.getTime(), "first"));
+		category.expenses.add(new Expense(20, cal.getTime(), "first"));
 
 		db.store(category);
 		db.commit();
 	}
 
 	private Intent createIntent() {
-		Intent intent = new Intent(new OverviewActivity(), ExpenditureListActivity.class);
+		Intent intent = new Intent(new OverviewActivity(), ExpenseListActivity.class);
 		return intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
 	}
 

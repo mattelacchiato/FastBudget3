@@ -4,7 +4,6 @@
     android:id="@+id/context_switcher"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:onClick="switchView"
     android:orientation="vertical"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
@@ -70,13 +69,13 @@
         <include layout="@layout/horizontal_divider" />
 
         <ImageButton
-            android:id="@+id/button_add_expenditure"
+            android:id="@+id/button_add_expense"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/add_category"
-            android:onClick="addExpenditure"
+            android:onClick="addExpense"
             android:src="@drawable/ic_add" />
     </LinearLayout>
 
@@ -93,8 +92,8 @@
             android:id="@+id/button_list"
             style="@style/contextButton"
             android:drawableTop="@drawable/ic_list"
-            android:onClick="openExpenditureList"
-            android:text="@string/expenditures" />
+            android:onClick="openExpenseList"
+            android:text="@string/expenses" />
 
         <Button
             android:id="@+id/button_edit"

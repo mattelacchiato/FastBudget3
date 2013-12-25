@@ -19,7 +19,7 @@ public abstract class EmptyStateTestCase extends ActivityInstrumentationTestCase
 			runTestOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					activity.requeryCategories();
+					activity.updateView();
 				}
 			});
 		} catch (Throwable e) {

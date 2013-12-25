@@ -13,11 +13,11 @@ import com.google.android.apps.common.testing.ui.espresso.DataInteraction;
 import de.splitstudio.fastbudget3.OverviewActivity;
 import de.splitstudio.fastbudget3.R;
 import de.splitstudio.fastbudget3.db.Category;
-import de.splitstudio.fastbudget3.db.Expenditure;
+import de.splitstudio.fastbudget3.db.Expense;
 
-public class ExpenditureListActivityTest extends FilledStateTestCase<OverviewActivity> {
+public class ExpenseListActivityTest extends FilledStateTestCase<OverviewActivity> {
 
-	public ExpenditureListActivityTest() {
+	public ExpenseListActivityTest() {
 		super(OverviewActivity.class);
 	}
 
@@ -33,7 +33,7 @@ public class ExpenditureListActivityTest extends FilledStateTestCase<OverviewAct
 		return new Runnable() {
 			@Override
 			public void run() {
-				initialActivity.requeryCategories();
+				initialActivity.updateView();
 			}
 		};
 	}
@@ -61,7 +61,7 @@ public class ExpenditureListActivityTest extends FilledStateTestCase<OverviewAct
 	}
 
 	private DataInteraction expenditureAt(int position) {
-		return onData(is(Expenditure.class)).atPosition(position);
+		return onData(is(Expense.class)).atPosition(position);
 	}
 
 }

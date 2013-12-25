@@ -14,7 +14,7 @@ import android.app.ListActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
-import de.splitstudio.fastbudget3.db.Expenditure;
+import de.splitstudio.fastbudget3.db.Expense;
 
 public abstract class FilledStateTestCase<T extends ListActivity> extends ActivityInstrumentationTestCase2<T> {
 
@@ -43,11 +43,11 @@ public abstract class FilledStateTestCase<T extends ListActivity> extends Activi
 		Category firstCategory = new Category("first category", 10, categoryDate);
 
 		Calendar expenditureDate = createFirstDayOfMonth();
-		firstCategory.expenditures.add(new Expenditure(10, expenditureDate.getTime(), "first expenditure"));
+		firstCategory.expenses.add(new Expense(10, expenditureDate.getTime(), "first expenditure"));
 		expenditureDate.add(DAY_OF_MONTH, 1);
-		firstCategory.expenditures.add(new Expenditure(20, expenditureDate.getTime(), "second expenditure"));
+		firstCategory.expenses.add(new Expense(20, expenditureDate.getTime(), "second expenditure"));
 		expenditureDate.add(DAY_OF_MONTH, 1);
-		firstCategory.expenditures.add(new Expenditure(30, expenditureDate.getTime(), "third expenditure"));
+		firstCategory.expenses.add(new Expense(30, expenditureDate.getTime(), "third expenditure"));
 
 		Database.store(firstCategory);
 		Database.store(new Category("second category", 20, categoryDate));
