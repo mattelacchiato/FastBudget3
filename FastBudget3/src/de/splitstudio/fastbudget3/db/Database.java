@@ -7,9 +7,7 @@ import android.content.Context;
 import com.db4o.Db4oEmbedded;
 import com.db4o.EmbeddedObjectContainer;
 import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
 import com.db4o.config.EmbeddedConfiguration;
-import com.db4o.query.Predicate;
 
 public class Database {
 
@@ -50,22 +48,6 @@ public class Database {
 		db.store(object);
 		db.commit();
 		return object;
-	}
-
-	public static Category findCategory(final String name) {
-		ObjectSet<Category> set = db.query(new Predicate<Category>() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public boolean match(Category category) {
-				return category.name.equals(name);
-			}
-		});
-
-		if (set.isEmpty()) {
-			return null;
-		}
-		return set.get(0);
 	}
 
 }

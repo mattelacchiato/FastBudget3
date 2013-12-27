@@ -11,7 +11,7 @@ import android.widget.TextView;
 import de.splitstudio.fastbudget3.R;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.NumberUtils;
-import de.splitstudio.utils.ObjectListAdapter;
+import de.splitstudio.utils.db.ObjectListAdapter;
 
 public class CategoryListAdapter extends ObjectListAdapter<Category> {
 

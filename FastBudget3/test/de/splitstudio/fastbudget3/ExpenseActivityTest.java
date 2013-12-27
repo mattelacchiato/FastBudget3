@@ -141,14 +141,6 @@ public class ExpenseActivityTest {
 		assertThat(shadowOf(expenseActivity).getResultCode(), is(Activity.RESULT_OK));
 	}
 
-	private void setDescription(String description) {
-		((EditText) expenseActivity.findViewById(R.id.description)).setText(description);
-	}
-
-	private void setAmount(String amount) {
-		((EditText) expenseActivity.findViewById(R.id.calculator_amount)).setText(amount);
-	}
-
 	@Test
 	public void save_amountNotValid_errorShown() {
 		setAmount("-.-..0");
@@ -158,9 +150,23 @@ public class ExpenseActivityTest {
 		assertToastIsShown(R.string.error_invalid_number);
 	}
 
+	@Test
+	public void onCreate_noIntentGiven_isFinishing() {
+		ExpenseActivity activityWithoutIntent = buildActivity(ExpenseActivity.class).create().get();
+		assertThat(activityWithoutIntent.isFinishing(), is(true));
+	}
+
 	private void assertToastIsShown(int stringId) {
 		assertThat(ShadowToast.getTextOfLatestToast(), is(notNullValue()));
 		assertThat(ShadowToast.getTextOfLatestToast(), is(expenseActivity.getString(stringId)));
+	}
+
+	private void setDescription(String description) {
+		((EditText) expenseActivity.findViewById(R.id.description)).setText(description);
+	}
+
+	private void setAmount(String amount) {
+		((EditText) expenseActivity.findViewById(R.id.calculator_amount)).setText(amount);
 	}
 
 }

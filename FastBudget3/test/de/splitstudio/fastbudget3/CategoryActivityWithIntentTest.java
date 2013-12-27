@@ -28,6 +28,7 @@ import android.widget.EditText;
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.utils.view.Calculator;
 import de.splitstudio.utils.view.DatePickerButtons;
@@ -43,6 +44,7 @@ public class CategoryActivityWithIntentTest {
 
 	private ObjectContainer db;
 	private Menu menu;
+	private CategoryDao categoryDao;
 
 	@Before
 	public void setUp() {
@@ -65,7 +67,9 @@ public class CategoryActivityWithIntentTest {
 
 	private void initDb(Context context) {
 		db = Database.getClearedInstance(context);
+		//TODO (Dec 27, 2013): write store() in GenericBaseDao
 		db.store(new Category(ANY_NAME, ANY_BUDGET, ANY_DATE));
+		categoryDao = new CategoryDao(db);
 	}
 
 	@Test
@@ -86,10 +90,10 @@ public class CategoryActivityWithIntentTest {
 		fillName(newName);
 		clickMenuItem(R.id.save);
 
-		Category oldCategory = Database.findCategory(ANY_NAME);
+		Category oldCategory = categoryDao.findCategory(ANY_NAME);
 		assertThat(oldCategory, is(nullValue()));
 
-		Category persistedCategory = Database.findCategory(newName);
+		Category persistedCategory = categoryDao.findCategory(newName);
 		assertThat(persistedCategory, is(notNullValue()));
 		assertThat(persistedCategory.name, is(newName));
 		assertThat(persistedCategory.budget, is(ANY_BUDGET));
@@ -102,7 +106,7 @@ public class CategoryActivityWithIntentTest {
 
 		assertThat(ShadowToast.getTextOfLatestToast(), is(nullValue()));
 
-		Category persistedCategory = Database.findCategory(ANY_NAME);
+		Category persistedCategory = categoryDao.findCategory(ANY_NAME);
 		assertThat(persistedCategory, is(notNullValue()));
 		assertThat(persistedCategory.budget, is(233));
 	}
@@ -111,11 +115,6 @@ public class CategoryActivityWithIntentTest {
 	public void titleIsSet() throws Exception {
 		String expectedTitle = categoryActivity.getString(R.string.edit);
 		assertThat(categoryActivity.getTitle().toString(), is(expectedTitle));
-	}
-
-	private void assertNoIntentWasStarted() {
-		Intent startedIntent = shadowOf(categoryActivity).getNextStartedActivity();
-		assertThat("An intend was started, but shouldn't", startedIntent, is(nullValue()));
 	}
 
 	private void clickMenuItem(int itemId) {
@@ -130,11 +129,6 @@ public class CategoryActivityWithIntentTest {
 
 	private void fillBudget(String string) {
 		((EditText) categoryActivity.findViewById(R.id.calculator_amount)).setText(string);
-	}
-
-	private void assertToastIsShown(int stringId) {
-		assertThat(ShadowToast.getTextOfLatestToast(), is(notNullValue()));
-		assertThat(ShadowToast.getTextOfLatestToast(), is(categoryActivity.getString(stringId)));
 	}
 
 }

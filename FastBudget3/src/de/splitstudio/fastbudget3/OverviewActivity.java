@@ -21,6 +21,7 @@ import com.db4o.ObjectContainer;
 import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.enums.Extras;
@@ -35,11 +36,15 @@ public class OverviewActivity extends ListActivity {
 
 	private CategoryListAdapter listAdapter;
 
+	protected CategoryDao categoryDao;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.overview_activity);
 		db = Database.getInstance(getApplicationContext());
+		categoryDao = new CategoryDao(db);
+
 		List<Category> categories = new ArrayList<Category>(db.query(Category.class));
 		listAdapter = new CategoryListAdapter(getLayoutInflater(), categories);
 		setListAdapter(new SlideExpandableListAdapter(listAdapter, R.id.context_switcher, R.id.context_row));
@@ -106,7 +111,7 @@ public class OverviewActivity extends ListActivity {
 			R.string.ok, new Runnable() {
 				@Override
 				public void run() {
-					Category category = Database.findCategory((String) view.getTag());
+					Category category = categoryDao.findCategory((String) view.getTag());
 					db.delete(category);
 					db.commit();
 					updateView();

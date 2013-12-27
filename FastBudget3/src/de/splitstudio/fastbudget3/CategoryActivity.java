@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
@@ -26,6 +27,7 @@ import de.splitstudio.utils.view.DatePickerButtons;
 
 public class CategoryActivity extends Activity {
 
+	//TODO (Dec 27, 2013): rm db field?
 	ObjectContainer db;
 
 	Locale locale;
@@ -40,10 +42,15 @@ public class CategoryActivity extends Activity {
 
 	private boolean updateCategory = true;
 
+	private CategoryDao categoryDao;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		db = Database.getInstance(this);
+		categoryDao = new CategoryDao(db);
+
+		//TODO (Dec 27, 2013): rm locale?
 		locale = getResources().getConfiguration().locale;
 
 		setContentView(R.layout.category_activity);
@@ -60,7 +67,7 @@ public class CategoryActivity extends Activity {
 		if (updateCategory) {
 			setTitle(R.string.edit);
 			String name = getIntent().getExtras().getString(CategoryName.name());
-			category = Database.findCategory(name);
+			category = categoryDao.findCategory(name);
 			nameEdit.setText(category.name);
 			calculator.setAmount(NumberUtils.formatAsDecimal(category.budget));
 			Calendar calendar = Calendar.getInstance();

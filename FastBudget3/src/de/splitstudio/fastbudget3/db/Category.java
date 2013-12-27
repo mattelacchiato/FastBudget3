@@ -7,6 +7,7 @@ import java.util.List;
 
 import de.splitstudio.utils.DateUtils;
 
+//TODO (Dec 27, 2013): extend UniqueEntity
 public class Category implements Comparable<Category> {
 
 	public String name;

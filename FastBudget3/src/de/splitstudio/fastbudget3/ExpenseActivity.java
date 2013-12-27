@@ -1,20 +1,25 @@
 package de.splitstudio.fastbudget3;
 
+import static de.splitstudio.utils.DateUtils.formatAsShortDate;
+import static de.splitstudio.utils.NumberUtils.formatAsDecimal;
+
 import java.text.ParseException;
-import java.util.Date;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
+import de.splitstudio.fastbudget3.db.ExpenseDao;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.NumberUtils;
 import de.splitstudio.utils.view.Calculator;
@@ -26,15 +31,38 @@ public class ExpenseActivity extends Activity {
 
 	private ObjectContainer db;
 
+	private Expense expense;
+
+	private ExpenseDao expenseDao;
+
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+		if (!getIntent().hasExtra(Extras.CategoryName.name())) {
+			finish();
+			return;
+		}
+		setContentView(R.layout.expense_activity);
 		String categoryName = getIntent().getExtras().getString(Extras.CategoryName.name());
 		db = Database.getInstance(this);
-		category = Database.findCategory(categoryName);
+		expenseDao = new ExpenseDao(db);
+		category = new CategoryDao(db).findCategory(categoryName);
 		setTitle(getString(R.string.title_expense, categoryName));
-		setContentView(R.layout.expense_activity);
+		fillValues(getIntent().getExtras());
 	}
+
+	private void fillValues(Bundle extras) {
+		if (extras.containsKey(Extras.Id.name())) {
+			expense = expenseDao.findByUuid(extras.getString(Extras.Id.name()));
+			((TextView) findViewById(R.id.description)).setText(expense.description);
+			((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
+			((TextView) findViewById(R.id.date_field)).setText(formatAsShortDate(expense.date));
+		} else {
+			expense = new Expense();
+		}
+	}
+
+	//TODO (Dec 25, 2013): benchmark: findByExample vs. Predicate?
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -67,10 +95,12 @@ public class ExpenseActivity extends Activity {
 		EditText descriptionEdit = (EditText) findViewById(R.id.description);
 
 		try {
-			int amount = NumberUtils.parseCent(calculator.getAmount());
-			Date date = datePickerButtons.getDate().getTime();
-			String description = descriptionEdit.getText().toString();
-			category.expenses.add(new Expense(amount, date, description));
+			expense.amount = NumberUtils.parseCent(calculator.getAmount());
+			expense.date = datePickerButtons.getDate().getTime();
+			expense.description = descriptionEdit.getText().toString();
+
+			//TODO (Dec 27, 2013): make expenses a set
+			category.expenses.add(expense);
 			db.store(category.expenses);
 			db.commit();
 			setResult(RESULT_OK);

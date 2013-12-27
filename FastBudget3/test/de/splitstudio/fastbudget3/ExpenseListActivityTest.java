@@ -21,6 +21,7 @@ import org.robolectric.util.ActivityController;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -177,9 +178,10 @@ public class ExpenseListActivityTest {
 		Intent nextStartedActivity = shadowOf(activity).getNextStartedActivity();
 		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
 
-		ShadowIntent intent = shadowOf(nextStartedActivity);
-		assertThat(intent.getExtras(), is(notNullValue()));
-		assertThat(intent.getExtras().getString(Extras.Id.name()), is(expense.uuid));
+		Bundle extras = shadowOf(nextStartedActivity).getExtras();
+		assertThat(extras, is(notNullValue()));
+		assertThat(extras.getString(Extras.Id.name()), is(expense.uuid));
+		assertThat(extras.getString(Extras.CategoryName.name()), is(category.name));
 	}
 
 	private View findListView(int viewId) {

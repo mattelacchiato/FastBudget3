@@ -10,7 +10,7 @@ import android.widget.TextView;
 import de.splitstudio.fastbudget3.R;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.NumberUtils;
-import de.splitstudio.utils.ObjectExpandableListAdapter;
+import de.splitstudio.utils.db.ObjectExpandableListAdapter;
 
 public class CategoryExpandableListAdapter extends ObjectExpandableListAdapter<Category> {
 

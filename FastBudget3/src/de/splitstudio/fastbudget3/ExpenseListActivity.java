@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.db.ExpenseListAdapter;
@@ -60,10 +61,9 @@ public class ExpenseListActivity extends ListActivity {
 		setTitle(categoryName);
 		setContentView(R.layout.expense_list_activity);
 
-		Database.getInstance(this);
 		start = DateUtils.createFirstDayOfMonth();
 		end = DateUtils.createLastDayOfMonth();
-		category = Database.findCategory(categoryName);
+		category = new CategoryDao(Database.getInstance(this)).findCategory(categoryName);
 		List<Expense> expenses = category.findExpenses(start.getTime(), end.getTime());
 		adapter = new ExpenseListAdapter(LayoutInflater.from(this), expenses);
 		setListAdapter(new SlideExpandableListAdapter(adapter, R.id.context_switcher, R.id.context_row));
@@ -80,6 +80,7 @@ public class ExpenseListActivity extends ListActivity {
 
 	public void editExpense(View view) {
 		Intent intent = new Intent(this, ExpenseActivity.class);
+		intent.putExtra(Extras.CategoryName.name(), category.name);
 		intent.putExtra(Extras.Id.name(), view.getTag().toString());
 		startActivityForResult(intent, RequestCode.EditExpense.ordinal());
 	}
