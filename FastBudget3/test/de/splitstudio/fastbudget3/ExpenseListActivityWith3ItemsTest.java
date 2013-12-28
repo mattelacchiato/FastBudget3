@@ -18,6 +18,7 @@ import org.robolectric.util.ActivityController;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.db4o.ObjectContainer;
 
@@ -76,6 +77,13 @@ public class ExpenseListActivityWith3ItemsTest {
 			assertThat(msg, contextRow, is(notNullValue()));
 			assertThat(msg, contextRow.getVisibility(), is(View.GONE));
 		}
+	}
+
+	@Test
+	public void ordersItemsByDate() throws Exception {
+		assertThat(((TextView) getRow(0).findViewById(R.id.description)).getText().toString(), is("first"));
+		assertThat(((TextView) getRow(1).findViewById(R.id.description)).getText().toString(), is("second"));
+		assertThat(((TextView) getRow(2).findViewById(R.id.description)).getText().toString(), is("third"));
 	}
 
 	private View getRow(int rowIndex) {

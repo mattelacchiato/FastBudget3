@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import de.splitstudio.utils.DateUtils;
 
@@ -12,7 +14,7 @@ public class Category implements Comparable<Category> {
 
 	public String name;
 	public int budget;
-	public List<Expense> expenses = new ArrayList<Expense>();
+	public Set<Expense> expenses = new TreeSet<Expense>();
 	public Date date;
 
 	public Category(String name, int budget, Date date) {

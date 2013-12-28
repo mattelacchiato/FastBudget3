@@ -4,6 +4,7 @@ import static de.splitstudio.utils.DateUtils.formatAsShortDate;
 import static de.splitstudio.utils.NumberUtils.formatAsDecimal;
 
 import java.text.ParseException;
+import java.util.Date;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -58,7 +59,7 @@ public class ExpenseActivity extends Activity {
 			((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
 			((TextView) findViewById(R.id.date_field)).setText(formatAsShortDate(expense.date));
 		} else {
-			expense = new Expense();
+			expense = new Expense(new Date());
 		}
 	}
 

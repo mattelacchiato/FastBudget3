@@ -17,6 +17,8 @@ public class CategoryTest {
 
 	private static final String ANY_NAME = "Category name";
 
+	private static final Date ANY_DATE = DateUtils.createFirstDayOfMonth().getTime();
+
 	@Test
 	public void summarizeExpenses() {
 		Date start = dayAndSecOfMonth(1, 0);
@@ -38,11 +40,11 @@ public class CategoryTest {
 	@Test
 	public void comparesTo_lessThanOther_greaterThanZero() {
 		Category category = new Category(ANY_NAME);
-		category.expenses.add(new Expense(0, null, ""));
+		category.expenses.add(new Expense(0, ANY_DATE, ""));
 
 		Category other = new Category("one");
-		other.expenses.add(new Expense(0, null, ""));
-		other.expenses.add(new Expense(0, null, ""));
+		other.expenses.add(new Expense(0, ANY_DATE, ""));
+		other.expenses.add(new Expense(0, ANY_DATE, ""));
 
 		assertThat(category.compareTo(other), is(greaterThan(0)));
 	}
@@ -50,11 +52,11 @@ public class CategoryTest {
 	@Test
 	public void comparesTo_moreThanOther_lessThanZero() {
 		Category category = new Category(ANY_NAME);
-		category.expenses.add(new Expense(0, null, ""));
-		category.expenses.add(new Expense(0, null, ""));
+		category.expenses.add(new Expense(0, ANY_DATE, ""));
+		category.expenses.add(new Expense(0, ANY_DATE, ""));
 
 		Category other = new Category(ANY_NAME);
-		other.expenses.add(new Expense(0, null, ""));
+		other.expenses.add(new Expense(0, ANY_DATE, ""));
 
 		assertThat(category.compareTo(other), is(lessThan(0)));
 	}
@@ -62,10 +64,10 @@ public class CategoryTest {
 	@Test
 	public void comparesTo_equal_zero() {
 		Category category = new Category(ANY_NAME);
-		category.expenses.add(new Expense(0, null, ""));
+		category.expenses.add(new Expense(0, ANY_DATE, ""));
 
 		Category other = new Category(ANY_NAME);
-		other.expenses.add(new Expense(0, null, ""));
+		other.expenses.add(new Expense(0, ANY_DATE, ""));
 
 		assertThat(category.compareTo(other), is(0));
 	}
@@ -191,6 +193,15 @@ public class CategoryTest {
 		category.expenses.add(new Expense(20, cal.getTime(), null));
 
 		assertThat(category.findExpenses(start, end).size(), is(3));
+	}
+
+	@Test
+	public void addSameExpenseInstanceTwice_onlyOneAdded() throws Exception {
+		Category category = new Category();
+		Expense expense = new Expense(ANY_DATE);
+		category.expenses.add(expense);
+		category.expenses.add(expense);
+		assertThat(category.expenses.size(), is(1));
 	}
 
 	@SuppressWarnings("deprecation")

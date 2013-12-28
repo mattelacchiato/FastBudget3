@@ -26,6 +26,7 @@ import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Database;
+import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.view.Calculator;
@@ -122,13 +123,19 @@ public class ExpenseActivityTest {
 		setAmount("30");
 		setDescription(description);
 
+		//TODO (Dec 27, 2013): write helper method for clicking sth.
 		expenseActivity.onOptionsItemSelected(menu.findItem(R.id.save));
 
+		//TODO (Dec 27, 2013): use dao!
 		Category category = (Category) db.queryByExample(new Category(CATEGORY_NAME)).get(0);
-		assertThat(category.expenses.get(0), is(notNullValue()));
-		assertThat(category.expenses.get(0).amount, is(3000));
-		assertThat(category.expenses.get(0).date, is(notNullValue()));
-		assertThat(category.expenses.get(0).description, is(description));
+		Expense persistedExpense = null;
+		for (Expense expense : category.expenses) {
+			persistedExpense = expense;
+		}
+		assertThat(persistedExpense, is(notNullValue()));
+		assertThat(persistedExpense.amount, is(3000));
+		assertThat(persistedExpense.date, is(notNullValue()));
+		assertThat(persistedExpense.description, is(description));
 	}
 
 	@Test
