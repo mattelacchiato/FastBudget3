@@ -25,6 +25,7 @@ import android.widget.EditText;
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.enums.Extras;
@@ -57,11 +58,11 @@ public class ExpenseActivityTest {
 				.withIntent(intent);
 		expenseActivity = activityController.get();
 
-		db = Database.getInstance(expenseActivity);
-		Database.clear();
-		db.store(new Category("not me", ANY_BUDGET, ANY_DATE));
-		db.store(new Category(CATEGORY_NAME, ANY_BUDGET, ANY_DATE));
-		db.store(new Category("not me too", ANY_BUDGET, ANY_DATE));
+		db = Database.getClearedInstance(expenseActivity);
+		CategoryDao categoryDao = new CategoryDao(db);
+		categoryDao.store(new Category("not me", ANY_BUDGET, ANY_DATE));
+		categoryDao.store(new Category(CATEGORY_NAME, ANY_BUDGET, ANY_DATE));
+		categoryDao.store(new Category("not me too", ANY_BUDGET, ANY_DATE));
 
 		activityController.create();
 		menu = new TestMenu();

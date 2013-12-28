@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 
 @RunWith(RobolectricTestRunner.class)
@@ -36,13 +37,14 @@ public class OverviewActivityTestWithoutCategories {
 	private OverviewActivity overview;
 	private ObjectContainer db;
 	private Menu menu;
+	private CategoryDao categoryDao;
 
 	@Before
 	public void setUp() {
 		ActivityController<OverviewActivity> activityController = buildActivity(OverviewActivity.class);
 		overview = activityController.get();
-		db = Database.getInstance(overview);
-		Database.clear();
+		db = Database.getClearedInstance(overview);
+		categoryDao = new CategoryDao(db);
 		activityController.create();
 		menu = new TestMenu();
 		overview.onCreateOptionsMenu(menu);
@@ -78,7 +80,7 @@ public class OverviewActivityTestWithoutCategories {
 		overview.onOptionsItemSelected(menu.findItem(R.id.add_category));
 
 		String categoryName = "i was added";
-		db.store(new Category(categoryName, 123, new Date()));
+		categoryDao.store(new Category(categoryName, 123, new Date()));
 		shadowOf(overview).receiveResult(new Intent(overview, CategoryActivity.class), Activity.RESULT_OK, null);
 
 		TextView name1 = (TextView) findListView(R.id.name);

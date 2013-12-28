@@ -13,6 +13,7 @@ import java.util.Date;
 import android.app.ListActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
 
@@ -28,7 +29,6 @@ public abstract class FilledStateTestCase<T extends ListActivity> extends Activi
 	public void setUp() throws Exception {
 		super.setUp();
 		initialActivity = getActivity();
-		Database.clear();
 		fillData();
 		runSyncAdapter();
 		refreshListView();
@@ -49,9 +49,10 @@ public abstract class FilledStateTestCase<T extends ListActivity> extends Activi
 		expenditureDate.add(DAY_OF_MONTH, 1);
 		firstCategory.expenses.add(new Expense(30, expenditureDate.getTime(), "third expenditure"));
 
-		Database.store(firstCategory);
-		Database.store(new Category("second category", 20, categoryDate));
-		Database.store(new Category("third category", 30, categoryDate));
+		CategoryDao categoryDao = new CategoryDao(Database.getClearedInstance(initialActivity));
+		categoryDao.store(firstCategory);
+		categoryDao.store(new Category("second category", 20, categoryDate));
+		categoryDao.store(new Category("third category", 30, categoryDate));
 	}
 
 	private void runSyncAdapter() {

@@ -67,9 +67,8 @@ public class CategoryActivityWithIntentTest {
 
 	private void initDb(Context context) {
 		db = Database.getClearedInstance(context);
-		//TODO (Dec 27, 2013): write store() in GenericBaseDao
-		db.store(new Category(ANY_NAME, ANY_BUDGET, ANY_DATE));
 		categoryDao = new CategoryDao(db);
+		categoryDao.store(new Category(ANY_NAME, ANY_BUDGET, ANY_DATE));
 	}
 
 	@Test

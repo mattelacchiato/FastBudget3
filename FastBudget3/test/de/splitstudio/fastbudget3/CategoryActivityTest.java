@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.utils.view.Calculator;
 
@@ -43,13 +44,15 @@ public class CategoryActivityTest {
 	private CategoryActivity categoryActivity;
 
 	private ObjectContainer db;
+	private CategoryDao categoryDao;
 	private Menu menu;
 
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
 		categoryActivity = buildActivity(CategoryActivity.class).create().get();
-		db = Database.getInstance(categoryActivity);
+		db = Database.getClearedInstance(categoryActivity);
+		categoryDao = new CategoryDao(db);
 		Database.clear();
 		menu = new TestMenu();
 		categoryActivity.onCreateOptionsMenu(menu);
@@ -121,7 +124,7 @@ public class CategoryActivityTest {
 	@Test
 	public void clickSave_complainsAboutDuplicateName_noIntentStarted() {
 		String name = "duplicatedName";
-		db.store(new Category(name, ANY_BUDGET, null));
+		categoryDao.store(new Category(name, ANY_BUDGET, null));
 
 		fillName(name);
 		fillBudget("1.00");

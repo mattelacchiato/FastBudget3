@@ -112,7 +112,7 @@ public class CategoryActivity extends Activity {
 		category.budget = validator.getAmountInCent();
 		category.date = datePicker.getDate().getTime();
 
-		Database.store(category);
+		categoryDao.store(category);
 		setResultAndFinish(RESULT_OK);
 	}
 

@@ -15,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowDatePickerDialog;
-import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.shadows.ShadowToast;
 import org.robolectric.util.ActivityController;
 
@@ -29,6 +28,7 @@ import android.widget.TextView;
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.enums.Extras;
@@ -58,14 +58,13 @@ public class ExpenseListActivityTest {
 	}
 
 	private void initDb() {
-		ObjectContainer db = Database.getInstance(activity);
-		Database.clear();
+		ObjectContainer db = Database.getClearedInstance(activity);
+		CategoryDao categoryDao = new CategoryDao(db);
 
 		category = new Category(CATEGORY_NAME);
 		expense = new Expense(10, createFirstDayOfMonth().getTime(), DESCRIPTION);
 		category.expenses.add(expense);
-		db.store(category);
-		db.commit();
+		categoryDao.store(category);
 	}
 
 	private Intent createIntent() {

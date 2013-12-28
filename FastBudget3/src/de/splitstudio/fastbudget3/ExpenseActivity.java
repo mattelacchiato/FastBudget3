@@ -36,6 +36,8 @@ public class ExpenseActivity extends Activity {
 
 	private ExpenseDao expenseDao;
 
+	private CategoryDao categoryDao;
+
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
@@ -47,7 +49,8 @@ public class ExpenseActivity extends Activity {
 		String categoryName = getIntent().getExtras().getString(Extras.CategoryName.name());
 		db = Database.getInstance(this);
 		expenseDao = new ExpenseDao(db);
-		category = new CategoryDao(db).findCategory(categoryName);
+		categoryDao = new CategoryDao(db);
+		category = categoryDao.findCategory(categoryName);
 		setTitle(getString(R.string.title_expense, categoryName));
 		fillValues(getIntent().getExtras());
 	}
@@ -100,10 +103,9 @@ public class ExpenseActivity extends Activity {
 			expense.date = datePickerButtons.getDate().getTime();
 			expense.description = descriptionEdit.getText().toString();
 
-			//TODO (Dec 27, 2013): make expenses a set
 			category.expenses.add(expense);
-			db.store(category.expenses);
-			db.commit();
+
+			categoryDao.store(category);
 			setResult(RESULT_OK);
 			finish();
 		} catch (ParseException e) {

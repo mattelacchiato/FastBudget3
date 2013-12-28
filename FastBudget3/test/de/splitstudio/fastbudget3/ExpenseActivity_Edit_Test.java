@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.db.ExpenseDao;
@@ -75,11 +76,12 @@ public class ExpenseActivity_Edit_Test {
 	}
 
 	private void initDb() {
-		db = Database.getInstance(activity);
-		Database.clear();
+		db = Database.getClearedInstance(activity);
+		CategoryDao categoryDao = new CategoryDao(db);
+
 		Category category = new Category(CATEGORY_NAME, ANY_BUDGET, ANY_DATE);
 		category.expenses.add(expense);
-		db.store(category);
+		categoryDao.store(category);
 		expenseDao = new ExpenseDao(db);
 	}
 

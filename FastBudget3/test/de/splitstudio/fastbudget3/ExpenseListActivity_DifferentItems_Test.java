@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.enums.Extras;
@@ -49,12 +50,11 @@ public class ExpenseListActivity_DifferentItems_Test {
 
 	private void initDb() {
 		Context context = activityController.get().getApplicationContext();
-		ObjectContainer db = Database.getInstance(context);
-		Database.clear();
-
+		ObjectContainer db = Database.getClearedInstance(context);
+		CategoryDao categoryDao = new CategoryDao(db);
+		
 		category = new Category(CATEGORY_NAME);
-		db.store(category);
-		db.commit();
+		categoryDao.store(category);
 	}
 
 	private Intent createIntent() {

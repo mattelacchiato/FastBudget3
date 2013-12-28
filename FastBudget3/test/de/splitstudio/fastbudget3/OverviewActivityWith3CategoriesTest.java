@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.enums.Extras;
@@ -56,13 +57,24 @@ public class OverviewActivityWith3CategoriesTest {
 
 	private ActivityController<OverviewActivity> activityController;
 
+	private CategoryDao categoryDao;
+
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
 		activityController = buildActivity(OverviewActivity.class);
 		overview = activityController.get();
-		db = Database.getInstance(overview.getApplicationContext());
-		Database.clear();
+		initDb();
+
+		activityController.create();
+		menu = new TestMenu();
+		overview.onCreateOptionsMenu(menu);
+		assertThat(overview.getListAdapter().getCount(), is(greaterThan(0)));
+	}
+
+	private void initDb() {
+		db = Database.getClearedInstance(overview.getApplicationContext());
+		categoryDao = new CategoryDao(db);
 
 		Calendar started = Calendar.getInstance();
 		started.add(Calendar.MONTH, -1);
@@ -70,14 +82,9 @@ public class OverviewActivityWith3CategoriesTest {
 		category1 = new Category(NAME1, 111, now);
 		category2 = new Category(NAME2, 222, now);
 		category3 = new Category(NAME3, 333, now);
-		db.store(category1);
-		db.store(category2);
-		db.store(category3);
-		db.commit();
-		activityController.create();
-		menu = new TestMenu();
-		overview.onCreateOptionsMenu(menu);
-		assertThat(overview.getListAdapter().getCount(), is(greaterThan(0)));
+		categoryDao.store(category1);
+		categoryDao.store(category2);
+		categoryDao.store(category3);
 	}
 
 	@Test
@@ -141,7 +148,7 @@ public class OverviewActivityWith3CategoriesTest {
 		findListView(R.id.button_add_expense).performClick();
 
 		category1.expenses.add(new Expense(20, new Date(), null));
-		db.store(category1);
+		categoryDao.store(category1);
 		Intent intent = new Intent(overview, ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), category1.name);
 		shadowOf(overview).receiveResult(intent, Activity.RESULT_OK, null);
@@ -153,7 +160,7 @@ public class OverviewActivityWith3CategoriesTest {
 	@Test
 	public void setsProgressBar() {
 		category1.expenses.add(new Expense(20, new Date(), null));
-		db.store(category1);
+		categoryDao.store(category1);
 		overview.updateView();
 
 		ProgressBar progressBar = (ProgressBar) findListView(R.id.category_fill);
@@ -166,8 +173,8 @@ public class OverviewActivityWith3CategoriesTest {
 		category1.expenses.add(new Expense(0, new Date(), ""));
 		category2.expenses.add(new Expense(0, new Date(), ""));
 		category2.expenses.add(new Expense(0, new Date(), ""));
-		db.store(category1);
-		db.store(category2);
+		categoryDao.store(category1);
+		categoryDao.store(category2);
 
 		overview.updateView();
 
@@ -195,7 +202,7 @@ public class OverviewActivityWith3CategoriesTest {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -1);
 		category1.expenses.add(new Expense(20, cal.getTime(), ""));
-		db.store(category1);
+		categoryDao.store(category1);
 
 		overview.updateView();
 
@@ -236,7 +243,7 @@ public class OverviewActivityWith3CategoriesTest {
 	public void deleteCategory_okDeletesCategorysExpensesFromDb() {
 		Expense expense = new Expense(20, new Date(), null);
 		category1.expenses.add(expense);
-		db.store(category1.expenses);
+		categoryDao.store(category1);
 		findListView(R.id.button_delete).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 

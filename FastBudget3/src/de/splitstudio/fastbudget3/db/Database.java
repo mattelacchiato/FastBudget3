@@ -44,10 +44,4 @@ public class Database {
 		return db;
 	}
 
-	public static <T> T store(T object) {
-		db.store(object);
-		db.commit();
-		return object;
-	}
-
 }
