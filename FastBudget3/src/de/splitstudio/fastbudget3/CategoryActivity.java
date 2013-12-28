@@ -5,7 +5,6 @@ import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationRes
 import static de.splitstudio.fastbudget3.enums.Extras.CategoryName;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -24,8 +23,6 @@ import de.splitstudio.utils.view.DatePickerButtons;
 
 public class CategoryActivity extends Activity {
 
-	Locale locale;
-
 	private DatePickerButtons datePicker;
 
 	private EditText nameEdit;
@@ -42,9 +39,6 @@ public class CategoryActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		categoryDao = new CategoryDao(Database.getInstance(this));
-
-		//TODO (Dec 27, 2013): rm locale?
-		locale = getResources().getConfiguration().locale;
 
 		setContentView(R.layout.category_activity);
 

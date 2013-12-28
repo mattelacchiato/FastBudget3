@@ -48,6 +48,8 @@ public class ExpenseActivityTest {
 
 	private TestMenu menu;
 
+	private CategoryDao categoryDao;
+
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
@@ -59,7 +61,7 @@ public class ExpenseActivityTest {
 		expenseActivity = activityController.get();
 
 		db = Database.getClearedInstance(expenseActivity);
-		CategoryDao categoryDao = new CategoryDao(db);
+		categoryDao = new CategoryDao(db);
 		categoryDao.store(new Category("not me", ANY_BUDGET, ANY_DATE));
 		categoryDao.store(new Category(CATEGORY_NAME, ANY_BUDGET, ANY_DATE));
 		categoryDao.store(new Category("not me too", ANY_BUDGET, ANY_DATE));
@@ -127,8 +129,7 @@ public class ExpenseActivityTest {
 		//TODO (Dec 27, 2013): write helper method for clicking sth.
 		expenseActivity.onOptionsItemSelected(menu.findItem(R.id.save));
 
-		//TODO (Dec 27, 2013): use dao!
-		Category category = (Category) db.queryByExample(new Category(CATEGORY_NAME)).get(0);
+		Category category = categoryDao.findByName(CATEGORY_NAME);
 		Expense persistedExpense = null;
 		for (Expense expense : category.expenses) {
 			persistedExpense = expense;
