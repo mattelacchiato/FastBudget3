@@ -110,13 +110,13 @@ public class ExpenseActivityTest {
 
 	@Test
 	public void cancel_returnsToOverview() {
-		expenseActivity.onOptionsItemSelected(menu.findItem(R.id.cancel));
+		clickOnMenuItem(R.id.cancel);
 		assertThat(expenseActivity.isFinishing(), is(true));
 	}
 
 	@Test
 	public void cancel_resultIsCancelled() {
-		expenseActivity.onOptionsItemSelected(menu.findItem(R.id.cancel));
+		clickOnMenuItem(R.id.cancel);
 		assertThat(shadowOf(expenseActivity).getResultCode(), is(Activity.RESULT_CANCELED));
 	}
 
@@ -126,8 +126,7 @@ public class ExpenseActivityTest {
 		setAmount("30");
 		setDescription(description);
 
-		//TODO (Dec 27, 2013): write helper method for clicking sth.
-		expenseActivity.onOptionsItemSelected(menu.findItem(R.id.save));
+		clickOnMenuItem(R.id.save);
 
 		Category category = categoryDao.findByName(CATEGORY_NAME);
 		Expense persistedExpense = null;
@@ -145,7 +144,7 @@ public class ExpenseActivityTest {
 		setAmount("30");
 		setDescription("stuff");
 
-		expenseActivity.onOptionsItemSelected(menu.findItem(R.id.save));
+		clickOnMenuItem(R.id.save);
 		assertThat(expenseActivity.isFinishing(), is(true));
 		assertThat(shadowOf(expenseActivity).getResultCode(), is(Activity.RESULT_OK));
 	}
@@ -154,7 +153,7 @@ public class ExpenseActivityTest {
 	public void save_amountNotValid_errorShown() {
 		setAmount("-.-..0");
 
-		expenseActivity.onOptionsItemSelected(menu.findItem(R.id.save));
+		clickOnMenuItem(R.id.save);
 
 		assertToastIsShown(R.string.error_invalid_number);
 	}
@@ -178,4 +177,7 @@ public class ExpenseActivityTest {
 		((EditText) expenseActivity.findViewById(R.id.calculator_amount)).setText(amount);
 	}
 
+	private void clickOnMenuItem(int buttonId) {
+		expenseActivity.onOptionsItemSelected(menu.findItem(buttonId));
+	}
 }
