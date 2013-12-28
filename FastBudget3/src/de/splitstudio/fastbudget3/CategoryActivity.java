@@ -13,9 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.db4o.ObjectContainer;
-
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.enums.Extras;
@@ -26,9 +23,6 @@ import de.splitstudio.utils.view.Calculator;
 import de.splitstudio.utils.view.DatePickerButtons;
 
 public class CategoryActivity extends Activity {
-
-	//TODO (Dec 27, 2013): rm db field?
-	ObjectContainer db;
 
 	Locale locale;
 
@@ -47,8 +41,7 @@ public class CategoryActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		db = Database.getInstance(this);
-		categoryDao = new CategoryDao(db);
+		categoryDao = new CategoryDao(Database.getInstance(this));
 
 		//TODO (Dec 27, 2013): rm locale?
 		locale = getResources().getConfiguration().locale;
@@ -67,7 +60,7 @@ public class CategoryActivity extends Activity {
 		if (updateCategory) {
 			setTitle(R.string.edit);
 			String name = getIntent().getExtras().getString(CategoryName.name());
-			category = categoryDao.findCategory(name);
+			category = categoryDao.findByName(name);
 			nameEdit.setText(category.name);
 			calculator.setAmount(NumberUtils.formatAsDecimal(category.budget));
 			Calendar calendar = Calendar.getInstance();
@@ -104,7 +97,7 @@ public class CategoryActivity extends Activity {
 		String amountString = calculator.getAmount();
 		category.name = nameEdit.getText().toString();
 
-		CategoryValidator validator = new CategoryValidator(db, category.name, amountString);
+		CategoryValidator validator = new CategoryValidator(categoryDao, category.name, amountString);
 		if (!isValid(validator)) {
 			Toast.makeText(this, validator.getResult().stringId, Toast.LENGTH_LONG).show();
 			return;

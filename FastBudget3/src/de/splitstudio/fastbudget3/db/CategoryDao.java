@@ -12,10 +12,9 @@ public class CategoryDao extends GenericBaseDao<Category> {
 		super(db);
 	}
 
-	public Category findCategory(final String name) {
+	@SuppressWarnings("serial")
+	public Category findByName(final String name) {
 		ObjectSet<Category> set = db.query(new Predicate<Category>() {
-			private static final long serialVersionUID = 1L;
-
 			@Override
 			public boolean match(Category category) {
 				return category.name.equals(name);
@@ -26,6 +25,10 @@ public class CategoryDao extends GenericBaseDao<Category> {
 			return null;
 		}
 		return set.get(0);
+	}
+
+	public void delete(String name) {
+		delete(findByName(name));
 	}
 
 }

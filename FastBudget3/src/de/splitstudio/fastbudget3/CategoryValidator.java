@@ -7,9 +7,7 @@ import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationRes
 
 import java.text.ParseException;
 
-import com.db4o.ObjectContainer;
-
-import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.utils.NumberUtils;
 
 public class CategoryValidator {
@@ -31,7 +29,7 @@ public class CategoryValidator {
 		}
 	}
 
-	private final ObjectContainer db;
+	private final CategoryDao categoryDao;
 
 	private final String name;
 	private final String amount;
@@ -40,8 +38,8 @@ public class CategoryValidator {
 
 	private final CategoryValidationResult result;
 
-	public CategoryValidator(ObjectContainer db, String name, String amount) {
-		this.db = db;
+	public CategoryValidator(CategoryDao categoryDao, String name, String amount) {
+		this.categoryDao = categoryDao;
 		this.name = name;
 		this.amount = amount;
 		this.result = validate();
@@ -82,7 +80,7 @@ public class CategoryValidator {
 	}
 
 	private boolean isCategoryNameDuplicated() {
-		return !db.queryByExample(new Category(name)).isEmpty();
+		return categoryDao.findByName(name) != null;
 	}
 
 	public int getAmountInCent() {

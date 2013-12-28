@@ -63,7 +63,7 @@ public class ExpenseListActivity extends ListActivity {
 
 		start = DateUtils.createFirstDayOfMonth();
 		end = DateUtils.createLastDayOfMonth();
-		category = new CategoryDao(Database.getInstance(this)).findCategory(categoryName);
+		category = new CategoryDao(Database.getInstance(this)).findByName(categoryName);
 		List<Expense> expenses = category.findExpenses(start.getTime(), end.getTime());
 		adapter = new ExpenseListAdapter(LayoutInflater.from(this), expenses);
 		setListAdapter(new SlideExpandableListAdapter(adapter, R.id.context_switcher, R.id.context_row));

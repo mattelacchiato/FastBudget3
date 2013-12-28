@@ -30,8 +30,6 @@ public class ExpenseActivity extends Activity {
 
 	Category category;
 
-	private ObjectContainer db;
-
 	private Expense expense;
 
 	private ExpenseDao expenseDao;
@@ -47,10 +45,10 @@ public class ExpenseActivity extends Activity {
 		}
 		setContentView(R.layout.expense_activity);
 		String categoryName = getIntent().getExtras().getString(Extras.CategoryName.name());
-		db = Database.getInstance(this);
+		ObjectContainer db = Database.getInstance(this);
 		expenseDao = new ExpenseDao(db);
 		categoryDao = new CategoryDao(db);
-		category = categoryDao.findCategory(categoryName);
+		category = categoryDao.findByName(categoryName);
 		setTitle(getString(R.string.title_expense, categoryName));
 		fillValues(getIntent().getExtras());
 	}

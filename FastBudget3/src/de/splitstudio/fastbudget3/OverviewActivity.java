@@ -6,7 +6,6 @@ import static de.splitstudio.utils.view.ViewHelper.getViewsById;
 import static java.lang.String.format;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
@@ -17,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.db4o.ObjectContainer;
 import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
 import de.splitstudio.fastbudget3.db.Category;
@@ -32,8 +30,6 @@ import de.splitstudio.utils.db.Database;
 //TODO (Dec 25, 2013): rename to CategoryListActivity
 public class OverviewActivity extends ListActivity {
 
-	private ObjectContainer db;
-
 	private CategoryListAdapter listAdapter;
 
 	protected CategoryDao categoryDao;
@@ -42,10 +38,9 @@ public class OverviewActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.overview_activity);
-		db = Database.getInstance(getApplicationContext());
-		categoryDao = new CategoryDao(db);
+		categoryDao = new CategoryDao(Database.getInstance(this));
 
-		List<Category> categories = new ArrayList<Category>(db.query(Category.class));
+		List<Category> categories = categoryDao.findAll(Category.class);
 		listAdapter = new CategoryListAdapter(getLayoutInflater(), categories);
 		setListAdapter(new SlideExpandableListAdapter(listAdapter, R.id.context_switcher, R.id.context_row));
 		updateView(categories);
@@ -107,13 +102,12 @@ public class OverviewActivity extends ListActivity {
 	}
 
 	public void deleteCategory(final View view) {
+		final String name = (String) view.getTag();
 		DialogHelper.createQuestion(this, R.string.warning, R.string.warning_delete_category, R.string.cancel,
 			R.string.ok, new Runnable() {
 				@Override
 				public void run() {
-					Category category = categoryDao.findCategory((String) view.getTag());
-					db.delete(category);
-					db.commit();
+					categoryDao.delete(name);
 					updateView();
 				}
 			});
@@ -126,8 +120,7 @@ public class OverviewActivity extends ListActivity {
 	}
 
 	public void updateView() {
-		List<Category> categories = new ArrayList<Category>(db.query(Category.class));
-		updateView(categories);
+		updateView(categoryDao.findAll(Category.class));
 	}
 
 	private void updateView(List<Category> categories) {

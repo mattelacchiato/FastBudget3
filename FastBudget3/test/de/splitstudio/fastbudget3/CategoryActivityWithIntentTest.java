@@ -89,10 +89,10 @@ public class CategoryActivityWithIntentTest {
 		fillName(newName);
 		clickMenuItem(R.id.save);
 
-		Category oldCategory = categoryDao.findCategory(ANY_NAME);
+		Category oldCategory = categoryDao.findByName(ANY_NAME);
 		assertThat(oldCategory, is(nullValue()));
 
-		Category persistedCategory = categoryDao.findCategory(newName);
+		Category persistedCategory = categoryDao.findByName(newName);
 		assertThat(persistedCategory, is(notNullValue()));
 		assertThat(persistedCategory.name, is(newName));
 		assertThat(persistedCategory.budget, is(ANY_BUDGET));
@@ -105,7 +105,7 @@ public class CategoryActivityWithIntentTest {
 
 		assertThat(ShadowToast.getTextOfLatestToast(), is(nullValue()));
 
-		Category persistedCategory = categoryDao.findCategory(ANY_NAME);
+		Category persistedCategory = categoryDao.findByName(ANY_NAME);
 		assertThat(persistedCategory, is(notNullValue()));
 		assertThat(persistedCategory.budget, is(233));
 	}
