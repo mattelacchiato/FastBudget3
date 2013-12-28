@@ -44,8 +44,6 @@ public class ExpenseActivityTest {
 
 	private ExpenseActivity expenseActivity;
 
-	private ObjectContainer db;
-
 	private TestMenu menu;
 
 	private CategoryDao categoryDao;
@@ -60,8 +58,7 @@ public class ExpenseActivityTest {
 				.withIntent(intent);
 		expenseActivity = activityController.get();
 
-		db = Database.getClearedInstance(expenseActivity);
-		categoryDao = new CategoryDao(db);
+		categoryDao = new CategoryDao(Database.getClearedInstance(expenseActivity));
 		categoryDao.store(new Category("not me", ANY_BUDGET, ANY_DATE));
 		categoryDao.store(new Category(CATEGORY_NAME, ANY_BUDGET, ANY_DATE));
 		categoryDao.store(new Category("not me too", ANY_BUDGET, ANY_DATE));

@@ -10,15 +10,15 @@ import static org.hamcrest.Matchers.not;
 
 import com.google.android.apps.common.testing.ui.espresso.DataInteraction;
 
-import de.splitstudio.fastbudget3.OverviewActivity;
+import de.splitstudio.fastbudget3.CategoryListActivity;
 import de.splitstudio.fastbudget3.R;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.Expense;
 
-public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<OverviewActivity> {
+public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<CategoryListActivity> {
 
 	public ExpenseListActivityIntegrationTest() {
-		super(OverviewActivity.class);
+		super(CategoryListActivity.class);
 	}
 
 	@Override

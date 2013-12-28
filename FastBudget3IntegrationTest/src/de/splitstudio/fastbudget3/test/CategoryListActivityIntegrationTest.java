@@ -15,16 +15,16 @@ import static org.hamcrest.Matchers.not;
 
 import com.google.android.apps.common.testing.ui.espresso.DataInteraction;
 
-import de.splitstudio.fastbudget3.OverviewActivity;
+import de.splitstudio.fastbudget3.CategoryListActivity;
 import de.splitstudio.fastbudget3.R;
 import de.splitstudio.fastbudget3.db.Category;
 
-public class OverviewActivityIntegrationTest extends FilledStateTestCase<OverviewActivity> {
+public class CategoryListActivityIntegrationTest extends FilledStateTestCase<CategoryListActivity> {
 
 	private static final String CATEGORY_NAME = "My Category";
 
-	public OverviewActivityIntegrationTest() {
-		super(OverviewActivity.class);
+	public CategoryListActivityIntegrationTest() {
+		super(CategoryListActivity.class);
 	}
 
 	@Override
