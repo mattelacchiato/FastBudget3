@@ -21,9 +21,6 @@ import org.robolectric.util.ActivityController;
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.EditText;
-
-import com.db4o.ObjectContainer;
-
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Expense;
@@ -51,7 +48,7 @@ public class ExpenseActivityTest {
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		CategoryListActivity categoryListActivity = buildActivity(CategoryListActivity.class).create().get();
+		CategoryListActivity categoryListActivity = buildActivity(CategoryListActivity.class).get();
 		Intent intent = new Intent(categoryListActivity, ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
 		ActivityController<ExpenseActivity> activityController = buildActivity(ExpenseActivity.class)
