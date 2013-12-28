@@ -1,8 +1,12 @@
 package de.splitstudio.fastbudget3;
 
 import static java.util.Calendar.DAY_OF_MONTH;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
 
@@ -15,7 +19,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.util.ActivityController;
 
-import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
@@ -25,6 +28,7 @@ import com.db4o.ObjectContainer;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Expense;
+import de.splitstudio.fastbudget3.db.ExpenseDao;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.db.Database;
@@ -39,6 +43,11 @@ public class ExpenseListActivityWith3ItemsTest {
 	private ActivityController<ExpenseListActivity> activityController;
 	private ExpenseListActivity activity;
 
+	private Expense firstExpense;
+
+	private ExpenseDao expenseDao;
+	private CategoryDao categoryDao;
+
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
@@ -48,9 +57,9 @@ public class ExpenseListActivityWith3ItemsTest {
 	}
 
 	private void initDb() {
-		Context context = activityController.get().getApplicationContext();
-		ObjectContainer db = Database.getClearedInstance(context);
-		CategoryDao categoryDao = new CategoryDao(db);
+		ObjectContainer db = Database.getClearedInstance(activityController.get());
+		categoryDao = new CategoryDao(db);
+		expenseDao = new ExpenseDao(db);
 
 		category = new Category(CATEGORY_NAME);
 
@@ -59,7 +68,8 @@ public class ExpenseListActivityWith3ItemsTest {
 		cal.add(DAY_OF_MONTH, 1);
 		category.expenses.add(new Expense(20, cal.getTime(), "second"));
 		cal.add(DAY_OF_MONTH, 1);
-		category.expenses.add(new Expense(20, cal.getTime(), "first"));
+		firstExpense = new Expense(20, cal.getTime(), "first");
+		category.expenses.add(firstExpense);
 
 		categoryDao.store(category);
 	}
@@ -84,6 +94,35 @@ public class ExpenseListActivityWith3ItemsTest {
 		assertThat(((TextView) getRow(0).findViewById(R.id.description)).getText().toString(), is("first"));
 		assertThat(((TextView) getRow(1).findViewById(R.id.description)).getText().toString(), is("second"));
 		assertThat(((TextView) getRow(2).findViewById(R.id.description)).getText().toString(), is("third"));
+	}
+
+	@Test
+	public void delete_expenditureNotVisibleAnymore() throws Exception {
+		getRow(0).performClick();
+		getRow(0).findViewById(R.id.button_delete).performClick();
+
+		String firstDescription = ((TextView) getRow(0).findViewById(R.id.description)).getText().toString();
+		assertThat(firstDescription, is("second"));
+	}
+
+	@Test
+	public void delete_expenditureDeletedInDb() throws Exception {
+		assertThat(expenseDao.findAll(Expense.class), hasSize(3));
+
+		getRow(0).performClick();
+		getRow(0).findViewById(R.id.button_delete).performClick();
+
+		assertThat(expenseDao.findAll(Expense.class), hasSize(2));
+		assertThat(expenseDao.findByUuid(firstExpense.uuid), is(nullValue()));
+	}
+
+	@Test
+	public void delete_expenditureNotInCategory() throws Exception {
+		getRow(0).performClick();
+		getRow(0).findViewById(R.id.button_delete).performClick();
+
+		Category persistedCategory = categoryDao.findByName(CATEGORY_NAME);
+		assertThat(persistedCategory.expenses, not(hasItem(firstExpense)));
 	}
 
 	private View getRow(int rowIndex) {

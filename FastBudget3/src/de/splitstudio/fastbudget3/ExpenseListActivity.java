@@ -15,11 +15,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.db4o.ObjectContainer;
 import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Expense;
+import de.splitstudio.fastbudget3.db.ExpenseDao;
 import de.splitstudio.fastbudget3.db.ExpenseListAdapter;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.fastbudget3.enums.RequestCode;
@@ -48,6 +50,8 @@ public class ExpenseListActivity extends ListActivity {
 	private ExpenseListAdapter adapter;
 
 	private Category category;
+	private CategoryDao categoryDao;
+	private ExpenseDao expenseDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,10 @@ public class ExpenseListActivity extends ListActivity {
 
 		start = DateUtils.createFirstDayOfMonth();
 		end = DateUtils.createLastDayOfMonth();
-		category = new CategoryDao(Database.getInstance(this)).findByName(categoryName);
+		ObjectContainer db = Database.getInstance(this);
+		categoryDao = new CategoryDao(db);
+		expenseDao = new ExpenseDao(db);
+		category = categoryDao.findByName(categoryName);
 		List<Expense> expenses = category.findExpenses(start.getTime(), end.getTime());
 		adapter = new ExpenseListAdapter(LayoutInflater.from(this), expenses);
 		setListAdapter(new SlideExpandableListAdapter(adapter, R.id.context_switcher, R.id.context_row));
@@ -85,4 +92,11 @@ public class ExpenseListActivity extends ListActivity {
 		startActivityForResult(intent, RequestCode.EditExpense.ordinal());
 	}
 
+	public void deleteExpense(View view) {
+		String uuid = view.getTag().toString();
+		Expense expense = expenseDao.findByUuid(uuid);
+		expenseDao.delete(expense);
+		category.expenses.remove(expense);
+		update.run();
+	}
 }

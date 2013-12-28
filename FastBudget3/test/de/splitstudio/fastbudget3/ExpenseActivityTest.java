@@ -3,6 +3,7 @@ package de.splitstudio.fastbudget3;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.isA;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
@@ -79,12 +80,12 @@ public class ExpenseActivityTest {
 
 	@Test
 	public void itHasAFieldToEnterADescription() {
-		assertThat(expenseActivity.findViewById(R.id.description), is(EditText.class));
+		assertThat((EditText) expenseActivity.findViewById(R.id.description), isA(EditText.class));
 	}
 
 	@Test
 	public void itHasACalculator() {
-		assertThat(expenseActivity.findViewById(R.id.calculator), is(Calculator.class));
+		assertThat((Calculator) expenseActivity.findViewById(R.id.calculator), isA(Calculator.class));
 	}
 
 	@Test
@@ -99,7 +100,7 @@ public class ExpenseActivityTest {
 
 	@Test
 	public void itHasADatePicker() {
-		assertThat(expenseActivity.findViewById(R.id.date_picker), is(DatePickerButtons.class));
+		assertThat((DatePickerButtons) expenseActivity.findViewById(R.id.date_picker), isA(DatePickerButtons.class));
 	}
 
 	@Test

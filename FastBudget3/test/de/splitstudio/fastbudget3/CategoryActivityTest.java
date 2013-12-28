@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.isA;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
@@ -23,7 +24,6 @@ import org.robolectric.tester.android.view.TestMenu;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -61,9 +61,8 @@ public class CategoryActivityTest {
 
 	@Test
 	public void itHasAFieldToEnterTheCategoryName() throws Exception {
-		View nameTextEdit = categoryActivity.findViewById(R.id.name);
+		EditText nameTextEdit = (EditText) categoryActivity.findViewById(R.id.name);
 		assertThat(nameTextEdit, is(notNullValue()));
-		assertThat(nameTextEdit, is(EditText.class));
 	}
 
 	@Test
@@ -87,9 +86,9 @@ public class CategoryActivityTest {
 
 	@Test
 	public void ithasACalculator() {
-		View calculator = categoryActivity.findViewById(R.id.calculator);
+		Calculator calculator = (Calculator) categoryActivity.findViewById(R.id.calculator);
 		assertThat(calculator, is(notNullValue()));
-		assertThat(calculator, is(Calculator.class));
+		assertThat(calculator, isA(Calculator.class));
 	}
 
 	@Test
@@ -174,7 +173,7 @@ public class CategoryActivityTest {
 	@Test
 	public void itHasADatePicker() {
 		assertThat(categoryActivity.findViewById(R.id.date_picker), is(notNullValue()));
-		assertThat(categoryActivity.findViewById(R.id.category_date_hint), is(TextView.class));
+		assertThat((TextView) categoryActivity.findViewById(R.id.category_date_hint), isA(TextView.class));
 		assertThat(((TextView) categoryActivity.findViewById(R.id.category_date_hint)).getText().toString(),
 			is(not("")));
 	}

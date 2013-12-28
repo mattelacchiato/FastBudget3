@@ -56,7 +56,7 @@ public class ExpenseActivity_Edit_Test {
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		CategoryListActivity categoryListActivity = buildActivity(CategoryListActivity.class).create().get();
+		CategoryListActivity categoryListActivity = buildActivity(CategoryListActivity.class).get();
 
 		expense = new Expense(10, DateUtils.createFirstDayOfMonth().getTime(), DESCRIPTION);
 
