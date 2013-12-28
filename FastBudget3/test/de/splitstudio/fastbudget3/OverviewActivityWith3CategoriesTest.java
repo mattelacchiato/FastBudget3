@@ -34,9 +34,9 @@ import com.db4o.ObjectContainer;
 
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
-import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.enums.Extras;
+import de.splitstudio.utils.db.Database;
 
 @RunWith(RobolectricTestRunner.class)
 public class OverviewActivityWith3CategoriesTest {

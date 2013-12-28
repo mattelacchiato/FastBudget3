@@ -16,6 +16,8 @@ import android.content.Context;
 
 import com.db4o.ObjectContainer;
 
+import de.splitstudio.utils.db.Database;
+
 @RunWith(RobolectricTestRunner.class)
 public class DatabaseTest {
 

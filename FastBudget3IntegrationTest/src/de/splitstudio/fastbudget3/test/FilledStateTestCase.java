@@ -14,8 +14,8 @@ import android.app.ListActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
-import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.db.Expense;
+import de.splitstudio.utils.db.Database;
 
 public abstract class FilledStateTestCase<T extends ListActivity> extends ActivityInstrumentationTestCase2<T> {
 

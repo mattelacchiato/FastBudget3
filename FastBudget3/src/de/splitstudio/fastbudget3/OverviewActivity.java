@@ -23,11 +23,11 @@ import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
-import de.splitstudio.fastbudget3.db.Database;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.fastbudget3.enums.RequestCode;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.activity.DialogHelper;
+import de.splitstudio.utils.db.Database;
 
 //TODO (Dec 25, 2013): rename to CategoryListActivity
 public class OverviewActivity extends ListActivity {

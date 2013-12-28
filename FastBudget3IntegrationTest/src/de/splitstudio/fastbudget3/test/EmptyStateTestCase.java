@@ -2,7 +2,7 @@ package de.splitstudio.fastbudget3.test;
 
 import android.test.ActivityInstrumentationTestCase2;
 import de.splitstudio.fastbudget3.OverviewActivity;
-import de.splitstudio.fastbudget3.db.Database;
+import de.splitstudio.utils.db.Database;
 
 public abstract class EmptyStateTestCase extends ActivityInstrumentationTestCase2<OverviewActivity> {
 
