@@ -50,10 +50,10 @@ public class CategoryActivityWithIntentTest {
 	public void setUp() {
 		Locale.setDefault(Locale.US);
 
-		ActivityController<OverviewActivity> overviewController = buildActivity(OverviewActivity.class);
-		initDb(overviewController.get().getApplicationContext());
-		OverviewActivity overviewActivity = overviewController.create().get();
-		Intent intent = new Intent(overviewActivity, CategoryActivity.class);
+		ActivityController<CategoryListActivity> categoryListController = buildActivity(CategoryListActivity.class);
+		initDb(categoryListController.get().getApplicationContext());
+		CategoryListActivity categoryListActivity = categoryListController.create().get();
+		Intent intent = new Intent(categoryListActivity, CategoryActivity.class);
 		intent.putExtra(CategoryName.name(), ANY_NAME);
 		ActivityController<CategoryActivity> categoryController = buildActivity(CategoryActivity.class).withIntent(
 			intent);

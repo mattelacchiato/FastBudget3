@@ -68,7 +68,7 @@ public class ExpenseListActivityTest {
 	}
 
 	private Intent createIntent() {
-		Intent intent = new Intent(new OverviewActivity(), ExpenseListActivity.class);
+		Intent intent = new Intent(new CategoryListActivity(), ExpenseListActivity.class);
 		return intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
 	}
 

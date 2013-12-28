@@ -39,9 +39,9 @@ import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.db.Database;
 
 @RunWith(RobolectricTestRunner.class)
-public class OverviewActivityWith3CategoriesTest {
+public class CategoryListActivityWith3CategoriesTest {
 
-	private OverviewActivity overview;
+	private CategoryListActivity categoryList;
 
 	private ObjectContainer db;
 
@@ -55,25 +55,25 @@ public class OverviewActivityWith3CategoriesTest {
 
 	private TestMenu menu;
 
-	private ActivityController<OverviewActivity> activityController;
+	private ActivityController<CategoryListActivity> activityController;
 
 	private CategoryDao categoryDao;
 
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		activityController = buildActivity(OverviewActivity.class);
-		overview = activityController.get();
+		activityController = buildActivity(CategoryListActivity.class);
+		categoryList = activityController.get();
 		initDb();
 
 		activityController.create();
 		menu = new TestMenu();
-		overview.onCreateOptionsMenu(menu);
-		assertThat(overview.getListAdapter().getCount(), is(greaterThan(0)));
+		categoryList.onCreateOptionsMenu(menu);
+		assertThat(categoryList.getListAdapter().getCount(), is(greaterThan(0)));
 	}
 
 	private void initDb() {
-		db = Database.getClearedInstance(overview.getApplicationContext());
+		db = Database.getClearedInstance(categoryList.getApplicationContext());
 		categoryDao = new CategoryDao(db);
 
 		Calendar started = Calendar.getInstance();
@@ -94,7 +94,7 @@ public class OverviewActivityWith3CategoriesTest {
 
 	@Test
 	public void containsAListWith3Items() throws Exception {
-		assertThat(overview.getListView().getAdapter().getCount(), is(3));
+		assertThat(categoryList.getListView().getAdapter().getCount(), is(3));
 	}
 
 	@Test
@@ -115,7 +115,7 @@ public class OverviewActivityWith3CategoriesTest {
 	public void addExpense_sendsCategoryNameToExpenseActivity() {
 		findListView(R.id.button_add_expense).performClick();
 
-		Intent nextStartedActivity = shadowOf(overview).getNextStartedActivity();
+		Intent nextStartedActivity = shadowOf(categoryList).getNextStartedActivity();
 		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
 		ShadowIntent shadowIntent = shadowOf(nextStartedActivity);
 		assertThat(shadowIntent.getExtras(), is(notNullValue()));
@@ -126,7 +126,7 @@ public class OverviewActivityWith3CategoriesTest {
 	public void editCategory_sendsCategoryNameToCategoryActivity() {
 		findListView(R.id.button_edit).performClick();
 
-		Intent nextStartedActivity = shadowOf(overview).getNextStartedActivity();
+		Intent nextStartedActivity = shadowOf(categoryList).getNextStartedActivity();
 		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
 		ShadowIntent shadowIntent = shadowOf(nextStartedActivity);
 		assertThat(shadowIntent.getExtras(), is(notNullValue()));
@@ -137,7 +137,7 @@ public class OverviewActivityWith3CategoriesTest {
 	public void setsSumOfAllExpenses() {
 		category1.expenses.add(new Expense(20, new Date(), null));
 		category1.expenses.add(new Expense(40, new Date(), null));
-		overview.updateView();
+		categoryList.updateView();
 
 		TextView spent = (TextView) findListView(R.id.category_spent);
 		assertThat(spent.getText().toString(), is("$0.60"));
@@ -149,9 +149,9 @@ public class OverviewActivityWith3CategoriesTest {
 
 		category1.expenses.add(new Expense(20, new Date(), null));
 		categoryDao.store(category1);
-		Intent intent = new Intent(overview, ExpenseActivity.class);
+		Intent intent = new Intent(categoryList, ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), category1.name);
-		shadowOf(overview).receiveResult(intent, Activity.RESULT_OK, null);
+		shadowOf(categoryList).receiveResult(intent, Activity.RESULT_OK, null);
 
 		TextView spent = (TextView) findListView(R.id.category_spent);
 		assertThat(spent.getText().toString(), is("$0.20"));
@@ -161,7 +161,7 @@ public class OverviewActivityWith3CategoriesTest {
 	public void setsProgressBar() {
 		category1.expenses.add(new Expense(20, new Date(), null));
 		categoryDao.store(category1);
-		overview.updateView();
+		categoryList.updateView();
 
 		ProgressBar progressBar = (ProgressBar) findListView(R.id.category_fill);
 		assertThat(progressBar.getMax(), is(category1.budget));
@@ -176,7 +176,7 @@ public class OverviewActivityWith3CategoriesTest {
 		categoryDao.store(category1);
 		categoryDao.store(category2);
 
-		overview.updateView();
+		categoryList.updateView();
 
 		assertThatTextAtPositionIs(0, R.id.name, NAME2);
 		assertThatTextAtPositionIs(1, R.id.name, NAME1);
@@ -185,15 +185,15 @@ public class OverviewActivityWith3CategoriesTest {
 
 	@Test
 	public void itShowsTotalBudgetForThisMonthInTitle() {
-		assertThat(overview.getTitle().toString(), containsString("$7"));
+		assertThat(categoryList.getTitle().toString(), containsString("$7"));
 	}
 
 	@Test
 	public void itShowsTotalSpentsForThisMonthInTitle() {
 		category1.expenses.add(new Expense(20, new Date(), ""));
 		category2.expenses.add(new Expense(200, new Date(), ""));
-		overview.updateView();
-		assertThat(overview.getTitle().toString(), containsString("$2"));
+		categoryList.updateView();
+		assertThat(categoryList.getTitle().toString(), containsString("$2"));
 	}
 
 	@Test
@@ -204,7 +204,7 @@ public class OverviewActivityWith3CategoriesTest {
 		category1.expenses.add(new Expense(20, cal.getTime(), ""));
 		categoryDao.store(category1);
 
-		overview.updateView();
+		categoryList.updateView();
 
 		assertThatTextAtPositionIs(0, R.id.category_budget, "$0.91");
 	}
@@ -273,7 +273,7 @@ public class OverviewActivityWith3CategoriesTest {
 		activityController.start();
 		findListView(R.id.button_list).performClick();
 
-		Intent startedIntent = shadowOf(overview).getNextStartedActivity();
+		Intent startedIntent = shadowOf(categoryList).getNextStartedActivity();
 		assertThat("No intend was started!", startedIntent, is(notNullValue()));
 		assertThat(startedIntent.getExtras().isEmpty(), is(false));
 		assertThat((String) startedIntent.getExtras().get(Extras.CategoryName.name()), is(category1.name));
@@ -283,7 +283,7 @@ public class OverviewActivityWith3CategoriesTest {
 	}
 
 	private void assertThatTextAtPositionIs(int position, int viewId, String expected) {
-		TextView name1 = (TextView) overview.getListAdapter().getView(position, null, null).findViewById(viewId);
+		TextView name1 = (TextView) categoryList.getListAdapter().getView(position, null, null).findViewById(viewId);
 		assertThat(name1, is(notNullValue()));
 		assertThat("At Position " + position, name1.getText().toString(), is(expected));
 	}
@@ -293,6 +293,6 @@ public class OverviewActivityWith3CategoriesTest {
 	}
 
 	private View findListView(int position, int viewId) {
-		return overview.getListAdapter().getView(position, null, overview.getListView()).findViewById(viewId);
+		return categoryList.getListAdapter().getView(position, null, categoryList.getListView()).findViewById(viewId);
 	}
 }

@@ -103,7 +103,7 @@ public class CategoryActivityTest {
 	}
 
 	@Test
-	public void clickSave_goesBackToOverview() {
+	public void clickSave_goesBackToCategoryList() {
 		ShadowActivity shadowActivity = shadowOf(categoryActivity);
 
 		fillBudget("1");

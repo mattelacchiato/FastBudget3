@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import de.splitstudio.utils.DateUtils;
+import de.splitstudio.utils.db.UniqueEntity;
 
-//TODO (Dec 27, 2013): extend UniqueEntity
-public class Category implements Comparable<Category> {
+public class Category extends UniqueEntity implements Comparable<Category> {
 
 	public String name;
 	public int budget;

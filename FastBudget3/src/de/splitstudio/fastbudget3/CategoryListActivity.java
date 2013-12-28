@@ -27,8 +27,7 @@ import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.activity.DialogHelper;
 import de.splitstudio.utils.db.Database;
 
-//TODO (Dec 25, 2013): rename to CategoryListActivity
-public class OverviewActivity extends ListActivity {
+public class CategoryListActivity extends ListActivity {
 
 	private CategoryListAdapter listAdapter;
 
@@ -37,7 +36,7 @@ public class OverviewActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.overview_activity);
+		setContentView(R.layout.category_list_activity);
 		categoryDao = new CategoryDao(Database.getInstance(this));
 
 		List<Category> categories = categoryDao.findAll(Category.class);
@@ -48,7 +47,7 @@ public class OverviewActivity extends ListActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.actionbar_overview, menu);
+		getMenuInflater().inflate(R.menu.actionbar_category_list, menu);
 		return true;
 	}
 

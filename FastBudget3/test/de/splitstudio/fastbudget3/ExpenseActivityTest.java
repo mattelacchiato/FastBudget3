@@ -53,8 +53,8 @@ public class ExpenseActivityTest {
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		OverviewActivity overviewActivity = buildActivity(OverviewActivity.class).create().get();
-		Intent intent = new Intent(overviewActivity, ExpenseActivity.class);
+		CategoryListActivity categoryListActivity = buildActivity(CategoryListActivity.class).create().get();
+		Intent intent = new Intent(categoryListActivity, ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
 		ActivityController<ExpenseActivity> activityController = buildActivity(ExpenseActivity.class)
 				.withIntent(intent);
@@ -109,7 +109,7 @@ public class ExpenseActivityTest {
 	}
 
 	@Test
-	public void cancel_returnsToOverview() {
+	public void cancel_returnsToCategoryList() {
 		clickOnMenuItem(R.id.cancel);
 		assertThat(expenseActivity.isFinishing(), is(true));
 	}

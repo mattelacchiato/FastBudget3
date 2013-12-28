@@ -52,13 +52,13 @@ public class ExpenseListActivity_DifferentItems_Test {
 		Context context = activityController.get().getApplicationContext();
 		ObjectContainer db = Database.getClearedInstance(context);
 		CategoryDao categoryDao = new CategoryDao(db);
-		
+
 		category = new Category(CATEGORY_NAME);
 		categoryDao.store(category);
 	}
 
 	private Intent createIntent() {
-		Intent intent = new Intent(new OverviewActivity(), ExpenseListActivity.class);
+		Intent intent = new Intent(new CategoryListActivity(), ExpenseListActivity.class);
 		return intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
 	}
 

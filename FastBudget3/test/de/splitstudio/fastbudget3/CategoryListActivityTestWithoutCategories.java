@@ -32,22 +32,22 @@ import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.utils.db.Database;
 
 @RunWith(RobolectricTestRunner.class)
-public class OverviewActivityTestWithoutCategories {
+public class CategoryListActivityTestWithoutCategories {
 
-	private OverviewActivity overview;
+	private CategoryListActivity categoryList;
 	private ObjectContainer db;
 	private Menu menu;
 	private CategoryDao categoryDao;
 
 	@Before
 	public void setUp() {
-		ActivityController<OverviewActivity> activityController = buildActivity(OverviewActivity.class);
-		overview = activityController.get();
-		db = Database.getClearedInstance(overview);
+		ActivityController<CategoryListActivity> activityController = buildActivity(CategoryListActivity.class);
+		categoryList = activityController.get();
+		db = Database.getClearedInstance(categoryList);
 		categoryDao = new CategoryDao(db);
 		activityController.create();
 		menu = new TestMenu();
-		overview.onCreateOptionsMenu(menu);
+		categoryList.onCreateOptionsMenu(menu);
 	}
 
 	@Test
@@ -57,19 +57,19 @@ public class OverviewActivityTestWithoutCategories {
 
 	@Test
 	public void hasAnEmptyList() throws Exception {
-		assertThat(overview.getListView().getAdapter().getCount(), is(0));
+		assertThat(categoryList.getListView().getAdapter().getCount(), is(0));
 	}
 
 	@Test
 	public void assignsAListAdapter() throws Exception {
-		assertThat(overview.getListAdapter(), is(not(nullValue())));
+		assertThat(categoryList.getListAdapter(), is(not(nullValue())));
 	}
 
 	@Test
 	public void addCategoryClick_categoryActivityStarts() throws Exception {
-		overview.onOptionsItemSelected(menu.findItem(R.id.add_category));
+		categoryList.onOptionsItemSelected(menu.findItem(R.id.add_category));
 
-		Intent startedIntent = shadowOf(overview).getNextStartedActivity();
+		Intent startedIntent = shadowOf(categoryList).getNextStartedActivity();
 		assertThat("No intend was started!", startedIntent, is(notNullValue()));
 		ShadowIntent shadowIntent = shadowOf(startedIntent);
 		assertThat(shadowIntent.getComponent().getClassName(), equalTo(CategoryActivity.class.getName()));
@@ -77,11 +77,11 @@ public class OverviewActivityTestWithoutCategories {
 
 	@Test
 	public void listFooter_click_dbChange_resultRecieved_listUpdate() throws Exception {
-		overview.onOptionsItemSelected(menu.findItem(R.id.add_category));
+		categoryList.onOptionsItemSelected(menu.findItem(R.id.add_category));
 
 		String categoryName = "i was added";
 		categoryDao.store(new Category(categoryName, 123, new Date()));
-		shadowOf(overview).receiveResult(new Intent(overview, CategoryActivity.class), Activity.RESULT_OK, null);
+		shadowOf(categoryList).receiveResult(new Intent(categoryList, CategoryActivity.class), Activity.RESULT_OK, null);
 
 		TextView name1 = (TextView) findListView(R.id.name);
 		assertThat(name1, is(notNullValue()));
@@ -89,6 +89,6 @@ public class OverviewActivityTestWithoutCategories {
 	}
 
 	private View findListView(int viewId) {
-		return overview.getListAdapter().getView(0, null, null).findViewById(viewId);
+		return categoryList.getListAdapter().getView(0, null, null).findViewById(viewId);
 	}
 }

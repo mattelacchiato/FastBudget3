@@ -56,11 +56,11 @@ public class ExpenseActivity_Edit_Test {
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
-		OverviewActivity overviewActivity = buildActivity(OverviewActivity.class).create().get();
+		CategoryListActivity categoryListActivity = buildActivity(CategoryListActivity.class).create().get();
 
 		expense = new Expense(10, DateUtils.createFirstDayOfMonth().getTime(), DESCRIPTION);
 
-		Intent intent = new Intent(overviewActivity, ExpenseActivity.class);
+		Intent intent = new Intent(categoryListActivity, ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
 		intent.putExtra(Extras.Id.name(), expense.uuid);
 		ActivityController<ExpenseActivity> activityController = buildActivity(ExpenseActivity.class)
