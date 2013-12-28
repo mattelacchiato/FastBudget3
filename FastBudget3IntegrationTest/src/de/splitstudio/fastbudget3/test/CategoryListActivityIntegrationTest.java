@@ -52,7 +52,7 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 
 		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 		onView(withText(R.string.add_category)).perform(click());
-		//TODO (Dec 20, 2013): find a way to check the title
+		//find a way to check the title
 		onView(withId(R.id.category_date_hint)).check(matches(isDisplayed()));
 
 		onView(withId(R.id.name)).perform(typeText(CATEGORY_NAME));
