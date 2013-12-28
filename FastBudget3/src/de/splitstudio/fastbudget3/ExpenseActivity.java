@@ -64,8 +64,6 @@ public class ExpenseActivity extends Activity {
 		}
 	}
 
-	//TODO (Dec 25, 2013): benchmark: findByExample vs. Predicate?
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.actionbar_save_cancel, menu);
