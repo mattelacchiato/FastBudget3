@@ -20,8 +20,8 @@ public class ExpenseTest {
 	public void constructor_createsUniqueUuid() throws Exception {
 		Expense expense1 = new Expense(20, DateUtils.createFirstDayOfMonth().getTime(), "bla");
 		Expense expense2 = new Expense(20, DateUtils.createFirstDayOfMonth().getTime(), "bla");
-		assertThat(expense1.uuid2, is(notNullValue()));
-		assertThat(expense1.uuid2, is(not(expense2.uuid2)));
+		assertThat(expense1.uuid, is(notNullValue()));
+		assertThat(expense1.uuid, is(not(expense2.uuid)));
 	}
 
 	@Test
