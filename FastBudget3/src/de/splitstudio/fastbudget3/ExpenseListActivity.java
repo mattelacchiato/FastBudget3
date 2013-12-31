@@ -95,6 +95,9 @@ public class ExpenseListActivity extends ListActivity {
 	public void deleteExpense(View view) {
 		String uuid = view.getTag().toString();
 		Expense expense = expenseDao.findByUuid(uuid);
+		if (expense == null) {
+			throw new IllegalStateException("Could not find Expense for uuid " + uuid);
+		}
 		expenseDao.delete(expense);
 		category.expenses.remove(expense);
 		update.run();
