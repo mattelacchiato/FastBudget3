@@ -5,6 +5,7 @@ import static com.google.android.apps.common.testing.ui.espresso.action.ViewActi
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isDisplayed;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
+import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
@@ -54,6 +55,13 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 		contextMenuAt(0).check(matches(not(isDisplayed())));
 		contextMenuAt(1).check(matches(not(isDisplayed())));
 		contextMenuAt(2).check(matches(isDisplayed()));
+	}
+
+	public void test_deleteFirstItem_itemNotShown() {
+		expenditureAt(0).onChildView(withId(R.id.description)).check(matches(withText("first expenditure")));
+		expenditureAt(0).perform(click());
+		expenditureAt(0).onChildView(withId(R.id.button_delete)).perform(click());
+		expenditureAt(0).onChildView(withId(R.id.description)).check(matches(not(withText("first expenditure"))));
 	}
 
 	private DataInteraction contextMenuAt(int position) {

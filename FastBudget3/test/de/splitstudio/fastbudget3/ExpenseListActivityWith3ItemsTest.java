@@ -63,13 +63,15 @@ public class ExpenseListActivityWith3ItemsTest {
 
 		category = new Category(CATEGORY_NAME);
 
-		Calendar cal = DateUtils.createFirstDayOfMonth();
-		category.expenses.add(new Expense(20, cal.getTime(), "third"));
-		cal.add(DAY_OF_MONTH, 1);
-		category.expenses.add(new Expense(20, cal.getTime(), "second"));
-		cal.add(DAY_OF_MONTH, 1);
+		Calendar cal = DateUtils.createLastDayOfMonth();
 		firstExpense = new Expense(20, cal.getTime(), "first");
 		category.expenses.add(firstExpense);
+
+		cal.add(DAY_OF_MONTH, -1);
+		category.expenses.add(new Expense(20, cal.getTime(), "second"));
+
+		cal.add(DAY_OF_MONTH, -1);
+		category.expenses.add(new Expense(20, cal.getTime(), "third"));
 
 		categoryDao.store(category);
 	}
@@ -113,7 +115,7 @@ public class ExpenseListActivityWith3ItemsTest {
 		getRow(0).findViewById(R.id.button_delete).performClick();
 
 		assertThat(expenseDao.findAll(Expense.class), hasSize(2));
-		assertThat(expenseDao.findByUuid(firstExpense.uuid), is(nullValue()));
+		assertThat(expenseDao.findByUuid(firstExpense.description), is(nullValue()));
 	}
 
 	@Test

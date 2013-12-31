@@ -2,12 +2,14 @@ package de.splitstudio.fastbudget3;
 
 import static de.splitstudio.utils.DateUtils.formatAsShortDate;
 import static de.splitstudio.utils.NumberUtils.formatAsDecimal;
+import static de.splitstudio.utils.NumberUtils.parseCent;
 
 import java.text.ParseException;
 import java.util.Date;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -21,12 +23,13 @@ import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Expense;
 import de.splitstudio.fastbudget3.db.ExpenseDao;
 import de.splitstudio.fastbudget3.enums.Extras;
-import de.splitstudio.utils.NumberUtils;
 import de.splitstudio.utils.db.Database;
 import de.splitstudio.utils.view.Calculator;
 import de.splitstudio.utils.view.DatePickerButtons;
 
 public class ExpenseActivity extends Activity {
+
+	private static final String TAG = ExpenseActivity.class.getSimpleName();
 
 	Category category;
 
@@ -55,7 +58,9 @@ public class ExpenseActivity extends Activity {
 
 	private void fillValues(Bundle extras) {
 		if (extras.containsKey(Extras.Id.name())) {
-			expense = expenseDao.findByUuid(extras.getString(Extras.Id.name()));
+			String uuid = extras.getString(Extras.Id.name());
+			Log.d(TAG, "fill expense by loading its values from db with uuid " + uuid);
+			expense = expenseDao.findByUuid(uuid);
 			((TextView) findViewById(R.id.description)).setText(expense.description);
 			((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
 			((TextView) findViewById(R.id.date_field)).setText(formatAsShortDate(expense.date));
@@ -95,12 +100,12 @@ public class ExpenseActivity extends Activity {
 		EditText descriptionEdit = (EditText) findViewById(R.id.description);
 
 		try {
-			expense.amount = NumberUtils.parseCent(calculator.getAmount());
+			expense.amount = parseCent(calculator.getAmount());
 			expense.date = datePickerButtons.getDate().getTime();
 			expense.description = descriptionEdit.getText().toString();
 
 			category.expenses.add(expense);
-
+			expenseDao.store(expense);//needed as long as we use TreeSet in Category
 			categoryDao.store(category);
 			setResult(RESULT_OK);
 			finish();

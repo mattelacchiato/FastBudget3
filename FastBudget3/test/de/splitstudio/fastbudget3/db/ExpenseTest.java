@@ -2,13 +2,13 @@ package de.splitstudio.fastbudget3.db;
 
 import static java.util.Calendar.MILLISECOND;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -20,17 +20,20 @@ public class ExpenseTest {
 	public void constructor_createsUniqueUuid() throws Exception {
 		Expense expense1 = new Expense(20, DateUtils.createFirstDayOfMonth().getTime(), "bla");
 		Expense expense2 = new Expense(20, DateUtils.createFirstDayOfMonth().getTime(), "bla");
-		assertThat(expense1.uuid, is(notNullValue()));
-		assertThat(expense1.uuid, is(not(expense2.uuid)));
+		assertThat(expense1.uuid2, is(notNullValue()));
+		assertThat(expense1.uuid2, is(not(expense2.uuid2)));
 	}
 
 	@Test
 	public void compareTo_newestEntryShouldBeFirst() throws Exception {
 		Calendar cal = DateUtils.createFirstDayOfMonth();
-		Expense second = new Expense(20, cal.getTime(), "bla");
+		Expense oldExpense = new Expense(10, cal.getTime(), "first");
 		cal.add(MILLISECOND, 1);
-		Expense first = new Expense(10, cal.getTime(), "bla");
-		assertThat(first.compareTo(second), is(lessThan(0)));
+		Expense newExpense = new Expense(10, cal.getTime(), "second");
+		TreeSet<Expense> treeSet = new TreeSet<Expense>();
+		treeSet.add(newExpense);
+		treeSet.add(oldExpense);
+		assertThat(treeSet.first(), is(newExpense));
 	}
 
 	@Test

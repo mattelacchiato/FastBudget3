@@ -179,7 +179,7 @@ public class ExpenseListActivityTest {
 
 		Bundle extras = shadowOf(nextStartedActivity).getExtras();
 		assertThat(extras, is(notNullValue()));
-		assertThat(extras.getString(Extras.Id.name()), is(expense.uuid));
+		assertThat(extras.getString(Extras.Id.name()), is(expense.uuid2));
 		assertThat(extras.getString(Extras.CategoryName.name()), is(category.name));
 	}
 

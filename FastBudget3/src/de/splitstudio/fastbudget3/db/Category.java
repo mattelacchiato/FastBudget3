@@ -7,24 +7,31 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.db4o.config.annotations.Indexed;
+
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.db.UniqueEntity;
 
 public class Category extends UniqueEntity implements Comparable<Category> {
 
+	@Indexed
 	public String name;
+
 	public int budget;
+
 	public Set<Expense> expenses = new TreeSet<Expense>();
+
 	public Date date;
 
 	public Category(String name, int budget, Date date) {
-		this.name = name;
+		this(name);
 		this.budget = budget;
 		this.date = date;
 	}
 
 	public Category(String name) {
-		this(name, 0, null);
+		super();
+		this.name = name;
 	}
 
 	public Category() {}

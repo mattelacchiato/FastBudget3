@@ -3,6 +3,7 @@ package de.splitstudio.fastbudget3.test;
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onData;
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.clearText;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.typeText;
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.doesNotExist;
@@ -53,6 +54,8 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 		onView(withText(R.string.add_category)).perform(click());
 		//find a way to check the title
+		//TODO (Dec 31, 2013): check this out: https://groups.google.com/forum/#!searchin/android-test-kit-discuss/screenshot/android-test-kit-discuss/rIM4sgWA9Fk/VvZeF-kaQjEJ
+		//run on main sync: ActivityLifecycleRegister.getInstance()
 		onView(withId(R.id.category_date_hint)).check(matches(isDisplayed()));
 
 		onView(withId(R.id.name)).perform(typeText(CATEGORY_NAME));
@@ -86,6 +89,18 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 		onView(withId(R.id.cancel)).perform(click());
 
 		contextMenuAt(0).check(matches(not(isDisplayed())));
+	}
+
+	public void test_editCategoryName_save_nameIsVisibleInList() {
+		String newName = "new name";
+
+		onData(is(Category.class)).atPosition(0).perform(click());
+		onData(is(Category.class)).atPosition(0).onChildView(withId(R.id.button_edit)).perform(click());
+
+		onView(withId(R.id.name)).perform(clearText()).perform(typeText(newName));
+		onView(withId(R.id.save)).perform(click());
+
+		onData(is(Category.class)).atPosition(0).onChildView(withId(R.id.name)).check(matches(withText(newName)));
 	}
 
 	private DataInteraction contextMenuAt(int position) {

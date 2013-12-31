@@ -67,6 +67,7 @@ public class CategoryListActivity extends ListActivity {
 		RequestCode requestCode = RequestCode.values()[requestCodeOrdinal];
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
+			case EditCategory:
 			case CreateCategory:
 			case CreateExpense:
 				updateView();

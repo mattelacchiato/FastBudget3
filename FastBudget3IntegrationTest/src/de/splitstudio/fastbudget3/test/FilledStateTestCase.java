@@ -2,7 +2,6 @@ package de.splitstudio.fastbudget3.test;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onData;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.assertThat;
-import static de.splitstudio.utils.DateUtils.createFirstDayOfMonth;
 import static de.splitstudio.utils.DateUtils.createFirstDayOfYear;
 import static java.util.Calendar.DAY_OF_MONTH;
 import static org.hamcrest.Matchers.is;
@@ -15,6 +14,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Expense;
+import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.db.Database;
 
 public abstract class FilledStateTestCase<T extends ListActivity> extends ActivityInstrumentationTestCase2<T> {
@@ -42,11 +42,11 @@ public abstract class FilledStateTestCase<T extends ListActivity> extends Activi
 		Date categoryDate = createFirstDayOfYear().getTime();
 		Category firstCategory = new Category("first category", 10, categoryDate);
 
-		Calendar expenditureDate = createFirstDayOfMonth();
+		Calendar expenditureDate = DateUtils.createLastDayOfMonth();
 		firstCategory.expenses.add(new Expense(10, expenditureDate.getTime(), "first expenditure"));
-		expenditureDate.add(DAY_OF_MONTH, 1);
+		expenditureDate.add(DAY_OF_MONTH, -1);
 		firstCategory.expenses.add(new Expense(20, expenditureDate.getTime(), "second expenditure"));
-		expenditureDate.add(DAY_OF_MONTH, 1);
+		expenditureDate.add(DAY_OF_MONTH, -1);
 		firstCategory.expenses.add(new Expense(30, expenditureDate.getTime(), "third expenditure"));
 
 		CategoryDao categoryDao = new CategoryDao(Database.getClearedInstance(initialActivity));
