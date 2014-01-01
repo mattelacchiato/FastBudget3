@@ -65,7 +65,6 @@ public class ExpenseActivity extends Activity {
 			((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(expense.date);
-			//TODO (Dec 31, 2013): do this in CategoryActivity, too!
 			((DatePickerButtons) findViewById(R.id.date_picker)).setAndUpdateDate(cal);
 		} else {
 			Log.d(TAG, "no uuid given, will create a new expense");
