@@ -22,7 +22,6 @@ public class Expense extends UniqueEntity implements Comparable<Expense> {
 
 	@Override
 	public int compareTo(Expense another) {
-		//TODO (Dec 31, 2013): really???
 		//when loaded from db, it could be unset...
 		if (date == null || another.date == null) {
 			return -1;

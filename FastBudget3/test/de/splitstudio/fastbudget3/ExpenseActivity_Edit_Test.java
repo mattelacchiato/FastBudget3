@@ -1,6 +1,5 @@
 package de.splitstudio.fastbudget3;
 
-import static de.splitstudio.utils.DateUtils.formatAsShortDate;
 import static de.splitstudio.utils.NumberUtils.formatAsDecimal;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -15,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowLog;
 import org.robolectric.tester.android.view.TestMenu;
 import org.robolectric.util.ActivityController;
 
@@ -37,7 +37,7 @@ public class ExpenseActivity_Edit_Test {
 
 	private static final String CATEGORY_NAME = "Category One";
 
-	private static final Date ANY_DATE = DateUtils.createFirstDayOfYear().getTime();
+	private static final Date DATE = DateUtils.createFirstDayOfYear().getTime();
 
 	private static final int ANY_BUDGET = 0;
 
@@ -55,10 +55,11 @@ public class ExpenseActivity_Edit_Test {
 
 	@Before
 	public void setUp() {
+		ShadowLog.stream = System.out;
 		Locale.setDefault(Locale.US);
 		CategoryListActivity categoryListActivity = buildActivity(CategoryListActivity.class).get();
 
-		expense = new Expense(10, DateUtils.createFirstDayOfMonth().getTime(), DESCRIPTION);
+		expense = new Expense(10, DATE, DESCRIPTION);
 
 		Intent intent = new Intent(categoryListActivity, ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
@@ -78,11 +79,12 @@ public class ExpenseActivity_Edit_Test {
 	private void initDb() {
 		db = Database.getClearedInstance(activity);
 		CategoryDao categoryDao = new CategoryDao(db);
+		expenseDao = new ExpenseDao(db);
 
-		Category category = new Category(CATEGORY_NAME, ANY_BUDGET, ANY_DATE);
+		Category category = new Category(CATEGORY_NAME, ANY_BUDGET, DATE);
 		category.expenses.add(expense);
 		categoryDao.store(category);
-		expenseDao = new ExpenseDao(db);
+		expenseDao.store(expense);
 	}
 
 	@Test
@@ -100,7 +102,7 @@ public class ExpenseActivity_Edit_Test {
 	@Test
 	public void itShowsItsDate() {
 		String date = findTextView(R.id.date_field).getText().toString();
-		assertThat(date, is(formatAsShortDate(expense.date)));
+		assertThat(date, is(DateUtils.formatAsLongDate(DATE)));
 	}
 
 	@Test

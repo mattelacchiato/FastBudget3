@@ -1,10 +1,10 @@
 package de.splitstudio.fastbudget3;
 
-import static de.splitstudio.utils.DateUtils.formatAsShortDate;
 import static de.splitstudio.utils.NumberUtils.formatAsDecimal;
 import static de.splitstudio.utils.NumberUtils.parseCent;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
@@ -63,8 +63,12 @@ public class ExpenseActivity extends Activity {
 			expense = expenseDao.findByUuid(uuid);
 			((TextView) findViewById(R.id.description)).setText(expense.description);
 			((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
-			((TextView) findViewById(R.id.date_field)).setText(formatAsShortDate(expense.date));
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(expense.date);
+			//TODO (Dec 31, 2013): do this in CategoryActivity, too!
+			((DatePickerButtons) findViewById(R.id.date_picker)).setAndUpdateDate(cal);
 		} else {
+			Log.d(TAG, "no uuid given, will create a new expense");
 			expense = new Expense(new Date());
 		}
 	}
@@ -104,9 +108,10 @@ public class ExpenseActivity extends Activity {
 			expense.date = datePickerButtons.getDate().getTime();
 			expense.description = descriptionEdit.getText().toString();
 
-			category.expenses.add(expense);
 			expenseDao.store(expense);//needed as long as we use TreeSet in Category
+			category.expenses.add(expense);
 			categoryDao.store(category);
+			Log.d(TAG, "Persisted expense in db: " + expense);
 			setResult(RESULT_OK);
 			finish();
 		} catch (ParseException e) {

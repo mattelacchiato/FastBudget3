@@ -77,6 +77,14 @@ public class ExpenseListActivity extends ListActivity {
 		update.run();
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			update.run();
+		}
+	}
+
 	public void pickDate(View view) {
 		if (view.getId() == R.id.date_start) {
 			DialogHelper.pickDate(this, start, update);
