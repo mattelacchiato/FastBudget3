@@ -13,20 +13,21 @@
 
         <include layout="@layout/calculator" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
+            android:completionThreshold="1"
+            android:dropDownHeight="200dp"
             android:ems="10"
             android:hint="@string/hint_description"
             android:inputType="textCapWords" >
 
             <requestFocus />
-        </EditText>
+        </AutoCompleteTextView>
 
         <include layout="@layout/date_picker_buttons" />
-
     </LinearLayout>
 
 </ScrollView>

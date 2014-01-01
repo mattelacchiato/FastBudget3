@@ -22,9 +22,13 @@ import org.robolectric.util.ActivityController;
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.EditText;
+
+import com.db4o.ObjectContainer;
+
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Expense;
+import de.splitstudio.fastbudget3.db.ExpenseDao;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.db.Database;
@@ -40,11 +44,13 @@ public class ExpenseActivityTest {
 
 	private static final int ANY_BUDGET = 0;
 
-	private ExpenseActivity expenseActivity;
+	private ExpenseActivity activity;
 
 	private TestMenu menu;
 
 	private CategoryDao categoryDao;
+
+	private ExpenseDao expenseDao;
 
 	@Before
 	public void setUp() {
@@ -54,38 +60,40 @@ public class ExpenseActivityTest {
 		intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
 		ActivityController<ExpenseActivity> activityController = buildActivity(ExpenseActivity.class)
 				.withIntent(intent);
-		expenseActivity = activityController.get();
+		activity = activityController.get();
 
-		categoryDao = new CategoryDao(Database.getClearedInstance(expenseActivity));
+		ObjectContainer db = Database.getClearedInstance(activity);
+		categoryDao = new CategoryDao(db);
+		expenseDao = new ExpenseDao(db);
 		categoryDao.store(new Category("not me", ANY_BUDGET, ANY_DATE));
 		categoryDao.store(new Category(CATEGORY_NAME, ANY_BUDGET, ANY_DATE));
 		categoryDao.store(new Category("not me too", ANY_BUDGET, ANY_DATE));
 
 		activityController.create();
 		menu = new TestMenu();
-		expenseActivity.onCreateOptionsMenu(menu);
-		shadowOf(expenseActivity.findViewById(R.id.calculator)).callOnAttachedToWindow();
+		activity.onCreateOptionsMenu(menu);
+		shadowOf(activity.findViewById(R.id.calculator)).callOnAttachedToWindow();
 	}
 
 	@Test
 	public void hasLoadedCategory() {
-		assertThat(expenseActivity.category, is(notNullValue()));
-		assertThat(expenseActivity.category.name, is(CATEGORY_NAME));
+		assertThat(activity.category, is(notNullValue()));
+		assertThat(activity.category.name, is(CATEGORY_NAME));
 	}
 
 	@Test
 	public void itShowsTheCategoryNameInTitle() {
-		assertThat(expenseActivity.getTitle().toString(), containsString(CATEGORY_NAME));
+		assertThat(activity.getTitle().toString(), containsString(CATEGORY_NAME));
 	}
 
 	@Test
 	public void itHasAFieldToEnterADescription() {
-		assertThat((EditText) expenseActivity.findViewById(R.id.description), isA(EditText.class));
+		assertThat((EditText) activity.findViewById(R.id.description), isA(EditText.class));
 	}
 
 	@Test
 	public void itHasACalculator() {
-		assertThat((Calculator) expenseActivity.findViewById(R.id.calculator), isA(Calculator.class));
+		assertThat((Calculator) activity.findViewById(R.id.calculator), isA(Calculator.class));
 	}
 
 	@Test
@@ -100,19 +108,19 @@ public class ExpenseActivityTest {
 
 	@Test
 	public void itHasADatePicker() {
-		assertThat((DatePickerButtons) expenseActivity.findViewById(R.id.date_picker), isA(DatePickerButtons.class));
+		assertThat((DatePickerButtons) activity.findViewById(R.id.date_picker), isA(DatePickerButtons.class));
 	}
 
 	@Test
 	public void cancel_returnsToCategoryList() {
 		clickOnMenuItem(R.id.cancel);
-		assertThat(expenseActivity.isFinishing(), is(true));
+		assertThat(activity.isFinishing(), is(true));
 	}
 
 	@Test
 	public void cancel_resultIsCancelled() {
 		clickOnMenuItem(R.id.cancel);
-		assertThat(shadowOf(expenseActivity).getResultCode(), is(Activity.RESULT_CANCELED));
+		assertThat(shadowOf(activity).getResultCode(), is(Activity.RESULT_CANCELED));
 	}
 
 	@Test
@@ -140,8 +148,8 @@ public class ExpenseActivityTest {
 		setDescription("stuff");
 
 		clickOnMenuItem(R.id.save);
-		assertThat(expenseActivity.isFinishing(), is(true));
-		assertThat(shadowOf(expenseActivity).getResultCode(), is(Activity.RESULT_OK));
+		assertThat(activity.isFinishing(), is(true));
+		assertThat(shadowOf(activity).getResultCode(), is(Activity.RESULT_OK));
 	}
 
 	@Test
@@ -161,18 +169,18 @@ public class ExpenseActivityTest {
 
 	private void assertToastIsShown(int stringId) {
 		assertThat(ShadowToast.getTextOfLatestToast(), is(notNullValue()));
-		assertThat(ShadowToast.getTextOfLatestToast(), is(expenseActivity.getString(stringId)));
+		assertThat(ShadowToast.getTextOfLatestToast(), is(activity.getString(stringId)));
 	}
 
 	private void setDescription(String description) {
-		((EditText) expenseActivity.findViewById(R.id.description)).setText(description);
+		((EditText) activity.findViewById(R.id.description)).setText(description);
 	}
 
 	private void setAmount(String amount) {
-		((EditText) expenseActivity.findViewById(R.id.calculator_amount)).setText(amount);
+		((EditText) activity.findViewById(R.id.calculator_amount)).setText(amount);
 	}
 
 	private void clickOnMenuItem(int buttonId) {
-		expenseActivity.onOptionsItemSelected(menu.findItem(buttonId));
+		activity.onOptionsItemSelected(menu.findItem(buttonId));
 	}
 }

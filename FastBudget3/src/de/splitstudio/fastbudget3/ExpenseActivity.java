@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,12 +59,13 @@ public class ExpenseActivity extends Activity {
 	}
 
 	private void fillValues(Bundle extras) {
+		AutoCompleteTextView descriptionTextView = (AutoCompleteTextView) findViewById(R.id.description);
 		if (extras.containsKey(Extras.Id.name())) {
 			String uuid = extras.getString(Extras.Id.name());
 			Log.d(TAG, "fill expense by loading its values from db with uuid " + uuid);
 			expense = expenseDao.findByUuid(uuid);
 
-			((TextView) findViewById(R.id.description)).setText(expense.description);
+			descriptionTextView.setText(expense.description);
 			((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(expense.date);
@@ -71,6 +74,9 @@ public class ExpenseActivity extends Activity {
 			Log.d(TAG, "no uuid given, will create a new expense");
 			expense = new Expense(new Date());
 		}
+
+		descriptionTextView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+				expenseDao.findAllDescriptions()));
 	}
 
 	@Override

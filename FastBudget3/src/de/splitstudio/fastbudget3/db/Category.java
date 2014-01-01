@@ -5,8 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
+import com.db4o.collections.ActivatableTreeSet;
 import com.db4o.config.annotations.Indexed;
 
 import de.splitstudio.utils.DateUtils;
@@ -19,7 +19,7 @@ public class Category extends UniqueEntity implements Comparable<Category> {
 
 	public int budget;
 
-	public Set<Expense> expenses = new TreeSet<Expense>();
+	public Set<Expense> expenses = new ActivatableTreeSet<Expense>();
 
 	public Date date;
 
