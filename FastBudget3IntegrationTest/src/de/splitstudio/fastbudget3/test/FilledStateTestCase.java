@@ -7,8 +7,14 @@ import static java.util.Calendar.DAY_OF_MONTH;
 import static org.hamcrest.Matchers.is;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 
+import com.google.android.apps.common.testing.testrunner.ActivityLifecycleMonitor;
+import com.google.android.apps.common.testing.testrunner.ActivityLifecycleMonitorRegistry;
+import com.google.android.apps.common.testing.testrunner.Stage;
+
+import android.app.Activity;
 import android.app.ListActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import de.splitstudio.fastbudget3.db.Category;
@@ -63,4 +69,18 @@ public abstract class FilledStateTestCase<T extends ListActivity> extends Activi
 	}
 
 	protected abstract Runnable syncAdapter();
+
+	public void assertTitleIs(final int titleId) throws Throwable {
+		runTestOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				ActivityLifecycleMonitor monitor = ActivityLifecycleMonitorRegistry.getInstance();
+				Collection<Activity> startedActivities = monitor.getActivitiesInStage(Stage.RESUMED);
+				assertThat(startedActivities.size(), is(1));
+				for (Activity activity : startedActivities) {
+					assertThat(activity.getTitle().toString(), is(activity.getString(titleId)));
+				}
+			}
+		});
+	}
 }

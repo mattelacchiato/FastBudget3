@@ -105,6 +105,8 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 		assertExpensePersisted(newDescription, newDate);
 	}
 
+	//TODO (Jan 1, 2014): test for collapsed context rows.
+
 	@SuppressWarnings("serial")
 	private void assertExpensePersisted(final String newDescription, Date newDate) {
 		ObjectContainer db = Database.getInstance(getActivity());

@@ -48,14 +48,12 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 		onData(is(Object.class));
 	}
 
-	public void testCreateACategory() {
+	public void testCreateACategory() throws Throwable {
 		onView(withText(CATEGORY_NAME)).check(doesNotExist());
 
 		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 		onView(withText(R.string.add_category)).perform(click());
-		//find a way to check the title
-		//TODO (Dec 31, 2013): check this out: https://groups.google.com/forum/#!searchin/android-test-kit-discuss/screenshot/android-test-kit-discuss/rIM4sgWA9Fk/VvZeF-kaQjEJ
-		//run on main sync: ActivityLifecycleRegister.getInstance()
+		assertTitleIs(R.string.add_category);
 		onView(withId(R.id.category_date_hint)).check(matches(isDisplayed()));
 
 		onView(withId(R.id.name)).perform(typeText(CATEGORY_NAME));
@@ -106,5 +104,4 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 	private DataInteraction contextMenuAt(int position) {
 		return onData(is(Category.class)).atPosition(position).onChildView(withId(R.id.context_row));
 	}
-
 }
