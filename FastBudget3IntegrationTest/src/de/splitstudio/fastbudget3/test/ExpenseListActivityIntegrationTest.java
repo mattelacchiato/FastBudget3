@@ -68,6 +68,14 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 		contextMenuAt(2).check(matches(isDisplayed()));
 	}
 
+	public void test_openExpenseActivity_goBack_allContextsAreGone() {
+		expenditureAt(0).perform(click());
+		expenditureAt(0).onChildView(withId(R.id.button_edit)).perform(click());
+		onView(withId(R.id.cancel)).perform(click());
+
+		contextMenuAt(0).check(matches(not(isDisplayed())));
+	}
+
 	public void test_deleteFirstItem_itemNotShown() {
 		expenditureAt(0).perform(click());
 		expenditureAt(0).onChildView(withId(R.id.button_delete)).perform(click());
@@ -104,8 +112,6 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 
 		assertExpensePersisted(newDescription, newDate);
 	}
-
-	//TODO (Jan 1, 2014): test for collapsed context rows.
 
 	@SuppressWarnings("serial")
 	private void assertExpensePersisted(final String newDescription, Date newDate) {

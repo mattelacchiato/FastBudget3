@@ -1,7 +1,9 @@
 package de.splitstudio.fastbudget3;
 
+import static android.view.View.GONE;
 import static android.widget.Toast.LENGTH_LONG;
 import static de.splitstudio.utils.DateUtils.formatAsShortDate;
+import static de.splitstudio.utils.view.ViewHelper.getViewsById;
 
 import java.util.Calendar;
 import java.util.List;
@@ -83,6 +85,7 @@ public class ExpenseListActivity extends ListActivity {
 		if (resultCode == RESULT_OK) {
 			update.run();
 		}
+		hideAllContexts();
 	}
 
 	public void pickDate(View view) {
@@ -109,5 +112,11 @@ public class ExpenseListActivity extends ListActivity {
 		expenseDao.delete(expense);
 		category.expenses.remove(expense);
 		update.run();
+	}
+
+	private void hideAllContexts() {
+		for (View view : getViewsById(getListView(), R.id.context_row)) {
+			view.setVisibility(GONE);
+		}
 	}
 }
