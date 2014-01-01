@@ -50,6 +50,7 @@ public class CategoryActivity extends Activity {
 	}
 
 	private void initFields() {
+		//TODO (Jan 1, 2014): use uuid
 		updateCategory = getIntent().hasExtra(Extras.CategoryName.name());
 		if (updateCategory) {
 			setTitle(R.string.edit);

@@ -61,6 +61,7 @@ public class ExpenseActivity extends Activity {
 			String uuid = extras.getString(Extras.Id.name());
 			Log.d(TAG, "fill expense by loading its values from db with uuid " + uuid);
 			expense = expenseDao.findByUuid(uuid);
+
 			((TextView) findViewById(R.id.description)).setText(expense.description);
 			((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
 			Calendar cal = Calendar.getInstance();

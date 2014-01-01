@@ -34,8 +34,6 @@ import de.splitstudio.utils.db.Database;
 public class ExpenseListActivity extends ListActivity {
 
 	private static final String TAG = ListActivity.class.getSimpleName();
-	Calendar start;
-	Calendar end;
 
 	public final Runnable update = new Runnable() {
 		@Override
@@ -49,8 +47,10 @@ public class ExpenseListActivity extends ListActivity {
 		}
 	};
 
-	private ExpenseListAdapter adapter;
+	Calendar start;
+	Calendar end;
 
+	private ExpenseListAdapter adapter;
 	private Category category;
 	private CategoryDao categoryDao;
 	private ExpenseDao expenseDao;
