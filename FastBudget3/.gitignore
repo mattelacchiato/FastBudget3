@@ -2,3 +2,4 @@ bin/
 gen/
 tmp/
 target/
+build

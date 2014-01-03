@@ -85,6 +85,7 @@ public class ExpenseListActivity extends ListActivity {
 		if (resultCode == RESULT_OK) {
 			update.run();
 		}
+		//TODO (Jan 3, 2014): this is not working yet...
 		hideAllContexts();
 	}
 
