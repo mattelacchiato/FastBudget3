@@ -1,8 +1,6 @@
 package de.splitstudio.fastbudget3;
 
-import static android.view.View.GONE;
 import static de.splitstudio.utils.NumberUtils.centToDouble;
-import static de.splitstudio.utils.view.ViewHelper.getViewsById;
 import static java.lang.String.format;
 
 import java.text.NumberFormat;
@@ -79,12 +77,6 @@ public class CategoryListActivity extends ListActivity {
 		hideAllContexts();
 	}
 
-	private void hideAllContexts() {
-		for (View view : getViewsById(getListView(), R.id.context_row)) {
-			view.setVisibility(GONE);
-		}
-	}
-
 	public void addExpense(View view) {
 		View parent = (View) view.getParent();
 		TextView nameTextView = (TextView) parent.findViewById(R.id.name);
@@ -147,6 +139,10 @@ public class CategoryListActivity extends ListActivity {
 		String spent = currency.format(centToDouble(spentCents));
 		String budget = currency.format(centToDouble(budgetCents));
 		setTitle(format("%s  %s/%s", getString(R.string.app_name), spent, budget));
+	}
+
+	private void hideAllContexts() {
+		((SlideExpandableListAdapter) getListAdapter()).collapseLastOpen();
 	}
 
 }
