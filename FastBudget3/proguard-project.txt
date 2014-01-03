@@ -18,3 +18,16 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+## Monitoring requires JMX, which is not available on Android
+-dontwarn com.db4o.monitoring.*
+-dontwarn com.db4o.cs.monitoring.*
+-dontwarn com.db4o.internal.monitoring.*
+
+## Ant is usually not used in a running app
+-dontwarn com.db4o.instrumentation.ant.*
+-dontwarn com.db4o.ta.instrumentation.ant.*
+
+## Keep internal classes.
+-keep class com.db4o.** { *; }
+-keep class de.splitstudio.*.db.** { *; }
