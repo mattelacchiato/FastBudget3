@@ -86,7 +86,6 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 	public void test_editFirstItem_itemEditsVisible() throws Exception {
 		final String newDescription = "changed description";
 		//TODO (Jan 1, 2014): use joda everywhere!
-		//TODO (Jan 1, 2014): use maven for dependency management
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(firstExpenditureDate);
 		cal.add(Calendar.DAY_OF_MONTH, -1);

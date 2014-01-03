@@ -27,9 +27,15 @@ public class CategoryDao extends GenericBaseDao<Category> {
 		return set.get(0);
 	}
 
+	@Override
+	public void delete(Category category) {
+		db.delete(category.expenses);
+		super.delete(category);
+	}
+
 	public void delete(String name) {
-		delete(findByName(name));
-		//TODO (Jan 3, 2014): configure db4o to delete expenses, too.
+		Category category = findByName(name);
+		delete(category);
 	}
 
 }
