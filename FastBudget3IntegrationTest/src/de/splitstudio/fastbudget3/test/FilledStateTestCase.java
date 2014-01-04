@@ -10,13 +10,14 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
+import android.app.Activity;
+import android.app.ListActivity;
+import android.test.ActivityInstrumentationTestCase2;
+
 import com.google.android.apps.common.testing.testrunner.ActivityLifecycleMonitor;
 import com.google.android.apps.common.testing.testrunner.ActivityLifecycleMonitorRegistry;
 import com.google.android.apps.common.testing.testrunner.Stage;
 
-import android.app.Activity;
-import android.app.ListActivity;
-import android.test.ActivityInstrumentationTestCase2;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Expense;
@@ -40,6 +41,8 @@ public abstract class FilledStateTestCase<T extends ListActivity> extends Activi
 		runSyncAdapter();
 		refreshListView();
 	}
+
+	//TODO (Jan 3, 2014): tearDown with db.close() to fix issues when opening from normal user interaction?
 
 	private void refreshListView() {
 		onData(is(Object.class));

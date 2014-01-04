@@ -80,7 +80,7 @@ public class CategoryActivityTest {
 
 	@Test
 	public void titleIsSet() throws Exception {
-		String expectedTitle = categoryActivity.getString(R.string.add_category);
+		String expectedTitle = categoryActivity.getString(R.string.create_category);
 		assertThat(categoryActivity.getTitle().toString(), is(expectedTitle));
 	}
 

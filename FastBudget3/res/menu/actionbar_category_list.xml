@@ -1,8 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/add_category"
+        android:id="@+id/button_create_category"
         android:showAsAction="withText|never"
-        android:title="@string/add_category"/>
+        android:title="@string/create_category"/>
+    <item
+        android:id="@+id/button_create_backup"
+        android:showAsAction="withText|never"
+        android:title="@string/create_backup"/>
 
 </menu>

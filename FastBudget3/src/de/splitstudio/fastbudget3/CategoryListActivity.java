@@ -1,13 +1,18 @@
 package de.splitstudio.fastbudget3;
 
+import static android.content.Intent.ACTION_SEND;
+import static android.content.Intent.EXTRA_STREAM;
+import static android.content.Intent.createChooser;
 import static de.splitstudio.utils.NumberUtils.centToDouble;
 import static java.lang.String.format;
 
+import java.io.File;
 import java.text.NumberFormat;
 import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +31,8 @@ import de.splitstudio.utils.activity.DialogHelper;
 import de.splitstudio.utils.db.Database;
 
 public class CategoryListActivity extends ListActivity {
+
+	private static final String MIME_TYPE = "application/octet-stream";
 
 	private CategoryListAdapter listAdapter;
 
@@ -52,8 +59,11 @@ public class CategoryListActivity extends ListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case (R.id.add_category):
+		case (R.id.button_create_category):
 			addCategory();
+			return true;
+		case (R.id.button_create_backup):
+			createBackup();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -125,7 +135,29 @@ public class CategoryListActivity extends ListActivity {
 		startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
 	}
 
+	private void createBackup() {
+		File externalFilesDir = getExternalFilesDir(null);
+		if (externalFilesDir == null) {
+			DialogHelper.createAlert(this, R.string.warning, R.string.warning_no_external_storage, R.string.ok);
+		} else {
+			String filename = getString(R.string.app_name) + ".backup";
+			final File dest = new File(externalFilesDir, filename);
+			Database.getInstance(this).ext().backup(dest.getAbsolutePath());
+			DialogHelper.createQuestion(this, R.string.success, R.string.warning_backup_created, R.string.cancel,
+				R.string.send_file, new Runnable() {
+					@Override
+					public void run() {
+						Intent intent = new Intent(ACTION_SEND);
+						intent.setType(MIME_TYPE);
+						intent.putExtra(EXTRA_STREAM, Uri.fromFile(dest));
+						startActivity(createChooser(intent, getString(R.string.send_file)));
+					}
+				}, dest.getAbsolutePath());
+		}
+	}
+
 	private void updateTitle(List<Category> categories) {
+		//TODO (Jan 4, 2014): put this to NumberUtils.format
 		NumberFormat currency = NumberFormat.getCurrencyInstance();
 		currency.setMaximumFractionDigits(0);
 

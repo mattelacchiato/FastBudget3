@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:contentDescription="@string/add_category"
+            android:contentDescription="@string/create_category"
             android:onClick="addExpense"
             android:src="@drawable/ic_add" />
     </LinearLayout>

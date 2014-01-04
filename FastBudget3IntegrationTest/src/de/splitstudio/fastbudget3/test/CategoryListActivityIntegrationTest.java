@@ -52,8 +52,8 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 		onView(withText(CATEGORY_NAME)).check(doesNotExist());
 
 		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-		onView(withText(R.string.add_category)).perform(click());
-		assertTitleIs(R.string.add_category);
+		onView(withText(R.string.create_category)).perform(click());
+		assertTitleIs(R.string.create_category);
 		onView(withId(R.id.category_date_hint)).check(matches(isDisplayed()));
 
 		onView(withId(R.id.name)).perform(typeText(CATEGORY_NAME));
@@ -99,6 +99,14 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 		onView(withId(R.id.save)).perform(click());
 
 		onData(is(Category.class)).atPosition(0).onChildView(withId(R.id.name)).check(matches(withText(newName)));
+	}
+
+	public void test_createBackup_openIntentChooser() {
+		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+		onView(withText(R.string.create_backup)).perform(click());
+		onView(withText(R.string.send_file)).perform(click());
+		//this is the headline for the intent chooser:
+		onView(withText("Send File")).check(matches(isDisplayed()));
 	}
 
 	private DataInteraction contextMenuAt(int position) {

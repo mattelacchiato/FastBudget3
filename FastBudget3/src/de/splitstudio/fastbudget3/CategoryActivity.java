@@ -62,7 +62,7 @@ public class CategoryActivity extends Activity {
 			calendar.setTime(category.date);
 			datePicker.setAndUpdateDate(calendar);
 		} else {
-			setTitle(R.string.add_category);
+			setTitle(R.string.create_category);
 			category = new Category();
 			datePicker.setAndUpdateDate(DateUtils.createFirstDayOfYear());
 		}

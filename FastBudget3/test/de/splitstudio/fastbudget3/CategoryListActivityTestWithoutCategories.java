@@ -52,7 +52,7 @@ public class CategoryListActivityTestWithoutCategories {
 
 	@Test
 	public void hasAnAddView() throws Exception {
-		menu.findItem(R.id.add_category);
+		menu.findItem(R.id.button_create_category);
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class CategoryListActivityTestWithoutCategories {
 
 	@Test
 	public void addCategoryClick_categoryActivityStarts() throws Exception {
-		categoryList.onOptionsItemSelected(menu.findItem(R.id.add_category));
+		categoryList.onOptionsItemSelected(menu.findItem(R.id.button_create_category));
 
 		Intent startedIntent = shadowOf(categoryList).getNextStartedActivity();
 		assertThat("No intend was started!", startedIntent, is(notNullValue()));
@@ -77,11 +77,12 @@ public class CategoryListActivityTestWithoutCategories {
 
 	@Test
 	public void listFooter_click_dbChange_resultRecieved_listUpdate() throws Exception {
-		categoryList.onOptionsItemSelected(menu.findItem(R.id.add_category));
+		categoryList.onOptionsItemSelected(menu.findItem(R.id.button_create_category));
 
 		String categoryName = "i was added";
 		categoryDao.store(new Category(categoryName, 123, new Date()));
-		shadowOf(categoryList).receiveResult(new Intent(categoryList, CategoryActivity.class), Activity.RESULT_OK, null);
+		shadowOf(categoryList)
+				.receiveResult(new Intent(categoryList, CategoryActivity.class), Activity.RESULT_OK, null);
 
 		TextView name1 = (TextView) findListView(R.id.name);
 		assertThat(name1, is(notNullValue()));

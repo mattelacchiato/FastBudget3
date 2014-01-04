@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="add_category">Create a Category</string>
     <string name="amount">Amount</string>
     <string name="app_name">FastBudget</string>
     <string name="cancel">Cancel</string>
+    <string name="create_category">Create new Category</string>
+    <string name="create_backup">Create Backup</string>
     <string name="date">Date</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
@@ -19,8 +20,12 @@
     <string name="hint_description">Description</string>
     <string name="hint_empty_expenses">You\'re lucky! You haven\'t spent anything</string>
     <string name="save">Save</string>
+    <string name="send_file">Send File</string>
+    <string name="success">Success!</string>
     <string name="title_expense">Expense for %1$s</string>
     <string name="warning">Warning</string>
+    <string name="warning_backup_created">Backup successfully created at %s. Do you want to send the file (e.g. per Email, to Dropbox, ...)?</string>
     <string name="warning_delete_category">Do you really want to delete this category? All expenses will get lost.</string>
+    <string name="warning_no_external_storage">No external storage found.</string>
 
 </resources>

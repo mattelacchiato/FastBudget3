@@ -6,17 +6,23 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
+import static org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowIntent;
@@ -41,7 +47,7 @@ import de.splitstudio.utils.db.Database;
 @RunWith(RobolectricTestRunner.class)
 public class CategoryListActivityWith3CategoriesTest {
 
-	private CategoryListActivity categoryList;
+	private CategoryListActivity activity;
 
 	private ObjectContainer db;
 
@@ -59,21 +65,29 @@ public class CategoryListActivityWith3CategoriesTest {
 
 	private CategoryDao categoryDao;
 
+	private File externalFilePathForDb;
+
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
 		activityController = buildActivity(CategoryListActivity.class);
-		categoryList = activityController.get();
+		activity = activityController.get();
+		externalFilePathForDb = new File(activity.getExternalFilesDir(null), "FastBudget.backup");
 		initDb();
 
 		activityController.create();
 		menu = new TestMenu();
-		categoryList.onCreateOptionsMenu(menu);
-		assertThat(categoryList.getListAdapter().getCount(), is(greaterThan(0)));
+		activity.onCreateOptionsMenu(menu);
+		assertThat(activity.getListAdapter().getCount(), is(greaterThan(0)));
+	}
+
+	@After
+	public void cleanUp() {
+		externalFilePathForDb.getParentFile().delete();
 	}
 
 	private void initDb() {
-		db = Database.getClearedInstance(categoryList.getApplicationContext());
+		db = Database.getClearedInstance(activity.getApplicationContext());
 		categoryDao = new CategoryDao(db);
 
 		Calendar started = Calendar.getInstance();
@@ -89,12 +103,12 @@ public class CategoryListActivityWith3CategoriesTest {
 
 	@Test
 	public void hasAnAddView() throws Exception {
-		assertThat(menu.findItem(R.id.add_category), is(notNullValue()));
+		assertThat(menu.findItem(R.id.button_create_category), is(notNullValue()));
 	}
 
 	@Test
 	public void containsAListWith3Items() throws Exception {
-		assertThat(categoryList.getListView().getAdapter().getCount(), is(3));
+		assertThat(activity.getListView().getAdapter().getCount(), is(3));
 	}
 
 	@Test
@@ -115,7 +129,7 @@ public class CategoryListActivityWith3CategoriesTest {
 	public void addExpense_sendsCategoryNameToExpenseActivity() {
 		findListView(R.id.button_add_expense).performClick();
 
-		Intent nextStartedActivity = shadowOf(categoryList).getNextStartedActivity();
+		Intent nextStartedActivity = shadowOf(activity).getNextStartedActivity();
 		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
 		ShadowIntent shadowIntent = shadowOf(nextStartedActivity);
 		assertThat(shadowIntent.getExtras(), is(notNullValue()));
@@ -126,7 +140,7 @@ public class CategoryListActivityWith3CategoriesTest {
 	public void editCategory_sendsCategoryNameToCategoryActivity() {
 		findListView(R.id.button_edit).performClick();
 
-		Intent nextStartedActivity = shadowOf(categoryList).getNextStartedActivity();
+		Intent nextStartedActivity = shadowOf(activity).getNextStartedActivity();
 		assertThat("Activity was not started", nextStartedActivity, is(notNullValue()));
 		ShadowIntent shadowIntent = shadowOf(nextStartedActivity);
 		assertThat(shadowIntent.getExtras(), is(notNullValue()));
@@ -137,7 +151,7 @@ public class CategoryListActivityWith3CategoriesTest {
 	public void setsSumOfAllExpenses() {
 		category1.expenses.add(new Expense(20, new Date(), null));
 		category1.expenses.add(new Expense(40, new Date(), null));
-		categoryList.updateView();
+		activity.updateView();
 
 		TextView spent = (TextView) findListView(R.id.category_spent);
 		assertThat(spent.getText().toString(), is("$0.60"));
@@ -149,9 +163,9 @@ public class CategoryListActivityWith3CategoriesTest {
 
 		category1.expenses.add(new Expense(20, new Date(), null));
 		categoryDao.store(category1);
-		Intent intent = new Intent(categoryList, ExpenseActivity.class);
+		Intent intent = new Intent(activity, ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), category1.name);
-		shadowOf(categoryList).receiveResult(intent, Activity.RESULT_OK, null);
+		shadowOf(activity).receiveResult(intent, Activity.RESULT_OK, null);
 
 		TextView spent = (TextView) findListView(R.id.category_spent);
 		assertThat(spent.getText().toString(), is("$0.20"));
@@ -161,7 +175,7 @@ public class CategoryListActivityWith3CategoriesTest {
 	public void setsProgressBar() {
 		category1.expenses.add(new Expense(20, new Date(), null));
 		categoryDao.store(category1);
-		categoryList.updateView();
+		activity.updateView();
 
 		ProgressBar progressBar = (ProgressBar) findListView(R.id.category_fill);
 		assertThat(progressBar.getMax(), is(category1.budget));
@@ -176,7 +190,7 @@ public class CategoryListActivityWith3CategoriesTest {
 		categoryDao.store(category1);
 		categoryDao.store(category2);
 
-		categoryList.updateView();
+		activity.updateView();
 
 		assertThatTextAtPositionIs(0, R.id.name, NAME2);
 		assertThatTextAtPositionIs(1, R.id.name, NAME1);
@@ -185,15 +199,15 @@ public class CategoryListActivityWith3CategoriesTest {
 
 	@Test
 	public void itShowsTotalBudgetForThisMonthInTitle() {
-		assertThat(categoryList.getTitle().toString(), containsString("$7"));
+		assertThat(activity.getTitle().toString(), containsString("$7"));
 	}
 
 	@Test
 	public void itShowsTotalSpentsForThisMonthInTitle() {
 		category1.expenses.add(new Expense(20, new Date(), ""));
 		category2.expenses.add(new Expense(200, new Date(), ""));
-		categoryList.updateView();
-		assertThat(categoryList.getTitle().toString(), containsString("$2"));
+		activity.updateView();
+		assertThat(activity.getTitle().toString(), containsString("$2"));
 	}
 
 	@Test
@@ -204,7 +218,7 @@ public class CategoryListActivityWith3CategoriesTest {
 		category1.expenses.add(new Expense(20, cal.getTime(), ""));
 		categoryDao.store(category1);
 
-		categoryList.updateView();
+		activity.updateView();
 
 		assertThatTextAtPositionIs(0, R.id.category_budget, "$0.91");
 	}
@@ -273,7 +287,7 @@ public class CategoryListActivityWith3CategoriesTest {
 		activityController.start();
 		findListView(R.id.button_list).performClick();
 
-		Intent startedIntent = shadowOf(categoryList).getNextStartedActivity();
+		Intent startedIntent = shadowOf(activity).getNextStartedActivity();
 		assertThat("No intend was started!", startedIntent, is(notNullValue()));
 		assertThat(startedIntent.getExtras().isEmpty(), is(false));
 		assertThat((String) startedIntent.getExtras().get(Extras.CategoryName.name()), is(category1.name));
@@ -282,8 +296,55 @@ public class CategoryListActivityWith3CategoriesTest {
 		assertThat(shadowIntent.getComponent().getClassName(), equalTo(ExpenseListActivity.class.getName()));
 	}
 
+	@Test
+	public void hasABackupMenu() throws Exception {
+		menu.findItem(R.id.button_create_backup);
+	}
+
+	@Test
+	public void clickOnBackup_createsAFileOnSdCard() throws Exception {
+		activity.onOptionsItemSelected(menu.findItem(R.id.button_create_backup));
+
+		assertThat(externalFilePathForDb.exists(), is(true));
+	}
+
+	@Test
+	public void clickOnBackup_notifiesUserAboutItsLocation() throws Exception {
+		activity.onOptionsItemSelected(menu.findItem(R.id.button_create_backup));
+
+		assertThat(getLatestAlertDialog(), is(not(nullValue())));
+		String message = shadowOf(getLatestAlertDialog()).getMessage().toString();
+		String expectedMessage = activity.getString(R.string.warning_backup_created,
+			externalFilePathForDb.getAbsolutePath());
+		assertThat(message, is(expectedMessage));
+	}
+
+	@Test
+	public void clickOnBackup_noExternalStorageAvailable_noFileCreated() throws Exception {
+		CategoryListActivity activity = Mockito.spy(this.activity);
+		Mockito.when(activity.getExternalFilesDir(null)).thenReturn(null);
+
+		activity.onOptionsItemSelected(menu.findItem(R.id.button_create_backup));
+
+		assertThat(externalFilePathForDb.exists(), is(false));
+	}
+
+	@Test
+	public void clickOnBackup_noExternalStorageAvailable_userNotified() throws Exception {
+		CategoryListActivity activity = Mockito.spy(this.activity);
+		Mockito.when(activity.getExternalFilesDir(null)).thenReturn(null);
+
+		activity.onOptionsItemSelected(menu.findItem(R.id.button_create_backup));
+
+		AlertDialog latestAlertDialog = ShadowAlertDialog.getLatestAlertDialog();
+		assertThat(latestAlertDialog, is(not(nullValue())));
+		String message = shadowOf(latestAlertDialog).getMessage().toString();
+		String expectedMessage = activity.getString(R.string.warning_no_external_storage);
+		assertThat(message, is(expectedMessage));
+	}
+
 	private void assertThatTextAtPositionIs(int position, int viewId, String expected) {
-		TextView name1 = (TextView) categoryList.getListAdapter().getView(position, null, null).findViewById(viewId);
+		TextView name1 = (TextView) activity.getListAdapter().getView(position, null, null).findViewById(viewId);
 		assertThat(name1, is(notNullValue()));
 		assertThat("At Position " + position, name1.getText().toString(), is(expected));
 	}
@@ -293,6 +354,6 @@ public class CategoryListActivityWith3CategoriesTest {
 	}
 
 	private View findListView(int position, int viewId) {
-		return categoryList.getListAdapter().getView(position, null, categoryList.getListView()).findViewById(viewId);
+		return activity.getListAdapter().getView(position, null, activity.getListView()).findViewById(viewId);
 	}
 }
