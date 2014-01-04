@@ -1,5 +1,7 @@
 package de.splitstudio.fastbudget3.db;
 
+import static de.splitstudio.utils.NumberUtils.formatAsCurrency;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import de.splitstudio.fastbudget3.R;
 import de.splitstudio.utils.DateUtils;
-import de.splitstudio.utils.NumberUtils;
 import de.splitstudio.utils.db.ObjectListAdapter;
 
 public class CategoryListAdapter extends ObjectListAdapter<Category> {
@@ -25,20 +26,21 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 	@Override
 	public void bindView(View view, Category category) {
 		int expensesCent = category.summarizeExpenses(start, null);
-		int budget = category.calcBudget();
-		String budgetLiteral = NumberUtils.formatAsCurrency(budget);
-		String expenses = NumberUtils.formatAsCurrency(expensesCent);
+		int budgetCent = category.calcBudget();
+		//TODO (Jan 4, 2014): Frauke fragen, ob nicht lieber der Rest angezeigt werden soll, anstatt das Budget
+		String budgetString = formatAsCurrency(budgetCent);
+		String expensesString = formatAsCurrency(expensesCent);
 
 		ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.category_fill);
-		progressBar.setMax(budget);
+		progressBar.setMax(budgetCent);
 		progressBar.setProgress(expensesCent);
 
 		view.findViewById(R.id.button_list).setTag(category.name);
 		view.findViewById(R.id.button_edit).setTag(category.name);
 		view.findViewById(R.id.button_delete).setTag(category.name);
 		((TextView) view.findViewById(R.id.name)).setText(category.name);
-		((TextView) view.findViewById(R.id.category_budget)).setText(budgetLiteral);
-		((TextView) view.findViewById(R.id.category_spent)).setText(expenses);
+		((TextView) view.findViewById(R.id.category_budget)).setText(budgetString);
+		((TextView) view.findViewById(R.id.category_spent)).setText(expensesString);
 	}
 
 	@Override

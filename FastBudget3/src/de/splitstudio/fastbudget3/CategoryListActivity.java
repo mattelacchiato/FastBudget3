@@ -3,11 +3,10 @@ package de.splitstudio.fastbudget3;
 import static android.content.Intent.ACTION_SEND;
 import static android.content.Intent.EXTRA_STREAM;
 import static android.content.Intent.createChooser;
-import static de.splitstudio.utils.NumberUtils.centToDouble;
+import static de.splitstudio.utils.NumberUtils.formatAsIntegerCurrency;
 import static java.lang.String.format;
 
 import java.io.File;
-import java.text.NumberFormat;
 import java.util.List;
 
 import android.app.ListActivity;
@@ -157,10 +156,6 @@ public class CategoryListActivity extends ListActivity {
 	}
 
 	private void updateTitle(List<Category> categories) {
-		//TODO (Jan 4, 2014): put this to NumberUtils.format
-		NumberFormat currency = NumberFormat.getCurrencyInstance();
-		currency.setMaximumFractionDigits(0);
-
 		int budgetCents = 0;
 		int spentCents = 0;
 		for (Category category : categories) {
@@ -168,8 +163,8 @@ public class CategoryListActivity extends ListActivity {
 			spentCents += category.summarizeExpenses(DateUtils.createFirstDayOfMonth().getTime(), null);
 		}
 
-		String spent = currency.format(centToDouble(spentCents));
-		String budget = currency.format(centToDouble(budgetCents));
+		String spent = formatAsIntegerCurrency(spentCents);
+		String budget = formatAsIntegerCurrency(budgetCents);
 		setTitle(format("%s  %s/%s", getString(R.string.app_name), spent, budget));
 	}
 
