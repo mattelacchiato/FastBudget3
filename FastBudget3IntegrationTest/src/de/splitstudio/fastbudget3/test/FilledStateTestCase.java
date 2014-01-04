@@ -42,8 +42,6 @@ public abstract class FilledStateTestCase<T extends ListActivity> extends Activi
 		refreshListView();
 	}
 
-	//TODO (Jan 3, 2014): tearDown with db.close() to fix issues when opening from normal user interaction?
-
 	private void refreshListView() {
 		onData(is(Object.class));
 	}
