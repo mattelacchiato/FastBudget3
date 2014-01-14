@@ -75,8 +75,8 @@ public class ExpenseActivity extends Activity {
 			expense = new Expense(new Date());
 		}
 
-		descriptionTextView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-				expenseDao.findAllDescriptions()));
+		descriptionTextView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, expenseDao
+				.findAllDescriptions()));
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class ExpenseActivity extends Activity {
 			expense.description = descriptionEdit.getText().toString();
 
 			expenseDao.store(expense);//needed as long as we use TreeSet in Category
-			category.expenses.add(expense);
+			category.add(expense);
 			categoryDao.store(category);
 			Log.d(TAG, "Persisted expense in db: " + expense);
 			setResult(RESULT_OK);

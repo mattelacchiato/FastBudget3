@@ -65,13 +65,13 @@ public class ExpenseListActivityWith3ItemsTest {
 
 		Calendar cal = DateUtils.createLastDayOfMonth();
 		firstExpense = new Expense(20, cal.getTime(), "first");
-		category.expenses.add(firstExpense);
+		category.add(firstExpense);
 
 		cal.add(DAY_OF_MONTH, -1);
-		category.expenses.add(new Expense(20, cal.getTime(), "second"));
+		category.add(new Expense(20, cal.getTime(), "second"));
 
 		cal.add(DAY_OF_MONTH, -1);
-		category.expenses.add(new Expense(20, cal.getTime(), "third"));
+		category.add(new Expense(20, cal.getTime(), "third"));
 
 		categoryDao.store(category);
 	}
@@ -124,7 +124,7 @@ public class ExpenseListActivityWith3ItemsTest {
 		getRow(0).findViewById(R.id.button_delete).performClick();
 
 		Category persistedCategory = categoryDao.findByName(CATEGORY_NAME);
-		assertThat(persistedCategory.expenses, not(hasItem(firstExpense)));
+		assertThat(persistedCategory.getExpenses(), not(hasItem(firstExpense)));
 	}
 
 	private View getRow(int rowIndex) {

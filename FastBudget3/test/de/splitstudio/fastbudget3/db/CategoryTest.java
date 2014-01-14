@@ -26,13 +26,13 @@ public class CategoryTest {
 
 		Category category = new Category(ANY_NAME, 0, new Date());
 		//out of range
-		category.expenses.add(new Expense(2, dayAndSecOfMonth(-2, 0), null));
+		category.add(new Expense(2, dayAndSecOfMonth(-2, 0), null));
 		//in range
-		category.expenses.add(new Expense(-10, dayAndSecOfMonth(1, 1), null));
-		category.expenses.add(new Expense(2, dayAndSecOfMonth(2, 0), null));
-		category.expenses.add(new Expense(40, dayAndSecOfMonth(31, 0), null));
+		category.add(new Expense(-10, dayAndSecOfMonth(1, 1), null));
+		category.add(new Expense(2, dayAndSecOfMonth(2, 0), null));
+		category.add(new Expense(40, dayAndSecOfMonth(31, 0), null));
 		//out of range
-		category.expenses.add(new Expense(40, dayAndSecOfMonth(32, 1), null));
+		category.add(new Expense(40, dayAndSecOfMonth(32, 1), null));
 
 		assertThat(category.summarizeExpenses(start, end), is(32));
 	}
@@ -40,11 +40,11 @@ public class CategoryTest {
 	@Test
 	public void comparesTo_lessThanOther_greaterThanZero() {
 		Category category = new Category(ANY_NAME);
-		category.expenses.add(new Expense(0, ANY_DATE, ""));
+		category.add(new Expense(0, ANY_DATE, ""));
 
 		Category other = new Category("one");
-		other.expenses.add(new Expense(0, ANY_DATE, ""));
-		other.expenses.add(new Expense(0, ANY_DATE, ""));
+		other.add(new Expense(0, ANY_DATE, ""));
+		other.add(new Expense(0, ANY_DATE, ""));
 
 		assertThat(category.compareTo(other), is(greaterThan(0)));
 	}
@@ -52,11 +52,11 @@ public class CategoryTest {
 	@Test
 	public void comparesTo_moreThanOther_lessThanZero() {
 		Category category = new Category(ANY_NAME);
-		category.expenses.add(new Expense(0, ANY_DATE, ""));
-		category.expenses.add(new Expense(0, ANY_DATE, ""));
+		category.add(new Expense(0, ANY_DATE, ""));
+		category.add(new Expense(0, ANY_DATE, ""));
 
 		Category other = new Category(ANY_NAME);
-		other.expenses.add(new Expense(0, ANY_DATE, ""));
+		other.add(new Expense(0, ANY_DATE, ""));
 
 		assertThat(category.compareTo(other), is(lessThan(0)));
 	}
@@ -64,10 +64,10 @@ public class CategoryTest {
 	@Test
 	public void comparesTo_equal_zero() {
 		Category category = new Category(ANY_NAME);
-		category.expenses.add(new Expense(0, ANY_DATE, ""));
+		category.add(new Expense(0, ANY_DATE, ""));
 
 		Category other = new Category(ANY_NAME);
-		other.expenses.add(new Expense(0, ANY_DATE, ""));
+		other.add(new Expense(0, ANY_DATE, ""));
 
 		assertThat(category.compareTo(other), is(0));
 	}
@@ -122,7 +122,7 @@ public class CategoryTest {
 		Date createdAt = cal.getTime();
 
 		Category category = new Category(ANY_NAME, budget, createdAt);
-		category.expenses.add(new Expense(20, new Date(), null));
+		category.add(new Expense(20, new Date(), null));
 		assertThat(category.calcBudget(), is(budget));
 	}
 
@@ -135,7 +135,7 @@ public class CategoryTest {
 		Date createdAt = cal.getTime();
 
 		Category category = new Category(ANY_NAME, budget, createdAt);
-		category.expenses.add(new Expense(20, new Date(), null));
+		category.add(new Expense(20, new Date(), null));
 
 		assertThat(category.calcBudget(), is(budget * 2));
 	}
@@ -150,9 +150,9 @@ public class CategoryTest {
 
 		Category category = new Category(ANY_NAME, budget, createdAt);
 		//spent sth. last month
-		category.expenses.add(new Expense(20, cal.getTime(), null));
+		category.add(new Expense(20, cal.getTime(), null));
 		//spent sth. this month, don't count it
-		category.expenses.add(new Expense(20, new Date(), null));
+		category.add(new Expense(20, new Date(), null));
 
 		assertThat(category.calcBudget(), is(budget * 2 - 20));
 	}
@@ -161,7 +161,7 @@ public class CategoryTest {
 	public void findExpenses_expenseBeforeStart_emptyList() throws Exception {
 		Category category = new Category(ANY_NAME);
 		Calendar cal = Calendar.getInstance();
-		category.expenses.add(new Expense(20, cal.getTime(), null));
+		category.add(new Expense(20, cal.getTime(), null));
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		Date start = cal.getTime();
 
@@ -174,23 +174,23 @@ public class CategoryTest {
 		Calendar cal = Calendar.getInstance();
 
 		//out of range
-		category.expenses.add(new Expense(20, cal.getTime(), null));
+		category.add(new Expense(20, cal.getTime(), null));
 
 		//in range
 		cal.add(Calendar.MONTH, 1);
 		Date start = cal.getTime();
-		category.expenses.add(new Expense(20, cal.getTime(), null));
+		category.add(new Expense(20, cal.getTime(), null));
 
 		cal.add(Calendar.MONTH, 1);
-		category.expenses.add(new Expense(20, cal.getTime(), null));
+		category.add(new Expense(20, cal.getTime(), null));
 
 		cal.add(Calendar.MONTH, 1);
 		Date end = cal.getTime();
-		category.expenses.add(new Expense(20, cal.getTime(), null));
+		category.add(new Expense(20, cal.getTime(), null));
 
 		//out of range
 		cal.add(Calendar.MONTH, 1);
-		category.expenses.add(new Expense(20, cal.getTime(), null));
+		category.add(new Expense(20, cal.getTime(), null));
 
 		assertThat(category.findExpenses(start, end).size(), is(3));
 	}
@@ -199,9 +199,9 @@ public class CategoryTest {
 	public void addSameExpenseInstanceTwice_onlyOneAdded() throws Exception {
 		Category category = new Category();
 		Expense expense = new Expense(ANY_DATE);
-		category.expenses.add(expense);
-		category.expenses.add(expense);
-		assertThat(category.expenses.size(), is(1));
+		category.add(expense);
+		category.add(expense);
+		assertThat(category.getExpenses().size(), is(1));
 	}
 
 	@SuppressWarnings("deprecation")

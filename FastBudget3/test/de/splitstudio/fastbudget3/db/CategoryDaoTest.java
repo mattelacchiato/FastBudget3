@@ -49,7 +49,7 @@ public class CategoryDaoTest {
 	public void store_persistsAllExpenses() throws Exception {
 		Expense expense = new Expense(ANY_DATE);
 		Category category = new Category(ANY_NAME, ANY_AMOUNT, ANY_DATE);
-		category.expenses.add(expense);
+		category.add(expense);
 		categoryDao.store(category);
 		assertThat(db.ext().isStored(expense), is(true));
 	}
@@ -59,7 +59,7 @@ public class CategoryDaoTest {
 		Expense expense = new Expense(ANY_DATE);
 		Category category = new Category(ANY_NAME, ANY_AMOUNT, ANY_DATE);
 		categoryDao.store(category);
-		category.expenses.add(expense);
+		category.add(expense);
 		categoryDao.store(category);
 
 		assertThat(db.ext().isStored(expense), is(true));
@@ -69,7 +69,7 @@ public class CategoryDaoTest {
 	public void delete_deletesAllExpenses() throws Exception {
 		Expense expense = new Expense(ANY_DATE);
 		Category category = new Category(ANY_NAME, ANY_AMOUNT, ANY_DATE);
-		category.expenses.add(expense);
+		category.add(expense);
 		categoryDao.store(category);
 
 		categoryDao.delete(category);
@@ -80,13 +80,13 @@ public class CategoryDaoTest {
 	public void findByName_activatesExpenditures() throws Exception {
 		Expense expense = new Expense(ANY_DATE);
 		Category category = new Category(ANY_NAME, ANY_AMOUNT, ANY_DATE);
-		category.expenses.add(expense);
+		category.add(expense);
 		categoryDao.store(category);
 
 		closeDb();
 		setUp();
 
-		Expense loadedExpense = categoryDao.findByName(ANY_NAME).expenses.iterator().next();
+		Expense loadedExpense = categoryDao.findByName(ANY_NAME).getExpenses().iterator().next();
 		assertThat(db.ext().isActive(loadedExpense), is(true));
 	}
 

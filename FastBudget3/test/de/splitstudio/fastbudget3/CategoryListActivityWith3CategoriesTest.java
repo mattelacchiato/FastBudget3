@@ -149,8 +149,8 @@ public class CategoryListActivityWith3CategoriesTest {
 
 	@Test
 	public void setsSumOfAllExpenses() {
-		category1.expenses.add(new Expense(20, new Date(), null));
-		category1.expenses.add(new Expense(40, new Date(), null));
+		category1.add(new Expense(20, new Date(), null));
+		category1.add(new Expense(40, new Date(), null));
 		activity.updateView();
 
 		TextView spent = (TextView) findListView(R.id.category_spent);
@@ -161,7 +161,7 @@ public class CategoryListActivityWith3CategoriesTest {
 	public void expenseAdded_refreshUI() {
 		findListView(R.id.button_add_expense).performClick();
 
-		category1.expenses.add(new Expense(20, new Date(), null));
+		category1.add(new Expense(20, new Date(), null));
 		categoryDao.store(category1);
 		Intent intent = new Intent(activity, ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), category1.name);
@@ -173,7 +173,7 @@ public class CategoryListActivityWith3CategoriesTest {
 
 	@Test
 	public void setsProgressBar() {
-		category1.expenses.add(new Expense(20, new Date(), null));
+		category1.add(new Expense(20, new Date(), null));
 		categoryDao.store(category1);
 		activity.updateView();
 
@@ -184,9 +184,9 @@ public class CategoryListActivityWith3CategoriesTest {
 
 	@Test
 	public void itSortsCategoriesByTheirExpenseCount() {
-		category1.expenses.add(new Expense(0, new Date(), ""));
-		category2.expenses.add(new Expense(0, new Date(), ""));
-		category2.expenses.add(new Expense(0, new Date(), ""));
+		category1.add(new Expense(0, new Date(), ""));
+		category2.add(new Expense(0, new Date(), ""));
+		category2.add(new Expense(0, new Date(), ""));
 		categoryDao.store(category1);
 		categoryDao.store(category2);
 
@@ -204,8 +204,8 @@ public class CategoryListActivityWith3CategoriesTest {
 
 	@Test
 	public void itShowsTotalSpentsForThisMonthInTitle() {
-		category1.expenses.add(new Expense(20, new Date(), ""));
-		category2.expenses.add(new Expense(200, new Date(), ""));
+		category1.add(new Expense(20, new Date(), ""));
+		category2.add(new Expense(200, new Date(), ""));
 		activity.updateView();
 		assertThat(activity.getTitle().toString(), containsString("$2"));
 	}
@@ -215,7 +215,7 @@ public class CategoryListActivityWith3CategoriesTest {
 		assertThatTextAtPositionIs(0, R.id.category_budget, "$1.11");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -1);
-		category1.expenses.add(new Expense(20, cal.getTime(), ""));
+		category1.add(new Expense(20, cal.getTime(), ""));
 		categoryDao.store(category1);
 
 		activity.updateView();
@@ -256,7 +256,7 @@ public class CategoryListActivityWith3CategoriesTest {
 	@Test
 	public void deleteCategory_okDeletesCategorysExpensesFromDb() {
 		Expense expense = new Expense(20, new Date(), null);
-		category1.expenses.add(expense);
+		category1.add(expense);
 		categoryDao.store(category1);
 		findListView(R.id.button_delete).performClick();
 		AlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();

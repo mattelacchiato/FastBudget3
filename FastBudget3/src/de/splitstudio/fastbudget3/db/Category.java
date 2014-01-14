@@ -17,7 +17,7 @@ public class Category extends UniqueEntity implements Comparable<Category> {
 
 	public int budget;
 
-	public List<Expense> expenses = new ArrayList<Expense>();
+	private final List<Expense> expenses = new ArrayList<Expense>();
 
 	public Date date;
 
@@ -87,6 +87,20 @@ public class Category extends UniqueEntity implements Comparable<Category> {
 			}
 		}
 		return list;
+	}
+
+	public void add(Expense expense) {
+		if (!expenses.contains(expense)) {
+			expenses.add(expense);
+		}
+	}
+
+	public List<Expense> getExpenses() {
+		return expenses;
+	}
+
+	public void remove(Expense expense) {
+		expenses.remove(expense);
 	}
 
 }

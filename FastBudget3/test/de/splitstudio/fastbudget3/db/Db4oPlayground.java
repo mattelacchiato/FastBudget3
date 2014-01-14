@@ -170,7 +170,7 @@ public class Db4oPlayground {
 		List<Expense> expensesInCategories = new ArrayList<Expense>();
 		for (Category category : categories) {
 			db.activate(category, Integer.MAX_VALUE);
-			expensesInCategories.addAll(category.expenses);
+			expensesInCategories.addAll(category.getExpenses());
 		}
 		haushaltExpenses.removeAll(expensesInCategories);
 		return haushaltExpenses;

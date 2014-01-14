@@ -63,7 +63,7 @@ public class ExpenseListActivityTest {
 
 		category = new Category(CATEGORY_NAME);
 		expense = new Expense(10, createFirstDayOfMonth().getTime(), DESCRIPTION);
-		category.expenses.add(expense);
+		category.add(expense);
 		categoryDao.store(category);
 	}
 

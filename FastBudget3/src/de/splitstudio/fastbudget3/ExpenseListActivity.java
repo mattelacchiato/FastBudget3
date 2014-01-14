@@ -108,7 +108,7 @@ public class ExpenseListActivity extends ListActivity {
 			throw new IllegalStateException("Could not find Expense for uuid " + uuid);
 		}
 		expenseDao.delete(expense);
-		category.expenses.remove(expense);
+		category.remove(expense);
 		update.run();
 	}
 

@@ -29,7 +29,7 @@ public class CategoryDao extends GenericBaseDao<Category> {
 
 	@Override
 	public void delete(Category category) {
-		db.delete(category.expenses);
+		db.delete(category.getExpenses());
 		super.delete(category);
 	}
 

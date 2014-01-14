@@ -52,11 +52,11 @@ public abstract class FilledStateTestCase<T extends ListActivity> extends Activi
 
 		Calendar expenditureDate = DateUtils.createLastDayOfMonth();
 		firstExpenditureDate = expenditureDate.getTime();
-		firstCategory.expenses.add(new Expense(10, firstExpenditureDate, "first expenditure"));
+		firstCategory.add(new Expense(10, firstExpenditureDate, "first expenditure"));
 		expenditureDate.add(DAY_OF_MONTH, -2);
-		firstCategory.expenses.add(new Expense(20, expenditureDate.getTime(), "second expenditure"));
+		firstCategory.add(new Expense(20, expenditureDate.getTime(), "second expenditure"));
 		expenditureDate.add(DAY_OF_MONTH, -2);
-		firstCategory.expenses.add(new Expense(30, expenditureDate.getTime(), "third expenditure"));
+		firstCategory.add(new Expense(30, expenditureDate.getTime(), "third expenditure"));
 
 		CategoryDao categoryDao = new CategoryDao(Database.getClearedInstance(initialActivity));
 		categoryDao.store(firstCategory);

@@ -132,10 +132,7 @@ public class ExpenseActivityTest {
 		clickOnMenuItem(R.id.save);
 
 		Category category = categoryDao.findByName(CATEGORY_NAME);
-		Expense persistedExpense = null;
-		for (Expense expense : category.expenses) {
-			persistedExpense = expense;
-		}
+		Expense persistedExpense = category.getExpenses().get(0);
 		assertThat(persistedExpense, is(notNullValue()));
 		assertThat(persistedExpense.amount, is(3000));
 		assertThat(persistedExpense.date, is(notNullValue()));

@@ -3,6 +3,7 @@ package de.splitstudio.fastbudget3;
 import static de.splitstudio.utils.NumberUtils.formatAsDecimal;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
@@ -82,7 +83,7 @@ public class ExpenseActivity_Edit_Test {
 		expenseDao = new ExpenseDao(db);
 
 		Category category = new Category(CATEGORY_NAME, ANY_BUDGET, DATE);
-		category.expenses.add(expense);
+		category.add(expense);
 		categoryDao.store(category);
 		expenseDao.store(expense);
 	}
@@ -113,6 +114,16 @@ public class ExpenseActivity_Edit_Test {
 
 		Expense persisted = expenseDao.findByUuid(expense.uuid);
 		assertThat(persisted.description, is(newDescription));
+	}
+
+	@Test
+	public void save_forUpdate_dontCreateNewExpenses() throws Exception {
+		assertThat(expenseDao.findAll(Expense.class), hasSize(1));
+		String newDescription = "new";
+		findTextView(R.id.description).setText(newDescription);
+		clickMenuItem(R.id.save);
+
+		assertThat(expenseDao.findAll(Expense.class), hasSize(1));
 	}
 
 	private TextView findTextView(int id) {

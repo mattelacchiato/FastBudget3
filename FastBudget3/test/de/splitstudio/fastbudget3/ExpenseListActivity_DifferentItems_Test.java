@@ -69,7 +69,7 @@ public class ExpenseListActivity_DifferentItems_Test {
 	@Test
 	public void itShowsTheDescription() throws Exception {
 		String description = "jo!";
-		category.expenses.add(new Expense(20, new Date(), description));
+		category.add(new Expense(20, new Date(), description));
 
 		ExpenseListActivity activity = createActivity();
 
@@ -84,7 +84,7 @@ public class ExpenseListActivity_DifferentItems_Test {
 
 	@Test
 	public void itShowsTheAmount() throws Exception {
-		category.expenses.add(new Expense(20, new Date(), "bla"));
+		category.add(new Expense(20, new Date(), "bla"));
 
 		View row = createActivity().getListAdapter().getView(0, null, null);
 		TextView amountTextView = (TextView) row.findViewById(R.id.amount);
@@ -96,7 +96,7 @@ public class ExpenseListActivity_DifferentItems_Test {
 	public void itShowsTheDate() throws Exception {
 		Calendar cal = DateUtils.createFirstDayOfMonth();
 		Date date = cal.getTime();
-		category.expenses.add(new Expense(20, date, "bla"));
+		category.add(new Expense(20, date, "bla"));
 
 		View row = createActivity().getListAdapter().getView(0, null, null);
 		TextView dateTextView = (TextView) row.findViewById(R.id.date_field);
@@ -107,10 +107,10 @@ public class ExpenseListActivity_DifferentItems_Test {
 	@Test
 	public void itShowsOnlyExpensesForCurrentPeriod() throws Exception {
 		Calendar cal = Calendar.getInstance();
-		category.expenses.add(new Expense(30, cal.getTime(), ANY_DESCRIPTION));
-		category.expenses.add(new Expense(30, cal.getTime(), ANY_DESCRIPTION));
+		category.add(new Expense(30, cal.getTime(), ANY_DESCRIPTION));
+		category.add(new Expense(30, cal.getTime(), ANY_DESCRIPTION));
 		cal.add(Calendar.MONTH, -1);
-		category.expenses.add(new Expense(30, cal.getTime(), ANY_DESCRIPTION));
+		category.add(new Expense(30, cal.getTime(), ANY_DESCRIPTION));
 
 		ExpenseListActivity activity = createActivity();
 
@@ -121,7 +121,7 @@ public class ExpenseListActivity_DifferentItems_Test {
 	public void update_listViewUpdated() throws Exception {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -1);
-		category.expenses.add(new Expense(30, cal.getTime(), null));
+		category.add(new Expense(30, cal.getTime(), null));
 		ExpenseListActivity activity = createActivity();
 		assertThat(activity.getListAdapter().getCount(), is(0));
 
