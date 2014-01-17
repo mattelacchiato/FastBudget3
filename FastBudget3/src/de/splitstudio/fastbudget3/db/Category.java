@@ -2,6 +2,7 @@ package de.splitstudio.fastbudget3.db;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -92,6 +93,7 @@ public class Category extends UniqueEntity implements Comparable<Category> {
 	public void add(Expense expense) {
 		if (!expenses.contains(expense)) {
 			expenses.add(expense);
+			Collections.sort(expenses);
 		}
 	}
 

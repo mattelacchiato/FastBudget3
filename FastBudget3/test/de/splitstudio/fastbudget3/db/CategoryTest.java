@@ -204,6 +204,20 @@ public class CategoryTest {
 		assertThat(category.getExpenses().size(), is(1));
 	}
 
+	@Test
+	public void addExpense_resortList() throws Exception {
+		Category category = new Category();
+		Expense older = new Expense(ANY_DATE);
+		category.add(older);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(ANY_DATE);
+		cal.add(Calendar.DAY_OF_YEAR, 1);
+		Expense newer = new Expense(cal.getTime());
+		category.add(newer);
+		assertThat(category.getExpenses().get(0), is(newer));
+		assertThat(category.getExpenses().get(1), is(older));
+	}
+
 	@SuppressWarnings("deprecation")
 	private Date dayAndSecOfMonth(int day, int sec) {
 		return new Date(1985, 5, day, 0, 0, sec);
