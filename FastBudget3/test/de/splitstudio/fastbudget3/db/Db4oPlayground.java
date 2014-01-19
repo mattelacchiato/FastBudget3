@@ -21,6 +21,10 @@ import com.db4o.ObjectSet;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.ext.StoredClass;
 
+/**
+ * Just to test out some DB4O features.
+ */
+@Ignore
 public class Db4oPlayground {
 
 	private File file;

@@ -4,7 +4,6 @@ import static de.splitstudio.utils.NumberUtils.formatAsDecimal;
 import static de.splitstudio.utils.NumberUtils.parseCent;
 
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
@@ -38,7 +37,6 @@ public class ExpenseActivity extends Activity {
 	private Expense expense;
 
 	private ExpenseDao expenseDao;
-
 	private CategoryDao categoryDao;
 
 	@Override
@@ -48,35 +46,18 @@ public class ExpenseActivity extends Activity {
 			finish();
 			return;
 		}
-		setContentView(R.layout.expense_activity);
+
 		String categoryName = getIntent().getExtras().getString(Extras.CategoryName.name());
+		setContentView(R.layout.expense_activity);
+		setTitle(getString(R.string.title_expense, categoryName));
+
 		ObjectContainer db = Database.getInstance(this);
 		expenseDao = new ExpenseDao(db);
 		categoryDao = new CategoryDao(db);
 		category = categoryDao.findByName(categoryName);
-		setTitle(getString(R.string.title_expense, categoryName));
-		fillValues(getIntent().getExtras());
-	}
+		expense = loadExpense();
 
-	private void fillValues(Bundle extras) {
-		AutoCompleteTextView descriptionTextView = (AutoCompleteTextView) findViewById(R.id.description);
-		if (extras.containsKey(Extras.Id.name())) {
-			String uuid = extras.getString(Extras.Id.name());
-			Log.d(TAG, "fill expense by loading its values from db with uuid " + uuid);
-			expense = expenseDao.findByUuid(uuid);
-
-			descriptionTextView.setText(expense.description);
-			((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(expense.date);
-			((DatePickerButtons) findViewById(R.id.date_picker)).setAndUpdateDate(cal);
-		} else {
-			Log.d(TAG, "no uuid given, will create a new expense");
-			expense = new Expense(new Date());
-		}
-
-		descriptionTextView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, expenseDao
-				.findAllDescriptions()));
+		fillView();
 	}
 
 	@Override
@@ -114,7 +95,6 @@ public class ExpenseActivity extends Activity {
 			expense.date = datePickerButtons.getDate().getTime();
 			expense.description = descriptionEdit.getText().toString();
 
-			expenseDao.store(expense);//needed as long as we use TreeSet in Category
 			category.add(expense);
 			categoryDao.store(category);
 			Log.d(TAG, "Persisted expense in db: " + expense);
@@ -124,4 +104,26 @@ public class ExpenseActivity extends Activity {
 			Toast.makeText(this, R.string.error_invalid_number, Toast.LENGTH_LONG).show();
 		}
 	}
+
+	private Expense loadExpense() {
+		Bundle extras = getIntent().getExtras();
+		if (extras.containsKey(Extras.Id.name())) {
+			String uuid = extras.getString(Extras.Id.name());
+			Log.d(TAG, "fill expense by loading its values from db with uuid " + uuid);
+			return expenseDao.findByUuid(uuid);
+		}
+		Log.d(TAG, "no uuid given, will create a new expense");
+		return new Expense(new Date());
+	}
+
+	private void fillView() {
+		AutoCompleteTextView descriptionTextView = (AutoCompleteTextView) findViewById(R.id.description);
+		descriptionTextView.setText(expense.description);
+		descriptionTextView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, expenseDao
+				.findAllDescriptions()));
+
+		((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
+		((DatePickerButtons) findViewById(R.id.date_picker)).setAndUpdateDate(expense.date);
+	}
+
 }

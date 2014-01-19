@@ -32,7 +32,7 @@ import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.utils.db.Database;
 
 @RunWith(RobolectricTestRunner.class)
-public class CategoryListActivityTestWithoutCategories {
+public class CategoryListActivity_WithoutCategories_Test {
 
 	private CategoryListActivity categoryList;
 	private ObjectContainer db;

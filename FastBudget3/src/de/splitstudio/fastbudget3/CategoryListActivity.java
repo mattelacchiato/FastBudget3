@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
@@ -31,7 +30,7 @@ import de.splitstudio.utils.db.Database;
 
 public class CategoryListActivity extends ListActivity {
 
-	private static final String MIME_TYPE = "application/octet-stream";
+	private static final String BACKUP_MIME_TYPE = "application/octet-stream";
 
 	private CategoryListAdapter listAdapter;
 
@@ -59,7 +58,7 @@ public class CategoryListActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case (R.id.button_create_category):
-			addCategory();
+			createCategory();
 			return true;
 		case (R.id.button_create_backup):
 			createBackup();
@@ -83,16 +82,17 @@ public class CategoryListActivity extends ListActivity {
 				break;
 			}
 		}
-		hideAllContexts();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		hideAllContextsRows();
 	}
 
 	public void addExpense(View view) {
-		View parent = (View) view.getParent();
-		TextView nameTextView = (TextView) parent.findViewById(R.id.name);
-		String categoryName = nameTextView.getText().toString();
-
 		Intent intent = new Intent(getApplicationContext(), ExpenseActivity.class);
-		intent.putExtra(Extras.CategoryName.name(), categoryName);
+		intent.putExtra(Extras.CategoryName.name(), (String) view.getTag());
 		startActivityForResult(intent, RequestCode.CreateExpense.ordinal());
 	}
 
@@ -120,16 +120,7 @@ public class CategoryListActivity extends ListActivity {
 		startActivity(intent);
 	}
 
-	public void updateView() {
-		updateView(categoryDao.findAll(Category.class));
-	}
-
-	private void updateView(List<Category> categories) {
-		listAdapter.update(categories);
-		updateTitle(categories);
-	}
-
-	private void addCategory() {
+	private void createCategory() {
 		Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
 		startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
 	}
@@ -141,25 +132,35 @@ public class CategoryListActivity extends ListActivity {
 		} else {
 			String filename = getString(R.string.app_name) + ".backup";
 			final File dest = new File(externalFilesDir, filename);
-			Database.getInstance(this).ext().backup(dest.getAbsolutePath());
+			Database.getInstance(this).ext().backupSync(dest.getAbsolutePath());
 			DialogHelper.createQuestion(this, R.string.success, R.string.warning_backup_created, R.string.cancel,
 				R.string.send_file, new Runnable() {
 					@Override
 					public void run() {
+						String chooserTitle = getString(R.string.send_file);
 						Intent intent = new Intent(ACTION_SEND);
-						intent.setType(MIME_TYPE);
+						intent.setType(BACKUP_MIME_TYPE);
 						intent.putExtra(EXTRA_STREAM, Uri.fromFile(dest));
-						startActivity(createChooser(intent, getString(R.string.send_file)));
+						startActivity(createChooser(intent, chooserTitle));
 					}
 				}, dest.getAbsolutePath());
 		}
+	}
+
+	public void updateView() {
+		updateView(categoryDao.findAll(Category.class));
+	}
+
+	private void updateView(List<Category> categories) {
+		listAdapter.update(categories);
+		updateTitle(categories);
 	}
 
 	private void updateTitle(List<Category> categories) {
 		int budgetCents = 0;
 		int spentCents = 0;
 		for (Category category : categories) {
-			budgetCents += category.calcBudget();
+			budgetCents += category.calculateBudget();
 			spentCents += category.summarizeExpenses(DateUtils.createFirstDayOfMonth().getTime(), null);
 		}
 
@@ -168,7 +169,7 @@ public class CategoryListActivity extends ListActivity {
 		setTitle(format("%s  %s/%s", getString(R.string.app_name), spent, budget));
 	}
 
-	private void hideAllContexts() {
+	private void hideAllContextsRows() {
 		((SlideExpandableListAdapter) getListAdapter()).collapseLastOpen();
 	}
 

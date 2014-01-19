@@ -60,13 +60,13 @@ public class Category extends UniqueEntity implements Comparable<Category> {
 		return name.compareTo(other.name);
 	}
 
-	int calcGrossBudget() {
+	int calculateGrossBudget() {
 		int budget = 0;
-		Calendar started = Calendar.getInstance();
-		started.setTime(date);
+		Calendar startedMonth = Calendar.getInstance();
+		startedMonth.setTime(date);
 
 		Calendar currentMonth = Calendar.getInstance();
-		while (started.before(currentMonth) || started.equals(currentMonth)) {
+		while (!startedMonth.after(currentMonth)) {
 			budget += this.budget;
 			currentMonth.add(Calendar.MONTH, -1);
 		}
@@ -74,23 +74,24 @@ public class Category extends UniqueEntity implements Comparable<Category> {
 		return budget;
 	}
 
-	public int calcBudget() {
+	public int calculateBudget() {
 		Calendar lastMonth = DateUtils.createFirstDayOfMonth();
 		lastMonth.add(Calendar.MILLISECOND, -1);
-		return calcGrossBudget() - summarizeExpenses(null, lastMonth.getTime());
+		return calculateGrossBudget() - summarizeExpenses(null, lastMonth.getTime());
 	}
 
 	public List<Expense> findExpenses(Date start, Date end) {
-		List<Expense> list = new ArrayList<Expense>(expenses.size());
-		for (Expense expense : expenses) {
+		List<Expense> expenses = new ArrayList<Expense>(this.expenses.size());
+		for (Expense expense : this.expenses) {
 			if (DateUtils.isBetween(start, expense.date, end)) {
-				list.add(expense);
+				expenses.add(expense);
 			}
 		}
-		return list;
+		return expenses;
 	}
 
 	public void add(Expense expense) {
+		//TreeSet is buggy with db4o
 		if (!expenses.contains(expense)) {
 			expenses.add(expense);
 			Collections.sort(expenses);

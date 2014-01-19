@@ -45,7 +45,7 @@ import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.db.Database;
 
 @RunWith(RobolectricTestRunner.class)
-public class CategoryListActivityWith3CategoriesTest {
+public class CategoryListActivity_With3Categories_Test {
 
 	private CategoryListActivity activity;
 

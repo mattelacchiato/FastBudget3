@@ -15,6 +15,8 @@ import de.splitstudio.utils.DateUtils;
 
 public class CategoryTest {
 
+	private static final int ANY_BUDGET = 10000;
+
 	private static final String ANY_NAME = "Category name";
 
 	private static final Date ANY_DATE = DateUtils.createFirstDayOfMonth().getTime();
@@ -25,12 +27,15 @@ public class CategoryTest {
 		Date end = dayAndSecOfMonth(32, 0);
 
 		Category category = new Category(ANY_NAME, 0, new Date());
+
 		//out of range
 		category.add(new Expense(2, dayAndSecOfMonth(-2, 0), null));
+
 		//in range
 		category.add(new Expense(-10, dayAndSecOfMonth(1, 1), null));
 		category.add(new Expense(2, dayAndSecOfMonth(2, 0), null));
 		category.add(new Expense(40, dayAndSecOfMonth(31, 0), null));
+
 		//out of range
 		category.add(new Expense(40, dayAndSecOfMonth(32, 1), null));
 
@@ -73,62 +78,62 @@ public class CategoryTest {
 	}
 
 	@Test
-	public void calcGrossBudget_startetThisMonth_oneMonthBudget() {
-		int budget = 10000;
+	public void calcGrossBudget_startetThisMonth_budgetForOneMonth() {
+		int budget = ANY_BUDGET;
 		Category category = new Category(ANY_NAME, budget, DateUtils.createFirstDayOfMonth().getTime());
-		assertThat(category.calcGrossBudget(), is(budget));
+		assertThat(category.calculateGrossBudget(), is(budget));
 	}
 
 	@Test
-	public void calcGrossBudget_startetLastMonth_twoMonthBudget() {
-		int budget = 10000;
+	public void calcGrossBudget_startetLastMonth_budgetForTwoMonths() {
+		int budget = ANY_BUDGET;
 
 		Calendar cal = DateUtils.createFirstDayOfMonth();
 		cal.add(Calendar.MONTH, -1);
 		Date createdAt = cal.getTime();
 
 		Category category = new Category(ANY_NAME, budget, createdAt);
-		assertThat(category.calcGrossBudget(), is(budget * 2));
+		assertThat(category.calculateGrossBudget(), is(budget * 2));
 	}
 
 	@Test
 	public void calcGrossBudget_startetTenMonthsAgo_elevenMonthBudget() {
-		int budget = 10000;
+		int budget = ANY_BUDGET;
 
 		Calendar cal = DateUtils.createFirstDayOfMonth();
 		cal.add(Calendar.MONTH, -10);
 		Date createdAt = cal.getTime();
 
 		Category category = new Category(ANY_NAME, budget, createdAt);
-		assertThat(category.calcGrossBudget(), is(budget * 11));
+		assertThat(category.calculateGrossBudget(), is(budget * 11));
 	}
 
 	@Test
-	public void calcBudget_thisMonth_nothingSpent() {
-		int budget = 10000;
+	public void calcBudget_currentMonth_nothingSpent_budget() {
+		int budget = ANY_BUDGET;
 
 		Calendar cal = DateUtils.createFirstDayOfMonth();
 		Date createdAt = cal.getTime();
 
 		Category category = new Category(ANY_NAME, budget, createdAt);
-		assertThat(category.calcBudget(), is(budget));
+		assertThat(category.calculateBudget(), is(budget));
 	}
 
 	@Test
-	public void calcBudget_thisMonth_spentThisMonthSth() {
-		int budget = 10000;
+	public void calcBudget_currentMonth_spentThisMonthSomething_budget() {
+		int budget = ANY_BUDGET;
 
 		Calendar cal = DateUtils.createFirstDayOfMonth();
 		Date createdAt = cal.getTime();
 
 		Category category = new Category(ANY_NAME, budget, createdAt);
 		category.add(new Expense(20, new Date(), null));
-		assertThat(category.calcBudget(), is(budget));
+		assertThat(category.calculateBudget(), is(budget));
 	}
 
 	@Test
-	public void calcBudget_lastMonth_spentThisMonthSth() {
-		int budget = 10000;
+	public void calcBudget_lastMonth_spentThisMonthSomething_budgetTwice() {
+		int budget = ANY_BUDGET;
 
 		Calendar cal = DateUtils.createFirstDayOfMonth();
 		cal.add(Calendar.MONTH, -1);
@@ -137,12 +142,12 @@ public class CategoryTest {
 		Category category = new Category(ANY_NAME, budget, createdAt);
 		category.add(new Expense(20, new Date(), null));
 
-		assertThat(category.calcBudget(), is(budget * 2));
+		assertThat(category.calculateBudget(), is(budget * 2));
 	}
 
 	@Test
-	public void calcBudget_lastMonth_spentLastMonthSth() {
-		int budget = 10000;
+	public void calcBudget_lastMonth_spentLastMonthSomething_budgetTwiceWithoutLastMonthExpenses() {
+		int budget = ANY_BUDGET;
 
 		Calendar cal = DateUtils.createFirstDayOfMonth();
 		cal.add(Calendar.MONTH, -1);
@@ -154,7 +159,7 @@ public class CategoryTest {
 		//spent sth. this month, don't count it
 		category.add(new Expense(20, new Date(), null));
 
-		assertThat(category.calcBudget(), is(budget * 2 - 20));
+		assertThat(category.calculateBudget(), is(budget * 2 - 20));
 	}
 
 	@Test
@@ -207,13 +212,18 @@ public class CategoryTest {
 	@Test
 	public void addExpense_resortList() throws Exception {
 		Category category = new Category();
+
+		//first, add older expense
 		Expense older = new Expense(ANY_DATE);
 		category.add(older);
+
+		//secon, add newer expense
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(ANY_DATE);
 		cal.add(Calendar.DAY_OF_YEAR, 1);
 		Expense newer = new Expense(cal.getTime());
 		category.add(newer);
+
 		assertThat(category.getExpenses().get(0), is(newer));
 		assertThat(category.getExpenses().get(1), is(older));
 	}

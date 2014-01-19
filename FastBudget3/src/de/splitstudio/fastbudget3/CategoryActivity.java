@@ -1,11 +1,8 @@
 package de.splitstudio.fastbudget3;
 
-import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.Duplicate;
-import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.Ok;
+import static de.splitstudio.fastbudget3.db.CategoryValidator.CategoryValidationResult.Duplicate;
+import static de.splitstudio.fastbudget3.db.CategoryValidator.CategoryValidationResult.Ok;
 import static de.splitstudio.fastbudget3.enums.Extras.CategoryName;
-
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
+import de.splitstudio.fastbudget3.db.CategoryValidator;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.NumberUtils;
@@ -31,16 +29,16 @@ public class CategoryActivity extends Activity {
 
 	private Category category;
 
-	private boolean updateCategory = true;
+	private boolean updateCategory;
 
 	private CategoryDao categoryDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		categoryDao = new CategoryDao(Database.getInstance(this));
-
 		setContentView(R.layout.category_activity);
+
+		categoryDao = new CategoryDao(Database.getInstance(this));
 
 		datePicker = (DatePickerButtons) findViewById(R.id.date_picker);
 		nameEdit = (EditText) findViewById(R.id.name);
@@ -58,9 +56,7 @@ public class CategoryActivity extends Activity {
 			category = categoryDao.findByName(name);
 			nameEdit.setText(category.name);
 			calculator.setAmount(NumberUtils.formatAsDecimal(category.budget));
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(category.date);
-			datePicker.setAndUpdateDate(calendar);
+			datePicker.setAndUpdateDate(category.date);
 		} else {
 			setTitle(R.string.create_category);
 			category = new Category();
@@ -106,8 +102,8 @@ public class CategoryActivity extends Activity {
 
 	private boolean isValid(CategoryValidator validator) {
 		boolean valid = validator.getResult() == Ok;
-		boolean duplicateNameAndUpdating = validator.getResult() == Duplicate && updateCategory;
-		return valid || duplicateNameAndUpdating;
+		boolean duplicateNameButIsUpdating = validator.getResult() == Duplicate && updateCategory;
+		return valid || duplicateNameButIsUpdating;
 	}
 
 	public void cancel() {

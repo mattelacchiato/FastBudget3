@@ -31,21 +31,16 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		loadListView();
 	}
 
 	@Override
-	public Runnable syncAdapter() {
+	public Runnable updateAdapter() {
 		return new Runnable() {
 			@Override
 			public void run() {
 				initialActivity.updateView();
 			}
 		};
-	}
-
-	private void loadListView() {
-		onData(is(Object.class));
 	}
 
 	public void testCreateACategory() throws Throwable {

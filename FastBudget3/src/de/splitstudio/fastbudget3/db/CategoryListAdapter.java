@@ -26,8 +26,7 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 	@Override
 	public void bindView(View view, Category category) {
 		int expensesCent = category.summarizeExpenses(start, null);
-		int budgetCent = category.calcBudget();
-		//TODO (Jan 4, 2014): Frauke fragen, ob nicht lieber der Rest angezeigt werden soll, anstatt das Budget
+		int budgetCent = category.calculateBudget();
 		String budgetString = formatAsCurrency(budgetCent);
 		String expensesString = formatAsCurrency(expensesCent);
 
@@ -35,9 +34,11 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 		progressBar.setMax(budgetCent);
 		progressBar.setProgress(expensesCent);
 
+		view.findViewById(R.id.button_add_expense).setTag(category.name);
 		view.findViewById(R.id.button_list).setTag(category.name);
 		view.findViewById(R.id.button_edit).setTag(category.name);
 		view.findViewById(R.id.button_delete).setTag(category.name);
+
 		((TextView) view.findViewById(R.id.name)).setText(category.name);
 		((TextView) view.findViewById(R.id.category_budget)).setText(budgetString);
 		((TextView) view.findViewById(R.id.category_spent)).setText(expensesString);

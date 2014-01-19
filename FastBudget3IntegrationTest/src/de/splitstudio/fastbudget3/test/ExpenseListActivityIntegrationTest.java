@@ -36,12 +36,16 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
+		openExpenseList();
+	}
+
+	private void openExpenseList() {
 		onData(is(Category.class)).atPosition(0).perform(click());
 		onData(is(Category.class)).atPosition(0).onChildView(withId(R.id.button_list)).perform(click());
 	}
 
 	@Override
-	public Runnable syncAdapter() {
+	public Runnable updateAdapter() {
 		return new Runnable() {
 			@Override
 			public void run() {
@@ -85,7 +89,6 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 	//This test is too whiteboxed for integration test. But Robolectric doesn't allow to test date buttons...
 	public void test_editFirstItem_itemEditsVisible() throws Exception {
 		final String newDescription = "changed description";
-		//TODO (Jan 1, 2014): use joda everywhere!
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(firstExpenditureDate);
 		cal.add(Calendar.DAY_OF_MONTH, -1);
@@ -121,7 +124,7 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 			public boolean match(Expense expense) {
 				return expense.description.equals(newDescription);
 			}
-		}).get(0);
+		}).next();
 
 		assertThat(expense.amount, is(9900));
 		assertThat(expense.description, is(newDescription));

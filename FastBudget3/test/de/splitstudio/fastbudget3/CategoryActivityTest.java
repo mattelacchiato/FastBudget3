@@ -165,7 +165,7 @@ public class CategoryActivityTest {
 	}
 
 	@Test
-	public void cancel_resultIsCancelled() {
+	public void cancel_resultEqualsCancelled() {
 		clickMenuItem(R.id.cancel);
 		assertThat(shadowOf(categoryActivity).getResultCode(), is(Activity.RESULT_CANCELED));
 	}

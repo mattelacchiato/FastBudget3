@@ -21,20 +21,23 @@ public class ExpenseDao extends GenericBaseDao<Expense> {
 		return sort(countDescriptions());
 	}
 
-	private List<String> sort(final Map<String, Integer> count) {
-		List<String> sorted = new ArrayList<String>();
-		sorted.addAll(count.keySet());
-		Collections.sort(sorted, new Comparator<String>() {
+	/**
+	 * sorted first by count and then alphabetically.
+	 */
+	private List<String> sort(final Map<String, Integer> descriptionsCount) {
+		List<String> sortedDescriptions = new ArrayList<String>();
+		sortedDescriptions.addAll(descriptionsCount.keySet());
+		Collections.sort(sortedDescriptions, new Comparator<String>() {
 			@Override
-			public int compare(String lhs, String rhs) {
-				int compareByCount = count.get(rhs).compareTo(count.get(lhs));
+			public int compare(String left, String right) {
+				int compareByCount = descriptionsCount.get(right).compareTo(descriptionsCount.get(left));
 				if (compareByCount != 0) {
 					return compareByCount;
 				}
-				return lhs.compareTo(rhs);
+				return left.compareTo(right);
 			}
 		});
-		return sorted;
+		return sortedDescriptions;
 	}
 
 	Map<String, Integer> countDescriptions() {

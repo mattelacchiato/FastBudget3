@@ -34,7 +34,7 @@ import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.db.Database;
 
 @RunWith(RobolectricTestRunner.class)
-public class ExpenseListActivityWith3ItemsTest {
+public class ExpenseListActivity_With3Items_Test {
 
 	private static final String CATEGORY_NAME = "foobar";
 

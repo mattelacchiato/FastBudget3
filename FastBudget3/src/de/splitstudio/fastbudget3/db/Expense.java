@@ -5,6 +5,7 @@ import java.util.Date;
 import de.splitstudio.utils.db.UniqueEntity;
 
 public class Expense extends UniqueEntity implements Comparable<Expense> {
+
 	public int amount;
 	public Date date;
 	public String description;
@@ -21,17 +22,12 @@ public class Expense extends UniqueEntity implements Comparable<Expense> {
 	}
 
 	@Override
-	public int compareTo(Expense another) {
-		//when loaded from db, it could be unset...
-		//TODO (Jan 14, 2014): really?
-		if (date == null || another.date == null) {
-			return -1;
-		}
-		int dateComparison = another.date.compareTo(date);
+	public int compareTo(Expense other) {
+		int dateComparison = other.date.compareTo(date);
 		if (dateComparison != 0) {
 			return dateComparison;
 		}
-		return equals(another) ? 0 : 1;
+		return equals(other) ? 0 : 1;
 	}
 
 }

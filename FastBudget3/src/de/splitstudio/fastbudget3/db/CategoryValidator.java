@@ -1,15 +1,16 @@
-package de.splitstudio.fastbudget3;
+package de.splitstudio.fastbudget3.db;
 
-import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.Duplicate;
-import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.Empty;
-import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.InvalidNumber;
-import static de.splitstudio.fastbudget3.CategoryValidator.CategoryValidationResult.Ok;
+import static de.splitstudio.fastbudget3.db.CategoryValidator.CategoryValidationResult.Duplicate;
+import static de.splitstudio.fastbudget3.db.CategoryValidator.CategoryValidationResult.Empty;
+import static de.splitstudio.fastbudget3.db.CategoryValidator.CategoryValidationResult.InvalidNumber;
+import static de.splitstudio.fastbudget3.db.CategoryValidator.CategoryValidationResult.Ok;
 
 import java.text.ParseException;
 
-import de.splitstudio.fastbudget3.db.CategoryDao;
+import de.splitstudio.fastbudget3.R;
 import de.splitstudio.utils.NumberUtils;
 
+//TODO (Jan 18, 2014): find a more concise way to validate user inputs
 public class CategoryValidator {
 
 	public enum CategoryValidationResult {

@@ -34,7 +34,7 @@ import de.splitstudio.utils.view.Calculator;
 import de.splitstudio.utils.view.DatePickerButtons;
 
 @RunWith(RobolectricTestRunner.class)
-public class CategoryActivityWithIntentTest {
+public class CategoryActivity_WithIntent_Test {
 
 	private static final Date ANY_DATE = new Date();
 	private static final String ANY_NAME = "category name";
@@ -83,7 +83,7 @@ public class CategoryActivityWithIntentTest {
 	}
 
 	@Test
-	public void changeName_updatesCategory() {
+	public void changeName_persisted() {
 		String newName = "new category name";
 
 		fillName(newName);
@@ -99,7 +99,7 @@ public class CategoryActivityWithIntentTest {
 	}
 
 	@Test
-	public void changeBudget_updatesCategory() {
+	public void changeBudget_persisted() {
 		fillBudget("2.33");
 		clickMenuItem(R.id.save);
 
@@ -111,7 +111,7 @@ public class CategoryActivityWithIntentTest {
 	}
 
 	@Test
-	public void titleIsSet() throws Exception {
+	public void onCreate_titleIsSet() throws Exception {
 		String expectedTitle = categoryActivity.getString(R.string.edit);
 		assertThat(categoryActivity.getTitle().toString(), is(expectedTitle));
 	}

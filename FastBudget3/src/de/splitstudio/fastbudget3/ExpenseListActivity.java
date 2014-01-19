@@ -68,9 +68,10 @@ public class ExpenseListActivity extends ListActivity {
 		start = DateUtils.createFirstDayOfMonth();
 		end = DateUtils.createLastDayOfMonth();
 		ObjectContainer db = Database.getInstance(this);
-		categoryDao = new CategoryDao(db);
 		expenseDao = new ExpenseDao(db);
+		categoryDao = new CategoryDao(db);
 		category = categoryDao.findByName(categoryName);
+
 		List<Expense> expenses = category.findExpenses(start.getTime(), end.getTime());
 		adapter = new ExpenseListAdapter(LayoutInflater.from(this), expenses);
 		setListAdapter(new SlideExpandableListAdapter(adapter, R.id.context_switcher, R.id.context_row));
@@ -83,13 +84,19 @@ public class ExpenseListActivity extends ListActivity {
 		if (resultCode == RESULT_OK) {
 			update.run();
 		}
-		hideAllContexts();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		hideAllContextRows();
 	}
 
 	public void pickDate(View view) {
-		if (view.getId() == R.id.date_start) {
+		switch (view.getId()) {
+		case R.id.date_start:
 			DialogHelper.pickDate(this, start, update);
-		} else if (view.getId() == R.id.date_end) {
+		case R.id.date_end:
 			DialogHelper.pickDate(this, end, update);
 		}
 	}
@@ -105,14 +112,15 @@ public class ExpenseListActivity extends ListActivity {
 		String uuid = view.getTag().toString();
 		Expense expense = expenseDao.findByUuid(uuid);
 		if (expense == null) {
-			throw new IllegalStateException("Could not find Expense for uuid " + uuid);
+			Log.e(TAG, "Could not find Expense for UUID " + uuid);
+		} else {
+			expenseDao.delete(expense);
+			category.remove(expense);
 		}
-		expenseDao.delete(expense);
-		category.remove(expense);
 		update.run();
 	}
 
-	private void hideAllContexts() {
+	private void hideAllContextRows() {
 		((SlideExpandableListAdapter) getListAdapter()).collapseLastOpen();
 	}
 }

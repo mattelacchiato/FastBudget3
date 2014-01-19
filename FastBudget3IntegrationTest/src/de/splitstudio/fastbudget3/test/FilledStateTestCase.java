@@ -1,6 +1,5 @@
 package de.splitstudio.fastbudget3.test;
 
-import static com.google.android.apps.common.testing.ui.espresso.Espresso.onData;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.assertThat;
 import static de.splitstudio.utils.DateUtils.createFirstDayOfYear;
 import static java.util.Calendar.DAY_OF_MONTH;
@@ -38,12 +37,7 @@ public abstract class FilledStateTestCase<T extends ListActivity> extends Activi
 		super.setUp();
 		initialActivity = getActivity();
 		fillData();
-		runSyncAdapter();
-		refreshListView();
-	}
-
-	private void refreshListView() {
-		onData(is(Object.class));
+		runUpdateAdapter();
 	}
 
 	private void fillData() {
@@ -64,12 +58,12 @@ public abstract class FilledStateTestCase<T extends ListActivity> extends Activi
 		categoryDao.store(new Category("third category", 30, categoryDate));
 	}
 
-	private void runSyncAdapter() {
-		getInstrumentation().runOnMainSync(syncAdapter());
+	private void runUpdateAdapter() {
+		getInstrumentation().runOnMainSync(updateAdapter());
 		assertThat(initialActivity.getListAdapter().getCount(), is(3));
 	}
 
-	protected abstract Runnable syncAdapter();
+	protected abstract Runnable updateAdapter();
 
 	public void assertTitleIs(final int titleId) throws Throwable {
 		runTestOnUiThread(new Runnable() {
