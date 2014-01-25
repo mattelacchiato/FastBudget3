@@ -14,7 +14,6 @@
     <string name="error_name_duplicated">This category name is already given</string>
     <string name="error_name_empty">Please enter a name for this category</string>
     <string name="expenses">Expenses</string>
-    <string name="menu_settings">Settings</string>
     <string name="move">Move</string>
     <string name="hint_category_name">Category Name</string>
     <string name="hint_category_date">When should this category have started?</string>
@@ -23,7 +22,7 @@
     <string name="save">Save</string>
     <string name="send_file">Send File</string>
     <string name="success">Success!</string>
-    <string name="title_category_chooser">Choose your Category:</string>
+    <string name="title_category_chooser">Choose your new Category:</string>
     <string name="title_expense">Expense for %1$s</string>
     <string name="warning">Warning</string>
     <string name="warning_backup_created">Backup successfully created at %s. Do you want to send the file (e.g. per Email, to Dropbox, ...)?</string>
