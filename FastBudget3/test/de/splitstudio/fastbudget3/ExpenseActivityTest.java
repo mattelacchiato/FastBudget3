@@ -164,6 +164,11 @@ public class ExpenseActivityTest {
 		assertThat(activityWithoutIntent.isFinishing(), is(true));
 	}
 
+	@Test
+	public void itHasNoTextInAmount() throws Exception {
+		assertThat(((EditText) activity.findViewById(R.id.calculator_amount)).getText().toString(), is(""));
+	}
+
 	private void assertToastIsShown(int stringId) {
 		assertThat(ShadowToast.getTextOfLatestToast(), is(notNullValue()));
 		assertThat(ShadowToast.getTextOfLatestToast(), is(activity.getString(stringId)));

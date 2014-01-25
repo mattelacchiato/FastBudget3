@@ -106,14 +106,17 @@ public class ExpenseActivity extends Activity {
 	}
 
 	private Expense loadExpense() {
-		Bundle extras = getIntent().getExtras();
-		if (extras.containsKey(Extras.Id.name())) {
-			String uuid = extras.getString(Extras.Id.name());
+		if (isUpdating()) {
+			String uuid = getIntent().getExtras().getString(Extras.Id.name());
 			Log.d(TAG, "fill expense by loading its values from db with uuid " + uuid);
 			return expenseDao.findByUuid(uuid);
 		}
 		Log.d(TAG, "no uuid given, will create a new expense");
 		return new Expense(new Date());
+	}
+
+	private boolean isUpdating() {
+		return getIntent().getExtras().containsKey(Extras.Id.name());
 	}
 
 	private void fillView() {
@@ -122,8 +125,10 @@ public class ExpenseActivity extends Activity {
 		descriptionTextView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, expenseDao
 				.findAllDescriptions()));
 
-		((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
 		((DatePickerButtons) findViewById(R.id.date_picker)).setAndUpdateDate(expense.date);
+		if (isUpdating()) {
+			((TextView) findViewById(R.id.calculator_amount)).setText(formatAsDecimal(expense.amount));
+		}
 	}
 
 }
