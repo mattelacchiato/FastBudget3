@@ -107,7 +107,7 @@ public class ExpenseActivity extends Activity {
 
 	private Expense loadExpense() {
 		if (isUpdating()) {
-			String uuid = getIntent().getExtras().getString(Extras.Id.name());
+			String uuid = getIntent().getExtras().getString(Extras.Uuid.name());
 			Log.d(TAG, "fill expense by loading its values from db with uuid " + uuid);
 			return expenseDao.findByUuid(uuid);
 		}
@@ -116,7 +116,7 @@ public class ExpenseActivity extends Activity {
 	}
 
 	private boolean isUpdating() {
-		return getIntent().getExtras().containsKey(Extras.Id.name());
+		return getIntent().getExtras().containsKey(Extras.Uuid.name());
 	}
 
 	private void fillView() {

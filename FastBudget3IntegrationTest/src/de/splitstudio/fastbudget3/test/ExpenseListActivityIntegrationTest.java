@@ -61,29 +61,29 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 	}
 
 	public void testClickOnItemShowsContextMenuAndHidesOldOne() {
-		expenditureAt(0).perform(click());
+		expenseAt(0).perform(click());
 		contextMenuAt(0).check(matches(isDisplayed()));
 		contextMenuAt(1).check(matches(not(isDisplayed())));
 		contextMenuAt(2).check(matches(not(isDisplayed())));
 
-		expenditureAt(2).perform(click());
+		expenseAt(2).perform(click());
 		contextMenuAt(0).check(matches(not(isDisplayed())));
 		contextMenuAt(1).check(matches(not(isDisplayed())));
 		contextMenuAt(2).check(matches(isDisplayed()));
 	}
 
 	public void test_openExpenseActivity_goBack_allContextsAreGone() {
-		expenditureAt(0).perform(click());
-		expenditureAt(0).onChildView(withId(R.id.button_edit)).perform(click());
+		expenseAt(0).perform(click());
+		expenseAt(0).onChildView(withId(R.id.button_edit)).perform(click());
 		onView(withId(R.id.cancel)).perform(click());
 
 		contextMenuAt(0).check(matches(not(isDisplayed())));
 	}
 
 	public void test_deleteFirstItem_itemNotShown() {
-		expenditureAt(0).perform(click());
-		expenditureAt(0).onChildView(withId(R.id.button_delete)).perform(click());
-		expenditureAt(0).onChildView(withId(R.id.description)).check(matches(not(withText("first expenditure"))));
+		expenseAt(0).perform(click());
+		expenseAt(0).onChildView(withId(R.id.button_delete)).perform(click());
+		expenseAt(0).onChildView(withId(R.id.description)).check(matches(not(withText("first expenditure"))));
 	}
 
 	//This test is too whiteboxed for integration test. But Robolectric doesn't allow to test date buttons...
@@ -94,9 +94,9 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 		cal.add(Calendar.DAY_OF_MONTH, -1);
 		Date newDate = cal.getTime();
 
-		expenditureAt(0).onChildView(withId(R.id.description)).check(matches(withText("first expenditure")));
-		expenditureAt(0).perform(click());
-		expenditureAt(0).onChildView(withId(R.id.button_edit)).perform(click());
+		expenseAt(0).onChildView(withId(R.id.description)).check(matches(withText("first expenditure")));
+		expenseAt(0).perform(click());
+		expenseAt(0).onChildView(withId(R.id.button_edit)).perform(click());
 
 		onView(withId(R.id.date_minus)).perform(click());
 		onView(withId(R.id.description)).perform(clearText()).perform(typeText(newDescription));
@@ -109,11 +109,22 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 
 		onView(withId(R.id.save)).perform(click());
 
-		expenditureAt(0).onChildView(withId(R.id.description)).check(matches(withText(newDescription)));
-		expenditureAt(0).onChildView(withId(R.id.amount)).check(matches(withText("$99.00")));
-		expenditureAt(0).onChildView(withId(R.id.date_field)).check(matches(withText(formatAsShortDate(newDate))));
+		expenseAt(0).onChildView(withId(R.id.description)).check(matches(withText(newDescription)));
+		expenseAt(0).onChildView(withId(R.id.amount)).check(matches(withText("$99.00")));
+		expenseAt(0).onChildView(withId(R.id.date_field)).check(matches(withText(formatAsShortDate(newDate))));
 
 		assertExpensePersisted(newDescription, newDate);
+	}
+
+	public void test_clickMoveChooser_movesExpense() {
+		expenseAt(0).onChildView(withId(R.id.description)).check(matches(withText("first expenditure")));
+		expenseAt(0).perform(click());
+		contextMenuAt(0).onChildView(withText(R.string.move)).perform(click());
+
+		onView(withText(R.string.title_category_chooser)).check(matches(isDisplayed()));
+
+		onView(withText("second category")).perform(click());
+		expenseAt(0).onChildView(withId(R.id.description)).check(matches(not(withText("first expenditure"))));
 	}
 
 	@SuppressWarnings("serial")
@@ -132,10 +143,10 @@ public class ExpenseListActivityIntegrationTest extends FilledStateTestCase<Cate
 	}
 
 	private DataInteraction contextMenuAt(int position) {
-		return expenditureAt(position).onChildView(withId(R.id.context_row));
+		return expenseAt(position).onChildView(withId(R.id.context_row));
 	}
 
-	private DataInteraction expenditureAt(int position) {
+	private DataInteraction expenseAt(int position) {
 		return onData(is(Expense.class)).atPosition(position);
 	}
 

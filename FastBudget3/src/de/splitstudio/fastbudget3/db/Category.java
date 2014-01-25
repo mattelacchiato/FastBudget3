@@ -90,12 +90,13 @@ public class Category extends UniqueEntity implements Comparable<Category> {
 		return expenses;
 	}
 
-	public void add(Expense expense) {
+	public Category add(Expense expense) {
 		//TreeSet is buggy with db4o
 		if (!expenses.contains(expense)) {
 			expenses.add(expense);
 			Collections.sort(expenses);
 		}
+		return this;
 	}
 
 	public List<Expense> getExpenses() {

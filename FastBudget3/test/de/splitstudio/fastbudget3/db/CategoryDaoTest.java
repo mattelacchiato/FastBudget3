@@ -1,5 +1,6 @@
 package de.splitstudio.fastbudget3.db;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -36,6 +37,11 @@ public class CategoryDaoTest {
 
 	@Before
 	public void setUp() throws Exception {
+		openDb();
+		Database.clear(db);
+	}
+
+	private void openDb() {
 		db = Db4oEmbedded.openFile(Database.createConfig(), DB_FILE);
 		categoryDao = new CategoryDao(db);
 	}
@@ -81,12 +87,44 @@ public class CategoryDaoTest {
 		Expense expense = new Expense(ANY_DATE);
 		Category category = new Category(ANY_NAME, ANY_AMOUNT, ANY_DATE);
 		category.add(expense);
-		categoryDao.store(category);
 
+		categoryDao.store(category);
 		closeDb();
-		setUp();
+		openDb();
 
 		Expense loadedExpense = categoryDao.findByName(ANY_NAME).getExpenses().iterator().next();
 		assertThat(db.ext().isActive(loadedExpense), is(true));
+	}
+
+	@Test
+	public void moveExpense_oldCategory_hasNoExpenses() throws Exception {
+		String categoryName = ANY_NAME;
+		String categoryName2 = ANY_NAME + "2";
+
+		Expense expense = new Expense(ANY_DATE);
+		categoryDao.store(new Category(categoryName, ANY_AMOUNT, ANY_DATE).add(expense));
+		categoryDao.store(new Category(categoryName2, ANY_AMOUNT, ANY_DATE));
+
+		categoryDao.moveExpense(expense.uuid, categoryName, categoryName2);
+		closeDb();
+		openDb();
+
+		assertThat(categoryDao.findByName(categoryName).getExpenses()).isEmpty();
+	}
+
+	@Test
+	public void moveExpense_newCategory_hasExpense() throws Exception {
+		String categoryName = ANY_NAME;
+		String categoryName2 = ANY_NAME + "2";
+
+		Expense expense = new Expense(ANY_DATE);
+		categoryDao.store(new Category(categoryName, ANY_AMOUNT, ANY_DATE).add(expense));
+		categoryDao.store(new Category(categoryName2, ANY_AMOUNT, ANY_DATE));
+
+		categoryDao.moveExpense(expense.uuid, categoryName, categoryName2);
+		closeDb();
+		openDb();
+
+		assertThat(categoryDao.findByName(categoryName2).getExpenses()).contains(expense);
 	}
 }

@@ -64,7 +64,7 @@ public class ExpenseActivity_Edit_Test {
 
 		Intent intent = new Intent(categoryListActivity, ExpenseActivity.class);
 		intent.putExtra(Extras.CategoryName.name(), CATEGORY_NAME);
-		intent.putExtra(Extras.Id.name(), expense.uuid);
+		intent.putExtra(Extras.Uuid.name(), expense.uuid);
 		ActivityController<ExpenseActivity> activityController = buildActivity(ExpenseActivity.class)
 				.withIntent(intent);
 		activity = activityController.get();

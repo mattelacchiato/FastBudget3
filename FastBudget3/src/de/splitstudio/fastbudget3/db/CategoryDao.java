@@ -31,4 +31,16 @@ public class CategoryDao extends GenericBaseDao<Category> {
 		delete(findByName(name));
 	}
 
+	public void moveExpense(String expenseUuid, String oldCategoryName, String newCategoryName) {
+		Category oldCategory = findByName(oldCategoryName);
+		Category newCategory = findByName(newCategoryName);
+		Expense expense = new ExpenseDao(db).findByUuid(expenseUuid);
+
+		oldCategory.getExpenses().remove(expense);
+		newCategory.add(expense);
+
+		store(oldCategory);
+		store(newCategory);
+	}
+
 }

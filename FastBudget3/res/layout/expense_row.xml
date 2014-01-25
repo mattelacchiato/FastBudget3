@@ -57,6 +57,13 @@
             android:text="@string/edit" />
 
         <Button
+            android:id="@+id/button_move"
+            style="@style/contextButton"
+            android:drawableTop="@drawable/ic_move"
+            android:onClick="moveExpense"
+            android:text="@string/move" />
+
+        <Button
             android:id="@+id/button_delete"
             style="@style/contextButton"
             android:drawableTop="@drawable/ic_delete"

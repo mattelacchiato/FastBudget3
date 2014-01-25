@@ -1,6 +1,7 @@
 package de.splitstudio.fastbudget3;
 
 import static java.util.Calendar.DAY_OF_MONTH;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -125,6 +126,11 @@ public class ExpenseListActivity_With3Items_Test {
 
 		Category persistedCategory = categoryDao.findByName(CATEGORY_NAME);
 		assertThat(persistedCategory.getExpenses(), not(hasItem(firstExpense)));
+	}
+
+	@Test
+	public void itHasAMoveButton() throws Exception {
+		assertThat(getRow(0).findViewById(R.id.button_move)).isNotNull();
 	}
 
 	private View getRow(int rowIndex) {
