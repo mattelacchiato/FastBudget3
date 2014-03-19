@@ -22,6 +22,7 @@ import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
+import de.splitstudio.fastbudget3.db.FastBudgetMigration;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.fastbudget3.enums.RequestCode;
 import de.splitstudio.utils.DateUtils;
@@ -40,7 +41,8 @@ public class CategoryListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.category_list_activity);
-		categoryDao = new CategoryDao(Database.getInstance(this));
+
+		categoryDao = new CategoryDao(Database.getInstance(new FastBudgetMigration(this)));
 
 		List<Category> categories = categoryDao.findAll(Category.class);
 		listAdapter = new CategoryListAdapter(getLayoutInflater(), categories);

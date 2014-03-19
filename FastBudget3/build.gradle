@@ -8,7 +8,7 @@ dependencies {
 
 android {
 	compileSdkVersion 19
-	buildToolsVersion "19.0.1"
+	buildToolsVersion "19.0.3"
 
 	sourceSets {
 		main {
@@ -54,5 +54,11 @@ android {
 			proguardFile file('proguard-project.txt')
 		}
 	}
+	
+	packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+	
 }
 

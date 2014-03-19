@@ -33,6 +33,7 @@ public class CategoryDaoTest {
 	private static final String ANY_NAME = "foo";
 
 	private CategoryDao categoryDao;
+	private ExpenseDao expenseDao;
 	private ObjectContainer db;
 
 	@Before
@@ -44,6 +45,12 @@ public class CategoryDaoTest {
 	private void openDb() {
 		db = Db4oEmbedded.openFile(Database.createConfig(), DB_FILE);
 		categoryDao = new CategoryDao(db);
+		expenseDao = new ExpenseDao(db);
+	}
+
+	private void closeAndOpenDb() {
+		closeDb();
+		openDb();
 	}
 
 	@After
@@ -89,8 +96,7 @@ public class CategoryDaoTest {
 		category.add(expense);
 
 		categoryDao.store(category);
-		closeDb();
-		openDb();
+		closeAndOpenDb();
 
 		Expense loadedExpense = categoryDao.findByName(ANY_NAME).getExpenses().iterator().next();
 		assertThat(db.ext().isActive(loadedExpense), is(true));
@@ -106,8 +112,7 @@ public class CategoryDaoTest {
 		categoryDao.store(new Category(categoryName2, ANY_AMOUNT, ANY_DATE));
 
 		categoryDao.moveExpense(expense.uuid, categoryName, categoryName2);
-		closeDb();
-		openDb();
+		closeAndOpenDb();
 
 		assertThat(categoryDao.findByName(categoryName).getExpenses()).isEmpty();
 	}
@@ -122,9 +127,38 @@ public class CategoryDaoTest {
 		categoryDao.store(new Category(categoryName2, ANY_AMOUNT, ANY_DATE));
 
 		categoryDao.moveExpense(expense.uuid, categoryName, categoryName2);
-		closeDb();
-		openDb();
+		closeAndOpenDb();
 
 		assertThat(categoryDao.findByName(categoryName2).getExpenses()).contains(expense);
+	}
+
+	@Test
+	public void deleteExpense_deletesExpense() throws Exception {
+		Expense expense = new Expense(ANY_DATE);
+		Category category = new Category(ANY_NAME);
+		category.add(expense);
+
+		categoryDao.store(category);
+		assertThat(expenseDao.findByUuid(expense.uuid)).isNotNull();
+
+		categoryDao.deleteExpense(category, expense);
+		closeAndOpenDb();
+
+		assertThat(expenseDao.findByUuid(expense.uuid)).isNull();
+	}
+
+	@Test
+	public void deleteExpense_deletesExpenseReferenceInCategory() throws Exception {
+		Expense expense = new Expense(ANY_DATE);
+		Category category = new Category(ANY_NAME);
+		category.add(expense);
+
+		categoryDao.store(category);
+		assertThat(categoryDao.findByName(ANY_NAME).getExpenses()).contains(expense);
+
+		categoryDao.deleteExpense(category, expense);
+		closeAndOpenDb();
+
+		assertThat(categoryDao.findByName(ANY_NAME).getExpenses()).doesNotContain(expense);
 	}
 }

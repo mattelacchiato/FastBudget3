@@ -8,8 +8,11 @@ import de.splitstudio.utils.db.GenericBaseDao;
 
 public class CategoryDao extends GenericBaseDao<Category> {
 
+	private final ExpenseDao expenseDao;
+
 	public CategoryDao(ObjectContainer db) {
 		super(db);
+		expenseDao = new ExpenseDao(db);
 	}
 
 	@SuppressWarnings("serial")
@@ -34,7 +37,7 @@ public class CategoryDao extends GenericBaseDao<Category> {
 	public void moveExpense(String expenseUuid, String oldCategoryName, String newCategoryName) {
 		Category oldCategory = findByName(oldCategoryName);
 		Category newCategory = findByName(newCategoryName);
-		Expense expense = new ExpenseDao(db).findByUuid(expenseUuid);
+		Expense expense = expenseDao.findByUuid(expenseUuid);
 
 		oldCategory.getExpenses().remove(expense);
 		newCategory.add(expense);
@@ -43,4 +46,9 @@ public class CategoryDao extends GenericBaseDao<Category> {
 		store(newCategory);
 	}
 
+	public void deleteExpense(Category category, Expense expense) {
+		category.remove(expense);
+		store(category);
+		expenseDao.delete(expense);
+	}
 }

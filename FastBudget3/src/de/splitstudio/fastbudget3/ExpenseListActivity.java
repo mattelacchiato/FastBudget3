@@ -132,8 +132,7 @@ public class ExpenseListActivity extends ListActivity implements CategoryListDia
 		if (expense == null) {
 			Log.e(TAG, "Could not find Expense for UUID " + uuid);
 		} else {
-			expenseDao.delete(expense);
-			category.remove(expense);
+			categoryDao.deleteExpense(category, expense);
 		}
 		update.run();
 	}

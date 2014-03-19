@@ -28,11 +28,12 @@ public class ExpenseDaoTest {
 	private static final Date ANY_DATE = new Date();
 
 	private ExpenseDao expenseDao;
+	private ObjectContainer db;
 
 	@Before
 	public void setUp() throws Exception {
 		String databaseFileName = File.createTempFile(UUID.randomUUID().toString(), "").getAbsolutePath();
-		ObjectContainer db = Db4oEmbedded.openFile(Database.createConfig(), databaseFileName);
+		db = Db4oEmbedded.openFile(Database.createConfig(), databaseFileName);
 		expenseDao = new ExpenseDao(db);
 		expenseDao.store(new Expense(ANY_AMOUNT, ANY_DATE, "d"));
 		expenseDao.store(new Expense(ANY_AMOUNT, ANY_DATE, "a"));
