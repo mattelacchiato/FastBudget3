@@ -1,5 +1,5 @@
 1.0.5:
 - Bugfix: You can now expand your expense list dates, again. 
 - Bugfix: Rounding issue. 
+- Bugfix: Category list now gets updated, after an expense was edited.
 - Optimazations for Android 4.4 (KitKat) 
-- 

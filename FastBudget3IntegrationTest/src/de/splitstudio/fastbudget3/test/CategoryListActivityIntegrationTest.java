@@ -3,6 +3,7 @@ package de.splitstudio.fastbudget3.test;
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onData;
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static com.google.android.apps.common.testing.ui.espresso.Espresso.pressBack;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.clearText;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.typeText;
@@ -19,6 +20,7 @@ import com.google.android.apps.common.testing.ui.espresso.DataInteraction;
 import de.splitstudio.fastbudget3.CategoryListActivity;
 import de.splitstudio.fastbudget3.R;
 import de.splitstudio.fastbudget3.db.Category;
+import de.splitstudio.fastbudget3.db.Expense;
 
 public class CategoryListActivityIntegrationTest extends FilledStateTestCase<CategoryListActivity> {
 
@@ -77,8 +79,8 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 	}
 
 	public void test_openCategoryActivity_goBack_allContextsAreGone() {
-		onData(is(Category.class)).atPosition(0).perform(click());
-		onData(is(Category.class)).atPosition(0).onChildView(withId(R.id.button_edit)).perform(click());
+		categoryAt(0).perform(click());
+		categoryAt(0).onChildView(withId(R.id.button_edit)).perform(click());
 		onView(withId(R.id.cancel)).perform(click());
 
 		contextMenuAt(0).check(matches(not(isDisplayed())));
@@ -87,13 +89,25 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 	public void test_editCategoryName_save_nameIsVisibleInList() {
 		String newName = "new name";
 
-		onData(is(Category.class)).atPosition(0).perform(click());
-		onData(is(Category.class)).atPosition(0).onChildView(withId(R.id.button_edit)).perform(click());
+		categoryAt(0).perform(click());
+		categoryAt(0).onChildView(withId(R.id.button_edit)).perform(click());
 
 		onView(withId(R.id.name)).perform(clearText()).perform(typeText(newName));
 		onView(withId(R.id.save)).perform(click());
 
-		onData(is(Category.class)).atPosition(0).onChildView(withId(R.id.name)).check(matches(withText(newName)));
+		categoryAt(0).onChildView(withId(R.id.name)).check(matches(withText(newName)));
+	}
+
+	public void test_deleteExpense_categoryListIsUpdated() {
+		categoryAt(0).onChildView(withId(R.id.category_spent)).check(matches(withText("$0.60")));
+		categoryAt(0).perform(click());
+		categoryAt(0).onChildView(withId(R.id.button_list)).perform(click());
+
+		onData(is(Expense.class)).atPosition(0).perform(click());
+		onData(is(Expense.class)).atPosition(0).onChildView(withId(R.id.button_delete)).perform(click());
+
+		pressBack();
+		categoryAt(0).onChildView(withId(R.id.category_spent)).check(matches(withText("$0.50")));
 	}
 
 	public void test_createBackup_openIntentChooser() {
@@ -105,6 +119,11 @@ public class CategoryListActivityIntegrationTest extends FilledStateTestCase<Cat
 	}
 
 	private DataInteraction contextMenuAt(int position) {
-		return onData(is(Category.class)).atPosition(position).onChildView(withId(R.id.context_row));
+		return categoryAt(position).onChildView(withId(R.id.context_row));
 	}
+
+	private DataInteraction categoryAt(int position) {
+		return onData(is(Category.class)).atPosition(position);
+	}
+
 }

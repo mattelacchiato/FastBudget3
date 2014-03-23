@@ -28,7 +28,6 @@ import com.db4o.ObjectContainer;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.Expense;
-import de.splitstudio.fastbudget3.db.ExpenseDao;
 import de.splitstudio.fastbudget3.enums.Extras;
 import de.splitstudio.utils.DateUtils;
 import de.splitstudio.utils.db.Database;
@@ -50,8 +49,6 @@ public class ExpenseActivityTest {
 
 	private CategoryDao categoryDao;
 
-	private ExpenseDao expenseDao;
-
 	@Before
 	public void setUp() {
 		Locale.setDefault(Locale.US);
@@ -64,7 +61,6 @@ public class ExpenseActivityTest {
 
 		ObjectContainer db = Database.getClearedInstance(activity);
 		categoryDao = new CategoryDao(db);
-		expenseDao = new ExpenseDao(db);
 		categoryDao.store(new Category("not me", ANY_BUDGET, ANY_DATE));
 		categoryDao.store(new Category(CATEGORY_NAME, ANY_BUDGET, ANY_DATE));
 		categoryDao.store(new Category("not me too", ANY_BUDGET, ANY_DATE));

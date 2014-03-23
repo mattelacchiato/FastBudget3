@@ -71,24 +71,9 @@ public class CategoryListActivity extends ListActivity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCodeOrdinal, int resultCode, Intent data) {
-		RequestCode requestCode = RequestCode.values()[requestCodeOrdinal];
-		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-			case EditCategory:
-			case CreateCategory:
-			case CreateExpense:
-				updateView();
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
+		updateView();
 		hideAllContextsRows();
 	}
 
