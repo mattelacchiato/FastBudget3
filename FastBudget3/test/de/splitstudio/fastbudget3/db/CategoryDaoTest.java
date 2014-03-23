@@ -20,7 +20,7 @@ import de.splitstudio.utils.db.Database;
 
 public class CategoryDaoTest {
 
-	private static final String DB_FILE;
+	public static final String DB_FILE;
 	static {
 		try {
 			DB_FILE = File.createTempFile(UUID.randomUUID().toString(), "").getAbsolutePath();
