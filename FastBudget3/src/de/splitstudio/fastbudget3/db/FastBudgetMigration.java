@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.db4o.ObjectContainer;
 
-import de.splitstudio.utils.db.DbMigration;
+import de.splitstudio.utils.db.DatabaseMigration;
 
-public class FastBudgetMigration extends DbMigration {
+public class FastBudgetMigration extends DatabaseMigration {
 
 	public FastBudgetMigration(Context context) {
 		super(context);
