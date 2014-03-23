@@ -105,8 +105,10 @@ public class ExpenseListActivity extends ListActivity implements CategoryListDia
 		switch (view.getId()) {
 		case R.id.date_start:
 			DialogHelper.pickDate(this, start, update);
+			return;
 		case R.id.date_end:
 			DialogHelper.pickDate(this, end, update);
+			return;
 		}
 	}
 

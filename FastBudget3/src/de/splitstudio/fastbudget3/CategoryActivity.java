@@ -40,6 +40,7 @@ public class CategoryActivity extends Activity {
 
 		categoryDao = new CategoryDao(Database.getInstance(this));
 
+		//TODO (Mar 23, 2014): datePicker without day
 		datePicker = (DatePickerButtons) findViewById(R.id.date_picker);
 		nameEdit = (EditText) findViewById(R.id.name);
 		calculator = (Calculator) findViewById(R.id.calculator);
