@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="pickDate"
-            android:text="01.01.2014"
+            android:text="01.02.2014"
             tools:ignore="HardcodedText" />
 
         <!-- <ImageView -->
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="pickDate"
-            android:text="01.02.2014"
+            android:text="28.02.2014"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
