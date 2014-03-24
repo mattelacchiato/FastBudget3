@@ -1,5 +1,6 @@
 package de.splitstudio.fastbudget3;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.equalTo;
@@ -19,7 +20,6 @@ import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.tester.android.view.TestMenu;
 import org.robolectric.util.ActivityController;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -38,10 +38,11 @@ public class CategoryListActivity_WithoutCategories_Test {
 	private ObjectContainer db;
 	private Menu menu;
 	private CategoryDao categoryDao;
+	private ActivityController<CategoryListActivity> activityController;
 
 	@Before
 	public void setUp() {
-		ActivityController<CategoryListActivity> activityController = buildActivity(CategoryListActivity.class);
+		activityController = buildActivity(CategoryListActivity.class);
 		categoryList = activityController.get();
 		db = Database.getClearedInstance(categoryList);
 		categoryDao = new CategoryDao(db);
@@ -76,13 +77,12 @@ public class CategoryListActivity_WithoutCategories_Test {
 	}
 
 	@Test
-	public void listFooter_click_dbChange_resultRecieved_listUpdate() throws Exception {
+	public void createCategory_click_dbChange_resultRecieved_listUpdate() throws Exception {
 		categoryList.onOptionsItemSelected(menu.findItem(R.id.button_create_category));
 
 		String categoryName = "i was added";
 		categoryDao.store(new Category(categoryName, 123, new Date()));
-		shadowOf(categoryList)
-				.receiveResult(new Intent(categoryList, CategoryActivity.class), Activity.RESULT_OK, null);
+		activityController.resume();
 
 		TextView name1 = (TextView) findListView(R.id.name);
 		assertThat(name1, is(notNullValue()));
@@ -90,6 +90,7 @@ public class CategoryListActivity_WithoutCategories_Test {
 	}
 
 	private View findListView(int viewId) {
+		assertThat(categoryList.getListAdapter().getCount()).isGreaterThan(0);
 		return categoryList.getListAdapter().getView(0, null, null).findViewById(viewId);
 	}
 }
