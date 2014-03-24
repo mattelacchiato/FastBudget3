@@ -1,3 +1,6 @@
+1.0.6:
+- Bugfix: If this month's budget is negative, the progress bar is now filled.
+
 1.0.5:
 - Bugfix: You can now expand your expense list dates, again. 
 - Bugfix: Rounding issue. 
