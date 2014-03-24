@@ -31,8 +31,13 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 		String expensesString = formatAsCurrency(expensesCent);
 
 		ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.category_fill);
-		progressBar.setMax(budgetCent);
-		progressBar.setProgress(expensesCent);
+		if (budgetCent < 0) {
+			progressBar.setProgress(1);
+			progressBar.setMax(1);
+		} else {
+			progressBar.setProgress(expensesCent);
+			progressBar.setMax(budgetCent);
+		}
 
 		view.findViewById(R.id.button_add_expense).setTag(category.name);
 		view.findViewById(R.id.button_list).setTag(category.name);
