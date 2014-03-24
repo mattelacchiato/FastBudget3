@@ -120,10 +120,11 @@ public class ExpenseActivity extends Activity {
 	}
 
 	private void fillView() {
-		AutoCompleteTextView descriptionTextView = (AutoCompleteTextView) findViewById(R.id.description);
-		descriptionTextView.setText(expense.description);
-		descriptionTextView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, expenseDao
+		AutoCompleteTextView description = (AutoCompleteTextView) findViewById(R.id.description);
+		description.setText(expense.description);
+		description.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, expenseDao
 				.findAllDescriptions()));
+		focusAmountOnSmallScreens();
 
 		((DatePickerButtons) findViewById(R.id.date_picker)).setAndUpdateDate(expense.date);
 		if (isUpdating()) {
@@ -131,4 +132,9 @@ public class ExpenseActivity extends Activity {
 		}
 	}
 
+	private void focusAmountOnSmallScreens() {
+		if (getResources().getDisplayMetrics().heightPixels < 600) {
+			((TextView) findViewById(R.id.calculator_amount)).requestFocus();
+		}
+	}
 }
