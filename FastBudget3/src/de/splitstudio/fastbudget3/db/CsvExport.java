@@ -10,14 +10,12 @@ import java.util.Locale;
 public class CsvExport {
 
 	private static final char ESCAPE = '"';
-
 	private static final String SEPERATOR = "\t";
-
-	final List<Category> categories;
+	private static final String END_OF_LINE = "\r\n";
 
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
-	private static final String END_OF_LINE = "\r\n";
+	final List<Category> categories;
 
 	public CsvExport(List<Category> categories) {
 		this.categories = categories;
