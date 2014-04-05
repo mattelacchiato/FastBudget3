@@ -1,17 +1,12 @@
 package de.splitstudio.fastbudget3;
 
-import static android.content.Intent.ACTION_SEND;
-import static android.content.Intent.EXTRA_STREAM;
-import static android.content.Intent.createChooser;
 import static de.splitstudio.utils.NumberUtils.formatAsIntegerCurrency;
 import static java.lang.String.format;
 
-import java.io.File;
 import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +14,7 @@ import android.view.View;
 
 import com.tjerkw.slideexpandable.library.SlideExpandableListAdapter;
 
+import de.splitstudio.fastbudget3.db.BackupRestore;
 import de.splitstudio.fastbudget3.db.Category;
 import de.splitstudio.fastbudget3.db.CategoryDao;
 import de.splitstudio.fastbudget3.db.CategoryListAdapter;
@@ -30,8 +26,6 @@ import de.splitstudio.utils.activity.DialogHelper;
 import de.splitstudio.utils.db.Database;
 
 public class CategoryListActivity extends ListActivity {
-
-	private static final String BACKUP_MIME_TYPE = "application/octet-stream";
 
 	private CategoryListAdapter listAdapter;
 
@@ -63,7 +57,7 @@ public class CategoryListActivity extends ListActivity {
 			createCategory();
 			return true;
 		case (R.id.button_create_backup):
-			createBackup();
+			BackupRestore.backup(this);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -110,28 +104,6 @@ public class CategoryListActivity extends ListActivity {
 	private void createCategory() {
 		Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
 		startActivityForResult(intent, RequestCode.CreateCategory.ordinal());
-	}
-
-	private void createBackup() {
-		File externalFilesDir = getExternalFilesDir(null);
-		if (externalFilesDir == null) {
-			DialogHelper.createAlert(this, R.string.warning, R.string.warning_no_external_storage, R.string.ok);
-		} else {
-			String filename = getString(R.string.app_name) + ".backup";
-			final File dest = new File(externalFilesDir, filename);
-			Database.getInstance(this).ext().backupSync(dest.getAbsolutePath());
-			DialogHelper.createQuestion(this, R.string.success, R.string.warning_backup_created, R.string.cancel,
-				R.string.send_file, new Runnable() {
-					@Override
-					public void run() {
-						String chooserTitle = getString(R.string.send_file);
-						Intent intent = new Intent(ACTION_SEND);
-						intent.setType(BACKUP_MIME_TYPE);
-						intent.putExtra(EXTRA_STREAM, Uri.fromFile(dest));
-						startActivity(createChooser(intent, chooserTitle));
-					}
-				}, dest.getAbsolutePath());
-		}
 	}
 
 	public void updateView() {
