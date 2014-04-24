@@ -1,4 +1,5 @@
-1.0.6:
+1.1.0:
+- New Feature: Export your expenses to CSV (Excel)
 - Optimization for smaller devices: The expense description field does not get focused automatically on these devices.
 - Bugfix: If this month's budget is negative, the progress bar is now filled.
 
@@ -7,3 +8,12 @@
 - Bugfix: Rounding issue. 
 - Bugfix: Category list now gets updated, after an expense was edited.
 - Optimazations for Android 4.4 (KitKat) 
+
+Version 1.0.4:
+A minor fix to prevent app crashes.
+
+Version 1.0.3:
+German translation
+
+Version 1.0.2:
+Now you can move expenses to other categories!
