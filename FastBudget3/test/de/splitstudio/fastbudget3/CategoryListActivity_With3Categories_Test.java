@@ -66,6 +66,7 @@ public class CategoryListActivity_With3Categories_Test {
 	private CategoryDao categoryDao;
 
 	private File externalFilePathForDb;
+	private File externalFilePathForCsv;
 
 	@Before
 	public void setUp() {
@@ -73,6 +74,7 @@ public class CategoryListActivity_With3Categories_Test {
 		activityController = buildActivity(CategoryListActivity.class);
 		activity = activityController.get();
 		externalFilePathForDb = new File(activity.getExternalFilesDir(null), "FastBudget.backup");
+		externalFilePathForCsv = new File(activity.getExternalFilesDir(null), "FastBudget.csv");
 		initDb();
 
 		activityController.create();
@@ -309,13 +311,19 @@ public class CategoryListActivity_With3Categories_Test {
 	}
 
 	@Test
+	public void clickOnCsv_createsAFileOnSdCard() throws Exception {
+		activity.onOptionsItemSelected(menu.findItem(R.id.button_create_csv));
+
+		assertThat(externalFilePathForCsv.exists(), is(true));
+	}
+
+	@Test
 	public void clickOnBackup_notifiesUserAboutItsLocation() throws Exception {
 		activity.onOptionsItemSelected(menu.findItem(R.id.button_create_backup));
 
 		assertThat(getLatestAlertDialog(), is(not(nullValue())));
 		String message = shadowOf(getLatestAlertDialog()).getMessage().toString();
-		String expectedMessage = activity.getString(R.string.warning_backup_created,
-			externalFilePathForDb.getAbsolutePath());
+		String expectedMessage = activity.getString(R.string.backup_created, externalFilePathForDb.getAbsolutePath());
 		assertThat(message, is(expectedMessage));
 	}
 
@@ -336,10 +344,24 @@ public class CategoryListActivity_With3Categories_Test {
 
 		activity.onOptionsItemSelected(menu.findItem(R.id.button_create_backup));
 
+		assertDialogTextIs(R.string.error_no_external_storage, activity);
+	}
+
+	@Test
+	public void clickOnCsv_noExternalStorageAvailable_userNotified() throws Exception {
+		CategoryListActivity activity = Mockito.spy(this.activity);
+		Mockito.when(activity.getExternalFilesDir(null)).thenReturn(null);
+
+		activity.onOptionsItemSelected(menu.findItem(R.id.button_create_csv));
+
+		assertDialogTextIs(R.string.error_no_external_storage, activity);
+	}
+
+	private void assertDialogTextIs(int textId, CategoryListActivity activity) {
 		AlertDialog latestAlertDialog = ShadowAlertDialog.getLatestAlertDialog();
 		assertThat(latestAlertDialog, is(not(nullValue())));
 		String message = shadowOf(latestAlertDialog).getMessage().toString();
-		String expectedMessage = activity.getString(R.string.warning_no_external_storage);
+		String expectedMessage = activity.getString(textId);
 		assertThat(message, is(expectedMessage));
 	}
 

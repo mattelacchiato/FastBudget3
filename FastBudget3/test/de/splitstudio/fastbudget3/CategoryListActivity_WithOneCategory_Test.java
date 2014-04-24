@@ -37,12 +37,8 @@ public class CategoryListActivity_WithOneCategory_Test {
 	private ObjectContainer db;
 
 	private static final String NAME1 = "aFirst Category";
-	private static final String NAME2 = "bSecond Category";
-	private static final String NAME3 = "cThird Category";
 
 	private Category category;
-	private Category category2;
-	private Category category3;
 
 	private TestMenu menu;
 

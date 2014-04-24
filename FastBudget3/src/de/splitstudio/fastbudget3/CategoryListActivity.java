@@ -57,7 +57,10 @@ public class CategoryListActivity extends ListActivity {
 			createCategory();
 			return true;
 		case (R.id.button_create_backup):
-			BackupRestore.backup(this);
+			BackupRestore.createBackup(this);
+			return true;
+		case (R.id.button_create_csv):
+			BackupRestore.createCsv(this, categoryDao.findAll(Category.class));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

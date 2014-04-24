@@ -89,6 +89,7 @@ public class Db4oPlayground {
 		assertThat(db.ext().isStored(secondItem), is(true));
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	@Ignore
 	public void treeset() throws Exception {

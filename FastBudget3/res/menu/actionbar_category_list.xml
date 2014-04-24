@@ -8,5 +8,9 @@
         android:id="@+id/button_create_backup"
         android:showAsAction="withText|never"
         android:title="@string/create_backup"/>
+    <item
+        android:id="@+id/button_create_csv"
+        android:showAsAction="withText|never"
+        android:title="@string/create_csv"/>
 
 </menu>

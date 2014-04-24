@@ -52,8 +52,13 @@ public class CategoryListActivity_WithoutCategories_Test {
 	}
 
 	@Test
-	public void hasAnAddView() throws Exception {
+	public void menu_has_createCategory() throws Exception {
 		menu.findItem(R.id.button_create_category);
+	}
+
+	@Test
+	public void menu_has_createCsv() throws Exception {
+		menu.findItem(R.id.button_create_csv);
 	}
 
 	@Test

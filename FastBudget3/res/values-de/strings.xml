@@ -3,8 +3,10 @@
 
     <string name="amount">Betrag</string>
     <string name="app_name">FastBudget</string>
+    <string name="backup_created">Backup erfolgreich unter %s erstellt. Möchtest Du die Datei versenden (z.B. per Email, Dropbox, etc …)?</string>
     <string name="cancel">Abbrechen</string>
     <string name="create_category">Kategorie erstellen</string>
+    <string name="create_csv">CSV (Excel) erstellen</string>
     <string name="create_backup">Backup erstellen</string>
     <string name="date">Datum</string>
     <string name="delete">Löschen</string>
@@ -13,6 +15,8 @@
     <string name="error_invalid_number">Die eingegeben Zahl ist nicht gültig</string>
     <string name="error_name_duplicated">Dieser Name ist bereits vergeben</string>
     <string name="error_name_empty">Bitte gib einen Namen für diese Kategorie ein</string>
+    <string name="error_no_external_storage">Keine Speicherkarte gefunden.</string>
+    <string name="error_write_file">Leider konnte die Datei nicht geschrieben werden.</string>
     <string name="expenses">Ausgaben</string>
     <string name="move">Verschieben</string>
     <string name="hint_category_name">Name der Kategorie</string>
@@ -25,8 +29,6 @@
     <string name="title_category_chooser">Wähle die neue Kategorie</string>
     <string name="title_expense">Ausgabe für %1$s</string>
     <string name="warning">Warnung</string>
-    <string name="warning_backup_created">Backup erfolgreich unter %s erstellt. Möchtest Du die Datei versenden (z.B. per Email, Dropbox, etc)?</string>
-    <string name="warning_delete_category">Möchtest Du wirklich diese Kategorie löschen? Alle Ausgaben darin gehen verloren...</string>
-    <string name="warning_no_external_storage">Keine Speicherkarte gefunden.</string>
+    <string name="warning_delete_category">Möchtest Du wirklich diese Kategorie löschen? Alle Ausgaben darin gehen verloren…</string>
 
 </resources>
