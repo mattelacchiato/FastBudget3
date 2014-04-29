@@ -16,6 +16,7 @@ import de.splitstudio.utils.db.ObjectListAdapter;
 
 public class CategoryListAdapter extends ObjectListAdapter<Category> {
 
+	private static final String TAG = CategoryListAdapter.class.getSimpleName();
 	private final Date start;
 
 	public CategoryListAdapter(LayoutInflater layoutInflater, List<Category> categories) {
@@ -32,11 +33,11 @@ public class CategoryListAdapter extends ObjectListAdapter<Category> {
 
 		ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.category_fill);
 		if (budgetCent < 0) {
-			progressBar.setProgress(1);
 			progressBar.setMax(1);
+			progressBar.setProgress(1);
 		} else {
-			progressBar.setProgress(expensesCent);
 			progressBar.setMax(budgetCent);
+			progressBar.setProgress(expensesCent);
 		}
 
 		view.findViewById(R.id.button_add_expense).setTag(category.name);

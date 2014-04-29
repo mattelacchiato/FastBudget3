@@ -98,7 +98,6 @@ public class CategoryListActivity_WithOneCategory_Test {
 
 		ProgressBar progressBar = (ProgressBar) findListView(R.id.category_fill);
 
-		assertThat(progressBar.getProgress()).isGreaterThan(0);
 		assertThat(progressBar.getProgress()).isEqualTo(progressBar.getMax());
 	}
 

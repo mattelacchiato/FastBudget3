@@ -175,13 +175,13 @@ public class CategoryListActivity_With3Categories_Test {
 
 	@Test
 	public void setsProgressBar() {
-		category1.add(new Expense(20, new Date(), null));
+		category1.add(new Expense(110, new Date(), null));
 		categoryDao.store(category1);
 		activity.updateView();
 
 		ProgressBar progressBar = (ProgressBar) findListView(R.id.category_fill);
 		assertThat(progressBar.getMax(), is(category1.budget));
-		assertThat(progressBar.getProgress(), is(20));
+		assertThat(progressBar.getProgress(), is(110));
 	}
 
 	@Test

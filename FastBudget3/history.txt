@@ -1,3 +1,6 @@
+1.1.1:
+- Bugfix for a glitch with the progress bar
+
 1.1.0:
 - New Feature: Export your expenses to CSV (Excel)
 - Optimization for smaller devices: The expense description field does not get focused automatically on these devices.
