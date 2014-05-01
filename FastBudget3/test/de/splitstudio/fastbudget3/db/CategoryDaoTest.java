@@ -161,4 +161,25 @@ public class CategoryDaoTest {
 
 		assertThat(categoryDao.findByName(ANY_NAME).getExpenses()).doesNotContain(expense);
 	}
+
+	@Test
+	public void getCategoryNames_noCategories_empty() throws Exception {
+		assertThat(categoryDao.getCategoryNames()).isEmpty();
+	}
+
+	@Test
+	public void getCategoryNames_threeCategories_threeItems() throws Exception {
+		categoryDao.store(new Category("a"));
+		categoryDao.store(new Category("b"));
+		categoryDao.store(new Category("c"));
+		assertThat(categoryDao.getCategoryNames()).hasSize(3);
+	}
+
+	@Test
+	public void getCategoryNames_threeCategories_correctOrder() throws Exception {
+		categoryDao.store(new Category("b"));
+		categoryDao.store(new Category("c"));
+		categoryDao.store(new Category("a"));
+		assertThat(categoryDao.getCategoryNames()).containsExactly("a", "b", "c");
+	}
 }

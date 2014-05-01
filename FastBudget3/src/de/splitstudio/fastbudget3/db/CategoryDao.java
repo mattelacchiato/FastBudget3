@@ -1,5 +1,8 @@
 package de.splitstudio.fastbudget3.db;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Predicate;
@@ -50,5 +53,15 @@ public class CategoryDao extends GenericBaseDao<Category> {
 		category.remove(expense);
 		store(category);
 		expenseDao.delete(expense);
+	}
+
+	public CharSequence[] getCategoryNames() {
+		List<Category> categories = findAll(Category.class);
+		CharSequence[] names = new CharSequence[categories.size()];
+		for (int i = 0; i < categories.size(); ++i) {
+			names[i] = categories.get(i).name;
+		}
+		Arrays.sort(names);
+		return names;
 	}
 }
