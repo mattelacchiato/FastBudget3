@@ -16,7 +16,6 @@ import de.splitstudio.utils.db.ObjectListAdapter;
 
 public class CategoryListAdapter extends ObjectListAdapter<Category> {
 
-	private static final String TAG = CategoryListAdapter.class.getSimpleName();
 	private final Date start;
 
 	public CategoryListAdapter(LayoutInflater layoutInflater, List<Category> categories) {
