@@ -77,6 +77,7 @@ public class CategoryListActivity_With3Categories_Test {
 		externalFilePathForCsv = new File(activity.getExternalFilesDir(null), "FastBudget.csv");
 		initDb();
 
+		//TODO (May 15, 2014): call activityController.visible() to get real visible states?
 		activityController.create();
 		menu = new TestMenu();
 		activity.onCreateOptionsMenu(menu);
@@ -292,10 +293,12 @@ public class CategoryListActivity_With3Categories_Test {
 		Intent startedIntent = shadowOf(activity).getNextStartedActivity();
 		assertThat("No intend was started!", startedIntent, is(notNullValue()));
 		assertThat(startedIntent.getExtras().isEmpty(), is(false));
-		assertThat((String) startedIntent.getExtras().get(Extras.CategoryName.name()), is(category1.name));
+		assertThat((String) startedIntent.getExtras().get(Extras.CategoryName.name()),
+			is(category1.name));
 
 		ShadowIntent shadowIntent = shadowOf(startedIntent);
-		assertThat(shadowIntent.getComponent().getClassName(), equalTo(ExpenseListActivity.class.getName()));
+		assertThat(shadowIntent.getComponent().getClassName(),
+			equalTo(ExpenseListActivity.class.getName()));
 	}
 
 	@Test
@@ -323,7 +326,8 @@ public class CategoryListActivity_With3Categories_Test {
 
 		assertThat(getLatestAlertDialog(), is(not(nullValue())));
 		String message = shadowOf(getLatestAlertDialog()).getMessage().toString();
-		String expectedMessage = activity.getString(R.string.backup_created, externalFilePathForDb.getAbsolutePath());
+		String expectedMessage = activity.getString(R.string.backup_created,
+			externalFilePathForDb.getAbsolutePath());
 		assertThat(message, is(expectedMessage));
 	}
 
@@ -366,7 +370,8 @@ public class CategoryListActivity_With3Categories_Test {
 	}
 
 	private void assertThatTextAtPositionIs(int position, int viewId, String expected) {
-		TextView name1 = (TextView) activity.getListAdapter().getView(position, null, null).findViewById(viewId);
+		TextView name1 = (TextView) activity.getListAdapter().getView(position, null, null)
+				.findViewById(viewId);
 		assertThat(name1, is(notNullValue()));
 		assertThat("At Position " + position, name1.getText().toString(), is(expected));
 	}
@@ -376,6 +381,7 @@ public class CategoryListActivity_With3Categories_Test {
 	}
 
 	private View findListView(int position, int viewId) {
-		return activity.getListAdapter().getView(position, null, activity.getListView()).findViewById(viewId);
+		return activity.getListAdapter().getView(position, null, activity.getListView())
+				.findViewById(viewId);
 	}
 }
